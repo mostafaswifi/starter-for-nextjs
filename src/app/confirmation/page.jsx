@@ -291,7 +291,7 @@ const Confirmation = () => {
               <span className="material-symbols-outlined">arrow_forward</span>
               رجوع
             </button>
-            <button className="bg-blue-500 text-white flex items-center gap-2 rounded-lg bg-gradient-to-r px-8 py-3 font-bold shadow-lg transition-all hover:scale-105 active:scale-95">
+            <button className="bg-blue-700 text-white flex items-center gap-2 rounded-lg bg-gradient-to-r px-8 py-3 font-bold shadow-lg transition-all hover:scale-105 active:scale-95">
               تأكيد الموعد
               <span className="material-symbols-outlined text-sm">check</span>
             </button>
