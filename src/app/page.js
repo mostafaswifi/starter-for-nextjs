@@ -1,6 +1,5 @@
 "use client";
 
-import "./app.css";
 import "@appwrite.io/pink-icons";
 import Link from 'next/link'
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -14,7 +13,7 @@ export default function Home() {
       <main className="mx-auto max-w-7xl px-6 py-12">
         <section className="asymmetric-grid mb-24 items-center">
           <div className="space-y-8">
-            <div className="inline-flex items-center gap-2 bg-blue-100 text-on-primary-fixed px-4 py-2 rounded-full text-sm font-semibold">
+            <div className="inline-flex items-center gap-2 bg-blue-100 text-on-primary-fixed px-4 py-2 rounded-xl text-sm font-semibold">
               <span
                 className="material-symbols-outlined text-sm"
                 data-icon="verified"
@@ -35,16 +34,21 @@ export default function Home() {
               وجدولة المواعيد بشكل منظم لضمان حق الطالب.
             </p>
             <div className="flex flex-wrap gap-4">
-              <button className="from-primary to-primary-container text-white group flex items-center gap-3 rounded-full bg-blue-700 px-8 py-4 text-lg font-bold transition-all hover:shadow-lg">
+              <Link
+                href="/book-appointment"
+                className="from-primary to-primary-container text-white group flex items-center gap-3 rounded-xl bg-blue-700 px-8 py-4 text-lg font-bold transition-all hover:shadow-lg"
+              >
                 <span>بدء طلب إعادة التصحيح</span>
                 <span
                   className="material-symbols-outlined transition-transform group-hover:translate-x-[-4px]"
                   data-icon="arrow_back"
                 >
                   arrow_back
+               
                 </span>
-              </button>
-              <button className="from-primary to-primary-container group flex items-center gap-3 rounded-full bg-gray-200 px-8 py-4 text-lg font-bold transition-all hover:shadow-lg">
+              </Link>
+             
+              <button className="from-primary to-primary-container group flex items-center gap-3 rounded-xl bg-gray-200 px-8 py-4 text-lg font-bold transition-all hover:shadow-lg">
                <span> دليل المستخدم</span>
                   <span
                   className="material-symbols-outlined transition-transform group-hover:translate-x-[-4px]"

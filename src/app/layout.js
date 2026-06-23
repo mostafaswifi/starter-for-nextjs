@@ -1,3 +1,4 @@
+import "./app.css";
 import Footer from "../app/componenets/footer/Footer";
 import Nav from "../app/componenets/navBar/Nav";
 export const metadata = {
@@ -38,9 +39,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body
-        className={
-          "bg-surface selection:bg-primary-fixed selection:text-on-primary-fixed"
-        }
+   
         dir="rtl"
       >
         <Nav />
