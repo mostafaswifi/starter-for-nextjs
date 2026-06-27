@@ -7,6 +7,27 @@ import { client } from "@/lib/appwrite";
 import { AppwriteException } from "appwrite";
 
 export default function Home() {
+    const [items, setItems] = useState([]);
+  const [formData, setFormData] = useState({ title: '', description: '' });
+  const [editingId, setEditingId] = useState(null);
+
+    // Fetch all items
+  const fetchItems = async () => {
+    try {
+      const response = await fetch('/api/info');
+      const result = await response.json();
+      if (result.success) {
+        setItems(result.data);
+        console.log('Fetched items:', result.data);
+      }
+    } catch (error) {
+      console.error('Error fetching items:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchItems();
+  }, []);
   return (
     <main className="checker-background flex flex-col items-center p-5">
 

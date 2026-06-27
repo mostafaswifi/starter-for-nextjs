@@ -29,13 +29,13 @@ const Appointment = () => {
             </span>
             <span className="text-body-md">نظرة عامة على العملية</span>
           </div>
-          <div className="flex cursor-pointer items-center gap-3 rounded-lg bg-gray-200 p-3 font-bold text-slate-500 transition-colors transition-transform duration-200 hover:translate-x-1 hover:text-blue-500">
+          <div className={`flex cursor-pointer items-center gap-3 rounded-lg ${step === 1 ? 'bg-gray-200' : ''} p-3 font-bold text-slate-500 transition-colors transition-transform duration-200 hover:translate-x-1 hover:text-blue-500`}>
             <span className="material-symbols-outlined" data-icon="person">
               person
             </span>
             <span className="text-body-md">بيانات الطالب</span>
           </div>
-          <div className="flex cursor-pointer items-center gap-3 rounded-lg p-3 font-bold text-slate-500 transition-colors transition-transform duration-200 hover:translate-x-1 hover:text-blue-500">
+          <div className={`flex cursor-pointer items-center gap-3 rounded-lg ${step === 2 ? 'bg-gray-200' : ''} p-3 font-bold text-slate-500 transition-colors transition-transform duration-200 hover:translate-x-1 hover:text-blue-500`}>
             <span
               className="material-symbols-outlined"
               data-icon="calendar_today"
@@ -44,7 +44,7 @@ const Appointment = () => {
             </span>
             <span className="text-body-md">جدولة الموعد</span>
           </div>
-          <div className="flex cursor-pointer items-center gap-3 rounded-lg p-3 font-bold text-slate-500 transition-colors transition-transform duration-200 hover:translate-x-1 hover:text-blue-500">
+          <div className={`flex cursor-pointer items-center gap-3 rounded-lg ${step === 3 ? 'bg-gray-200' : ''} p-3 font-bold text-slate-500 transition-colors transition-transform duration-200 hover:translate-x-1 hover:text-blue-500`}>
             <span
               className="material-symbols-outlined"
               data-icon="check_circle"
@@ -54,7 +54,7 @@ const Appointment = () => {
             <span className="text-body-md">تأكيد الموعد</span>
           </div>
         </nav>
-        <button className="mt-8 rounded-lg bg-blue-700 px-4 py-3 text-sm font-semibold text-white transition-all hover:opacity-90">
+        <button className="mt-8 rounded-lg bg-blue-700 px-4 py-3 text-sm font-semibold text-white transition-all hover:opacity-90" onClick={() => setStep(1)}>
           بدء طلب جديد
         </button>
       </aside>

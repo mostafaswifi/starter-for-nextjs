@@ -50,17 +50,7 @@ const Makeappointment = () => {
               </h2>
             </div>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div className="space-y-2">
-                <label className="text-secondary block px-1 text-sm font-semibold">
-                  الاسم الكامل للطلبة
-                </label>
-                <input
-                  className="bg-surface-container-low focus:ring-primary w-full rounded-lg border-0 p-3 transition-all placeholder:text-slate-400 focus:ring-2"
-                  placeholder="أدخل اسمك كما هو في البطاقة"
-                  type="text"
-                />
-              </div>
-              <div className="space-y-2">
+                            <div className="space-y-2">
                 <label className="text-secondary block px-1 text-sm font-semibold">
                   رقم الجلوس
                 </label>
@@ -70,6 +60,17 @@ const Makeappointment = () => {
                   type="text"
                 />
               </div>
+              <div className="space-y-2">
+                <label className="text-secondary block px-1 text-sm font-semibold">
+                 اسم الطالب رباعي / خماسي
+                </label>
+                <input
+                  className="bg-surface-container-low focus:ring-primary w-full rounded-lg border-0 p-3 transition-all placeholder:text-slate-400 focus:ring-2"
+                  placeholder="أدخل اسمك كما هو في البطاقة"
+                  type="text"
+                />
+              </div>
+
               <div className="space-y-2">
                 <label className="text-secondary block px-1 text-sm font-semibold">
                   الرقم القومي
@@ -88,6 +89,16 @@ const Makeappointment = () => {
                   className="bg-surface-container-low focus:ring-primary w-full rounded-lg border-0 p-3 transition-all placeholder:text-slate-400 focus:ring-2"
                   placeholder="المدرسة المقيد بها حالياً"
                   type="text"
+                />
+              </div>
+                            <div className="space-y-2">
+                <label className="text-secondary block px-1 text-sm font-semibold">
+                   صورة بطاقة ولي الأمر
+                </label>
+                <input
+                  className="bg-surface-container-low focus:ring-primary w-full rounded-lg border-0 p-3 transition-all placeholder:text-slate-400 focus:ring-2"
+                  placeholder="المدرسة المقيد بها حالياً"
+                  type="file" required
                 />
               </div>
             </div>
