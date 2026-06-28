@@ -1,4 +1,19 @@
-const Makeappointment = () => {
+import { useEffect,useState } from "react";
+const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, items }) => {
+ 
+  const [openkey, setOpenkey] = useState(false);
+
+  useEffect(() => {
+    if (items?.school) {
+      //  console.log("Items updated:",items);
+           setOpenkey(true);
+    }
+  }, [items]);
+
+  const caller = (e) => {
+    setSeatNumber(e.target.value);
+
+  };
   return (
     <section className="flex-1 overflow-y-auto p-8 lg:p-12">
       <div className="mx-auto max-w-3xl space-y-10">
@@ -50,35 +65,58 @@ const Makeappointment = () => {
               </h2>
             </div>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                            <div className="space-y-2">
-                <label className="text-secondary block px-1 text-sm font-semibold">
-                  رقم الجلوس
-                </label>
-                <input
-                  className="bg-surface-container-low focus:ring-primary w-full rounded-lg border-0 p-3 transition-all placeholder:text-slate-400 focus:ring-2"
-                  placeholder="مثال: 123456"
-                  type="text"
-                />
-              </div>
               <div className="space-y-2">
                 <label className="text-secondary block px-1 text-sm font-semibold">
-                 اسم الطالب رباعي / خماسي
+                  أدخل رقم الجلوس
+                </label>
+                <input
+                  className="bg-surface-container-low focus:ring-primary w-full rounded-lg border-1 p-2 transition-all placeholder:text-slate-400 focus:ring-2"
+                  placeholder="مثال: 123456"
+                  type="text"
+                  value={seatNumber}
+                  onChange={(e) => caller(e)}
+                />
+              </div>
+
+
+<div className="space-y-2 flex items-end justify-between">
+               
+                <button
+                  className="bg-blue-700 px-4 py-3 text-sm font-semibold text-white transition-all hover:opacity-90 w-full rounded-lg"
+                  onClick={() => fetchItems(seatNumber)}
+                >
+                  استعلام
+                </button>
+          
+              </div>
+
+
+
+
+
+              {openkey ? <> <div className="space-y-2">
+                <label className="text-secondary block px-1 text-sm font-semibold">
+                  اسم الطالب رباعي / خماسي
                 </label>
                 <input
                   className="bg-surface-container-low focus:ring-primary w-full rounded-lg border-0 p-3 transition-all placeholder:text-slate-400 focus:ring-2"
                   placeholder="أدخل اسمك كما هو في البطاقة"
                   type="text"
+                  value={items?.studentname}
+                  readOnly
                 />
               </div>
 
               <div className="space-y-2">
                 <label className="text-secondary block px-1 text-sm font-semibold">
-                  الرقم القومي
+                 الإدارة التعليمية
                 </label>
                 <input
                   className="bg-surface-container-low focus:ring-primary w-full rounded-lg border-0 p-3 transition-all placeholder:text-slate-400 focus:ring-2"
-                  placeholder="14 رقم"
+                  placeholder="الإدارة التعليمية التابع لها"
                   type="text"
+                  value={items?.adminstration}
+                  readOnly
                 />
               </div>
               <div className="space-y-2">
@@ -89,19 +127,26 @@ const Makeappointment = () => {
                   className="bg-surface-container-low focus:ring-primary w-full rounded-lg border-0 p-3 transition-all placeholder:text-slate-400 focus:ring-2"
                   placeholder="المدرسة المقيد بها حالياً"
                   type="text"
+                  value={items?.school}
+                  readOnly
                 />
               </div>
-                            <div className="space-y-2">
+              <div className="space-y-2">
                 <label className="text-secondary block px-1 text-sm font-semibold">
-                   صورة بطاقة ولي الأمر
+                  صورة بطاقة ولي الأمر
                 </label>
                 <input
                   className="bg-surface-container-low focus:ring-primary w-full rounded-lg border-0 p-3 transition-all placeholder:text-slate-400 focus:ring-2"
                   placeholder="المدرسة المقيد بها حالياً"
-                  type="file" required
+                  type="file"
+                  required
                 />
-              </div>
+              </div> </> : <div className="text-red-500 text-sm font-semibold">لا توجد بيانات متاحة لرقم الجلوس المدخل</div>}
+
+
             </div>
+
+            
           </div>
 
           <div className="space-y-6">
