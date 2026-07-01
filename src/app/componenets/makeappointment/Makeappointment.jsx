@@ -1,18 +1,16 @@
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, items }) => {
- 
   const [openkey, setOpenkey] = useState(false);
 
   useEffect(() => {
     if (items?.school) {
       //  console.log("Items updated:",items);
-           setOpenkey(true);
+      setOpenkey(true);
     }
   }, [items]);
 
   const caller = (e) => {
     setSeatNumber(e.target.value);
-
   };
   return (
     <section className="flex-1 overflow-y-auto p-8 lg:p-12">
@@ -78,77 +76,75 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, items }) => {
                 />
               </div>
 
-
-<div className="space-y-2 flex items-end justify-between">
-               
+              <div className="flex items-end justify-between space-y-2">
                 <button
-                  className="bg-blue-700 px-4 py-3 text-sm font-semibold text-white transition-all hover:opacity-90 w-full rounded-lg"
+                  className="w-full rounded-lg bg-blue-700 px-4 py-3 text-sm font-semibold text-white transition-all hover:opacity-90"
                   onClick={() => fetchItems(seatNumber)}
                 >
                   استعلام
                 </button>
-          
               </div>
 
-
-
-
-
-              {openkey ? <> <div className="space-y-2">
-                <label className="text-secondary block px-1 text-sm font-semibold">
-                  اسم الطالب رباعي / خماسي
-                </label>
-                <input
-                  className="bg-surface-container-low focus:ring-primary w-full rounded-lg border-0 p-3 transition-all placeholder:text-slate-400 focus:ring-2"
-                  placeholder="أدخل اسمك كما هو في البطاقة"
-                  type="text"
-                  value={items?.studentname}
-                  readOnly
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-secondary block px-1 text-sm font-semibold">
-                 الإدارة التعليمية
-                </label>
-                <input
-                  className="bg-surface-container-low focus:ring-primary w-full rounded-lg border-0 p-3 transition-all placeholder:text-slate-400 focus:ring-2"
-                  placeholder="الإدارة التعليمية التابع لها"
-                  type="text"
-                  value={items?.adminstration}
-                  readOnly
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-secondary block px-1 text-sm font-semibold">
-                  اسم المدرسة
-                </label>
-                <input
-                  className="bg-surface-container-low focus:ring-primary w-full rounded-lg border-0 p-3 transition-all placeholder:text-slate-400 focus:ring-2"
-                  placeholder="المدرسة المقيد بها حالياً"
-                  type="text"
-                  value={items?.school}
-                  readOnly
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-secondary block px-1 text-sm font-semibold">
-                  صورة بطاقة ولي الأمر
-                </label>
-                <input
-                  className="bg-surface-container-low focus:ring-primary w-full rounded-lg border-0 p-3 transition-all placeholder:text-slate-400 focus:ring-2"
-                  placeholder="المدرسة المقيد بها حالياً"
-                  type="file"
-                  required
-                />
-              </div> </> : <div className="text-red-500 text-sm font-semibold">لا توجد بيانات متاحة لرقم الجلوس المدخل</div>}
-
-
+              {openkey ? (
+                <>
+                  {" "}
+                  <div className="space-y-2">
+                    <label className="text-secondary block px-1 text-sm font-semibold">
+                      اسم الطالب رباعي / خماسي
+                    </label>
+                    <input
+                      className="bg-surface-container-low focus:ring-primary w-full rounded-lg border-0 p-3 transition-all placeholder:text-slate-400 focus:ring-2"
+                      placeholder="أدخل اسمك كما هو في البطاقة"
+                      type="text"
+                      value={items?.studentname}
+                      readOnly
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-secondary block px-1 text-sm font-semibold">
+                      الإدارة التعليمية
+                    </label>
+                    <input
+                      className="bg-surface-container-low focus:ring-primary w-full rounded-lg border-0 p-3 transition-all placeholder:text-slate-400 focus:ring-2"
+                      placeholder="الإدارة التعليمية التابع لها"
+                      type="text"
+                      value={items?.adminstration}
+                      readOnly
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-secondary block px-1 text-sm font-semibold">
+                      اسم المدرسة
+                    </label>
+                    <input
+                      className="bg-surface-container-low focus:ring-primary w-full rounded-lg border-0 p-3 transition-all placeholder:text-slate-400 focus:ring-2"
+                      placeholder="المدرسة المقيد بها حالياً"
+                      type="text"
+                      value={items?.school}
+                      readOnly
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-secondary block px-1 text-sm font-semibold">
+                     المرحلة التعليمية
+                    </label>
+                    <input
+                      className="bg-surface-container-low focus:ring-primary w-full rounded-lg border-0 p-3 transition-all placeholder:text-slate-400 focus:ring-2"
+                     
+                      type="text"
+                      value="الصف الثالث الإعدادي"
+                      readOnly
+                    />
+                  </div>{" "}
+                </>
+              ) : (
+                <div className="text-sm font-semibold text-red-500">
+                  لا توجد بيانات متاحة لرقم الجلوس المدخل
+                </div>
+              )}
             </div>
-
-            
           </div>
-
+{openkey && (
           <div className="space-y-6">
             <div className="flex items-center justify-between border-r-4 border-blue-700 pr-4">
               <h2 className="text-on-surface text-xl font-bold">
@@ -162,7 +158,7 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, items }) => {
               <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
                 <input
                   className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
-                  type="checkbox"
+                  type="checkbox" checked={items?.arabic} onChange={() => {}}
                 />
                 <div className="flex flex-col">
                   <span className="text-on-surface font-bold">لغة عربية</span>
@@ -174,7 +170,7 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, items }) => {
               <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
                 <input
                   className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
-                  type="checkbox"
+                  type="checkbox" checked={items?.english} onChange={() => {}}
                 />
                 <div className="flex flex-col">
                   <span className="text-on-surface font-bold">
@@ -188,7 +184,7 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, items }) => {
               <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
                 <input
                   className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
-                  type="checkbox"
+                  type="checkbox" checked={items?.social} onChange={() => {}}
                 />
                 <div className="flex flex-col">
                   <span className="text-on-surface font-bold">
@@ -199,22 +195,42 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, items }) => {
                   </span>
                 </div>
               </label>
+
+
+
               <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
                 <input
                   className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
-                  type="checkbox"
+                  type="checkbox" checked={items?.algebra} onChange={() => {}}
                 />
                 <div className="flex flex-col">
-                  <span className="text-on-surface font-bold">رياضيات</span>
+                  <span className="text-on-surface font-bold">جبر</span>
                   <span className="text-secondary text-xs italic">
-                    Mathematics
+                    Algebra
                   </span>
                 </div>
               </label>
+
+
               <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
                 <input
                   className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
-                  type="checkbox"
+                  type="checkbox" checked={items?.geometry} onChange={() => {}}
+                />
+                <div className="flex flex-col">
+                  <span className="text-on-surface font-bold">هندسة</span>
+                  <span className="text-secondary text-xs italic">
+                    Geometry
+                  </span>
+                </div>
+              </label>
+
+
+
+              <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
+                <input
+                  className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
+                  type="checkbox" checked={items?.sciense} onChange={() => {}}
                 />
                 <div className="flex flex-col">
                   <span className="text-on-surface font-bold">علوم</span>
@@ -224,7 +240,7 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, items }) => {
               <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
                 <input
                   className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
-                  type="checkbox"
+                  type="checkbox" checked={items?.ict} onChange={() => {}}
                 />
                 <div className="flex flex-col">
                   <span className="text-on-surface font-bold">حاسب آلي</span>
@@ -236,7 +252,7 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, items }) => {
               <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
                 <input
                   className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
-                  type="checkbox"
+                  type="checkbox" checked={items?.religious} onChange={() => {}}
                 />
                 <div className="flex flex-col">
                   <span className="text-on-surface font-bold">تربية دينية</span>
@@ -248,7 +264,7 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, items }) => {
               <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
                 <input
                   className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
-                  type="checkbox"
+                  type="checkbox" checked={items?.art} onChange={() => {}}
                 />
                 <div className="flex flex-col">
                   <span className="text-on-surface font-bold">تربية فنية</span>
@@ -259,6 +275,7 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, items }) => {
               </label>
             </div>
           </div>
+)}
         </div>
 
         {/* <div className="flex items-center justify-between py-6">

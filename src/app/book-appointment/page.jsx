@@ -8,15 +8,20 @@ const Appointment = () => {
   const [step, setStep] = useState(1);
   const [items, setItems] = useState([]);
   // const [formData, setFormData] = useState({ title: '', description: '' });
+ 
   const [seatNumber, setSeatNumber] = useState(``);
   const fetchItems = async (seatnum) => {
     try {
    
       const response = await fetch(`/api/by-seatnum?seatnum=${seatnum}`);
+    
+
       const result = await response.json();
       if (result.success) {
         setItems(result.data);
         // console.log("Fetched items:", result.data);
+        document.cookie = 'studentData=' + JSON.stringify(result.data);
+       
       }
     } catch (error) {
       console.error("Error fetching items:", error);
