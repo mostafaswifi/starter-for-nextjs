@@ -7,6 +7,7 @@ import Print from "../componenets/print/Print";
 const Appointment = () => {
   const [step, setStep] = useState(1);
   const [items, setItems] = useState([]);
+  const [studentData, setStudentData] = useState(null); // Initialize studentData as null
   // const [formData, setFormData] = useState({ title: '', description: '' });
  
   const [seatNumber, setSeatNumber] = useState(``);
@@ -16,17 +17,26 @@ const Appointment = () => {
       const response = await fetch(`/api/by-seatnum?seatnum=${seatnum}`);
     
 
-      const result = await response.json();
+      let result = await response.json();
       if (result.success) {
         setItems(result.data);
         // console.log("Fetched items:", result.data);
-        document.cookie = 'studentData=' + JSON.stringify(result.data);
+        window.document.cookie = 'studentData=' + JSON.stringify(result.data);
        
       }
+
     } catch (error) {
       console.error("Error fetching items:", error);
     }
   };
+
+  useEffect(() => {
+   const studentDataCookie = window.document.cookie.split('; ').find(row => row.startsWith('studentData='));
+  setStudentData(studentDataCookie ? JSON.parse(studentDataCookie.split('=')[1]) : null);
+  //  console.log("Fetched items:", studentData);
+    }
+, [items]);
+
 
   return (
     <>
@@ -96,6 +106,9 @@ const Appointment = () => {
             setSeatNumber={setSeatNumber}
             fetchItems={fetchItems}
             items={items}
+            studentData={studentData}
+            setStudentData={setStudentData}
+            setItems={setItems}
           />
         )}
         {step === 2 && <Confirmation />}
@@ -104,7 +117,11 @@ const Appointment = () => {
         {/* <Makeappointment /> */}
         {/* <Confirmation /> */}
         {/* <Print /> */}
+        
+
       </main>
+
+
       <div className="mx-auto flex max-w-5xl items-center justify-between rounded-lg py-6 shadow-sm">
         {step !== 1 && (
           <button

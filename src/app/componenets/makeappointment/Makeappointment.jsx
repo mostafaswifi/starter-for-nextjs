@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, items }) => {
-  const [openkey, setOpenkey] = useState(false);
 
+import { useEffect, useState } from "react";
+const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, setItems, items }) => {
+  const [openkey, setOpenkey] = useState(false);
   useEffect(() => {
     if (items?.school) {
       //  console.log("Items updated:",items);
@@ -158,7 +158,7 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, items }) => {
               <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
                 <input
                   className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
-                  type="checkbox" checked={items?.arabic} onChange={() => {}}
+                  type="checkbox" checked={items?.arabic} onChange={(e) => {setItems({ ...items, arabic: e.target.checked });}}
                 />
                 <div className="flex flex-col">
                   <span className="text-on-surface font-bold">لغة عربية</span>
@@ -170,7 +170,7 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, items }) => {
               <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
                 <input
                   className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
-                  type="checkbox" checked={items?.english} onChange={() => {}}
+                  type="checkbox" checked={items?.english} onChange={(e) => {setItems({ ...items, english: e.target.checked });}}
                 />
                 <div className="flex flex-col">
                   <span className="text-on-surface font-bold">
@@ -184,7 +184,7 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, items }) => {
               <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
                 <input
                   className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
-                  type="checkbox" checked={items?.social} onChange={() => {}}
+                  type="checkbox" checked={items?.social} onChange={(e) => {setItems({ ...items, social: e.target.checked });}}
                 />
                 <div className="flex flex-col">
                   <span className="text-on-surface font-bold">
@@ -201,7 +201,7 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, items }) => {
               <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
                 <input
                   className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
-                  type="checkbox" checked={items?.algebra} onChange={() => {}}
+                  type="checkbox" checked={items?.algebra} onChange={(e) => {setItems({ ...items, algebra: e.target.checked });}}
                 />
                 <div className="flex flex-col">
                   <span className="text-on-surface font-bold">جبر</span>
@@ -215,7 +215,7 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, items }) => {
               <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
                 <input
                   className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
-                  type="checkbox" checked={items?.geometry} onChange={() => {}}
+                  type="checkbox" checked={items?.geometry} onChange={(e) => {setItems({ ...items, geometry: e.target.checked })}}
                 />
                 <div className="flex flex-col">
                   <span className="text-on-surface font-bold">هندسة</span>
@@ -230,7 +230,7 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, items }) => {
               <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
                 <input
                   className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
-                  type="checkbox" checked={items?.sciense} onChange={() => {}}
+                  type="checkbox" checked={items?.sciense} onChange={(e) => {setItems({ ...items, sciense: e.target.checked });}}
                 />
                 <div className="flex flex-col">
                   <span className="text-on-surface font-bold">علوم</span>
@@ -240,7 +240,7 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, items }) => {
               <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
                 <input
                   className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
-                  type="checkbox" checked={items?.ict} onChange={() => {}}
+                  type="checkbox" checked={items?.ict} onChange={(e) => {setItems({ ...items, ict: e.target.checked });}}
                 />
                 <div className="flex flex-col">
                   <span className="text-on-surface font-bold">حاسب آلي</span>
@@ -252,7 +252,7 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, items }) => {
               <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
                 <input
                   className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
-                  type="checkbox" checked={items?.religious} onChange={() => {}}
+                  type="checkbox" checked={items?.religious} onChange={(e) => {setItems({ ...items, religious: e.target.checked });}}
                 />
                 <div className="flex flex-col">
                   <span className="text-on-surface font-bold">تربية دينية</span>
@@ -264,7 +264,7 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, items }) => {
               <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
                 <input
                   className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
-                  type="checkbox" checked={items?.art} onChange={() => {}}
+                  type="checkbox" checked={items?.art} onChange={(e) => {setItems({ ...items, art: e.target.checked });}}
                 />
                 <div className="flex flex-col">
                   <span className="text-on-surface font-bold">تربية فنية</span>
@@ -289,6 +289,15 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, items }) => {
             </span>
           </button>
         </div> */}
+      {items.studentname &&  <button
+          className="group mr-auto flex items-center gap-2 rounded-lg bg-red-700 bg-gradient-to-r px-12 py-3 font-bold text-white shadow-lg transition-all hover:opacity-90 active:scale-95"
+          onClick={() => console.log(items)}
+        >
+          <span>تسجيل الطلب   </span>
+          <span className="material-symbols-outlined">
+            check_circle
+          </span>
+        </button>}
       </div>
     </section>
   );

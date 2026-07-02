@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useState, useEffect, useRef, useCallback } from "react";
 import { client } from "@/lib/appwrite";
 import { AppwriteException } from "appwrite";
+import {swalAlert} from "../lib/swal";
 
 export default function Home() {
 
@@ -52,7 +53,7 @@ export default function Home() {
                 </span>
               </Link>
              
-              <button className="from-primary to-primary-container group flex items-center gap-3 rounded-xl bg-gray-200 px-8 py-4 text-lg font-bold transition-all hover:shadow-lg">
+              <button onClick={() => swalAlert("دليل المستخدم", "هذا هو دليل المستخدم", "info", "موافق")} className="from-primary to-primary-container group flex items-center gap-3 rounded-xl bg-gray-200 px-8 py-4 text-lg font-bold transition-all hover:shadow-lg">
                <span> دليل المستخدم</span>
                   <span
                   className="material-symbols-outlined transition-transform group-hover:translate-x-[-4px]"
