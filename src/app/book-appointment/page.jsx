@@ -114,9 +114,7 @@ const Appointment = () => {
         {step === 2 && <Confirmation />}
         {step === 3 && <Print />}
         {step === 4 ? setStep(1) : null}
-        {/* <Makeappointment /> */}
-        {/* <Confirmation /> */}
-        {/* <Print /> */}
+    
         
 
       </main>
@@ -132,7 +130,7 @@ const Appointment = () => {
           </button>
         )}
         {step !== 3 && (
-          <button
+          items?.school && <button
             className="group mr-auto flex items-center gap-2 rounded-lg bg-blue-700 bg-gradient-to-r px-12 py-3 font-bold text-white shadow-lg transition-all hover:opacity-90 active:scale-95"
             onClick={() => setStep(step + 1)}
           >

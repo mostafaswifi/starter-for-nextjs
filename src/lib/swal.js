@@ -8,19 +8,7 @@ export const swalAlert = (title, text, icon, confirmButtonText) => {
     confirmButtonText: confirmButtonText,
     draggable: true,
     confirmButtonText: "نعم",
-    cancelButtonText: "لا",
-    showCancelButton: true,
-    showCloseButton: true,
-    showLoaderOnConfirm: true,
-    allowOutsideClick: false,
-    allowEscapeKey: false,
-    allowEnterKey: false,
-    stopKeydownPropagation: false,
-    stopKeyupPropagation: false,
-    onOpen: () => {
-      Swal.showLoading();
-    }
-
+    cancelButtonText: "لا"
   })
 }
 

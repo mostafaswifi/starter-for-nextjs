@@ -1,5 +1,6 @@
 
 import { useEffect, useState } from "react";
+import {swalAlert} from "../../../lib/swal";
 const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, setItems, items }) => {
   const [openkey, setOpenkey] = useState(false);
   useEffect(() => {
@@ -12,6 +13,26 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, setItems, item
   const caller = (e) => {
     setSeatNumber(e.target.value);
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const response = await fetch("/api/put-student", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({items: items}),
+    });
+    const result = await response.json();
+    if (result.success) {
+      // setItems({});
+       swalAlert(
+      "تم تسجيل الطلب بنجاح",
+      "من فضلك اضغط علي 'الخطوة التالية' لتحديد موعد المراجعة",
+      "success",
+      "موافق"
+    );
+  console.log("Submitting items:", items);
+  }}
+
   return (
     <section className="flex-1 overflow-y-auto p-8 lg:p-12">
       <div className="mx-auto max-w-3xl space-y-10">
@@ -291,7 +312,7 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, setItems, item
         </div> */}
       {items.studentname &&  <button
           className="group mr-auto flex items-center gap-2 rounded-lg bg-red-700 bg-gradient-to-r px-12 py-3 font-bold text-white shadow-lg transition-all hover:opacity-90 active:scale-95"
-          onClick={() => console.log(items)}
+          onClick={(e) => handleSubmit(e,items)}
         >
           <span>تسجيل الطلب   </span>
           <span className="material-symbols-outlined">
