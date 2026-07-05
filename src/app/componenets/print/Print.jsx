@@ -131,11 +131,17 @@ const Print = ({ items }) => {
 
         <div className="relative flex flex-col items-center gap-8 overflow-hidden rounded-xl bg-blue-500 text-white p-8 shadow-md md:col-span-2 md:flex-row">
           <div className="absolute top-0 left-0 -mt-32 -ml-32 h-64 w-64 rounded-lg bg-white/5"></div>
+
+
+
           <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-lg bg-blue-400">
             <span className="material-symbols-outlined text-4xl">
               assignment_late
             </span>
           </div>
+
+
+          
           <div>
             <h3 className="mb-3 text-xl font-bold">
               تعليمات هامة ليوم المراجعة

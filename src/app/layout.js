@@ -1,4 +1,5 @@
 import "./app.css";
+import 'modern-rdp-pro/theme.css';
 import Footer from "../app/componenets/footer/Footer";
 import Nav from "../app/componenets/navBar/Nav";
 export const metadata = {

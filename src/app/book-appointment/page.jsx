@@ -40,7 +40,7 @@ const Appointment = () => {
 
   return (
     <>
-      <main className="bg-surface-container mx-auto mt-8 flex min-h-[calc(100vh-72px)] max-w-7xl rounded-lg shadow-sm">
+      <main className="bg-surface-container mx-auto mt-8 flex max-w-7xl rounded-lg shadow-sm">
         <aside className="h-full w-64 flex-col gap-4 border-r border-gray-200 bg-slate-50 p-6 lg:flex">
           <div className="mb-6 flex items-center gap-3">
             <div className="flex items-center justify-center rounded-xl bg-blue-800 p-2 text-white">
