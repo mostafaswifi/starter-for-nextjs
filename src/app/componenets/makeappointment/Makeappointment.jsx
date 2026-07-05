@@ -1,15 +1,21 @@
-
 import { useEffect, useState } from "react";
-import {swalAlert} from "../../../lib/swal";
-import { v4 as uuid } from 'uuid';
-const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, setItems, items }) => {
+import { swalAlert } from "../../../lib/swal";
+import { v4 as uuid } from "uuid";
+const Makeappointment = ({
+  seatNumber,
+  setSeatNumber,
+  fetchItems,
+  setItems,
+  items,
+}) => {
   const [openkey, setOpenkey] = useState(false);
- const options = {
-  node: Uint8Array.of(0x01, 0x23, 0x45, 0x67, 0x89, 0xab),
-  clockseq: 0x1234,
-  msecs: new Date('2011-11-01').getTime(),
-  nsecs: 5678,
-};
+  const checkedsubjects = [];
+  const options = {
+    node: Uint8Array.of(0x01, 0x23, 0x45, 0x67, 0x89, 0xab),
+    clockseq: 0x1234,
+    msecs: new Date("2011-11-01").getTime(),
+    nsecs: 5678,
+  };
   useEffect(() => {
     if (items?.school) {
       //  console.log("Items updated:",items);
@@ -23,9 +29,17 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, setItems, item
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const checkedsubjects = Object.keys(items).filter(key => items[key] === true);
+    const checkedsubjects = Object.keys(items).filter(
+      (key) => items[key] === true,
+    );
     console.log("Checked subjects:", checkedsubjects);
-    items = { ...items, subjectnumber: checkedsubjects.length, $updatedAt: new Date().toISOString(),totalcost: checkedsubjects.length * 35 + 5 , reservationnumber: uuid(options) };
+    items = {
+      ...items,
+      subjectnumber: checkedsubjects.length,
+      $updatedAt: new Date().toISOString(),
+      totalcost: checkedsubjects.length * 35 + 5,
+      reservationnumber: uuid(options),
+    };
     const response = await fetch("/api/put-student", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -34,14 +48,15 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, setItems, item
     const result = await response.json();
     if (result.success) {
       // setItems({});
-       swalAlert(
-      "تم تسجيل الطلب بنجاح",
-      "من فضلك اضغط علي 'الخطوة التالية' لتحديد موعد المراجعة",
-      "success",
-      "موافق"
-    );
-  console.log("Submitting items:", items);
-  }}
+      swalAlert(
+        "تم تسجيل الطلب بنجاح",
+        "من فضلك اضغط علي 'الخطوة التالية' لتحديد موعد المراجعة",
+        "success",
+        "موافق",
+      );
+      console.log("Submitting items:", items);
+    }
+  };
 
   return (
     <section className="flex-1 overflow-y-auto p-8 lg:p-12">
@@ -157,11 +172,10 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, setItems, item
                   </div>
                   <div className="space-y-2">
                     <label className="text-secondary block px-1 text-sm font-semibold">
-                     المرحلة التعليمية
+                      المرحلة التعليمية
                     </label>
                     <input
                       className="bg-surface-container-low focus:ring-primary w-full rounded-lg border-0 p-3 transition-all placeholder:text-slate-400 focus:ring-2"
-                     
                       type="text"
                       value="الصف الثالث الإعدادي"
                       readOnly
@@ -175,156 +189,247 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, setItems, item
               )}
             </div>
           </div>
-{openkey && (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between border-r-4 border-blue-700 pr-4">
-              <h2 className="text-on-surface text-xl font-bold">
-                مواد إعادة التصحيح
-              </h2>
-              <span className="text-on-secondary-fixed-variant rounded-full bg-gray-200 px-3 py-1 text-xs font-medium">
-                اختر مادة واحدة أو أكثر
+          {openkey && (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between border-r-4 border-blue-700 pr-4">
+                <h2 className="text-on-surface text-xl font-bold">
+                  مواد إعادة التصحيح
+                </h2>
+                <span className="text-on-secondary-fixed-variant rounded-full bg-gray-200 px-3 py-1 text-xs font-medium">
+                  اختر مادة واحدة أو أكثر
+                </span>
+              </div>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
+                  <input
+                    className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
+                    type="checkbox"
+                    checked={items?.arabic}
+                    onChange={(e) => {
+                      setItems({ ...items, arabic: e.target.checked });
+                    }}
+                  />
+                  <div className="flex flex-col">
+                    <span className="text-on-surface font-bold">لغة عربية</span>
+                    <span className="text-secondary text-xs italic">
+                      Arabic Language
+                    </span>
+                  </div>
+                </label>
+                <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
+                  <input
+                    className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
+                    type="checkbox"
+                    checked={items?.english}
+                    onChange={(e) => {
+                      setItems({ ...items, english: e.target.checked });
+                    }}
+                  />
+                  <div className="flex flex-col">
+                    <span className="text-on-surface font-bold">
+                      لغة إنجليزية
+                    </span>
+                    <span className="text-secondary text-xs italic">
+                      English Language
+                    </span>
+                  </div>
+                </label>
+                <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
+                  <input
+                    className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
+                    type="checkbox"
+                    checked={items?.social}
+                    onChange={(e) => {
+                      setItems({ ...items, social: e.target.checked });
+                    }}
+                  />
+                  <div className="flex flex-col">
+                    <span className="text-on-surface font-bold">
+                      دراسات إجتماعية
+                    </span>
+                    <span className="text-secondary text-xs italic">
+                      Social Studies
+                    </span>
+                  </div>
+                </label>
+
+                <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
+                  <input
+                    className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
+                    type="checkbox"
+                    checked={items?.algebra}
+                    onChange={(e) => {
+                      setItems({ ...items, algebra: e.target.checked });
+                    }}
+                  />
+                  <div className="flex flex-col">
+                    <span className="text-on-surface font-bold">جبر</span>
+                    <span className="text-secondary text-xs italic">
+                      Algebra
+                    </span>
+                  </div>
+                </label>
+
+                <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
+                  <input
+                    className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
+                    type="checkbox"
+                    checked={items?.geometry}
+                    onChange={(e) => {
+                      setItems({ ...items, geometry: e.target.checked });
+                    }}
+                  />
+                  <div className="flex flex-col">
+                    <span className="text-on-surface font-bold">هندسة</span>
+                    <span className="text-secondary text-xs italic">
+                      Geometry
+                    </span>
+                  </div>
+                </label>
+
+                <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
+                  <input
+                    className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
+                    type="checkbox"
+                    checked={items?.sciense}
+                    onChange={(e) => {
+                      setItems({ ...items, sciense: e.target.checked });
+                    }}
+                  />
+                  <div className="flex flex-col">
+                    <span className="text-on-surface font-bold">علوم</span>
+                    <span className="text-secondary text-xs italic">
+                      Science
+                    </span>
+                  </div>
+                </label>
+                <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
+                  <input
+                    className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
+                    type="checkbox"
+                    checked={items?.ict}
+                    onChange={(e) => {
+                      setItems({ ...items, ict: e.target.checked });
+                    }}
+                  />
+                  <div className="flex flex-col">
+                    <span className="text-on-surface font-bold">حاسب آلي</span>
+                    <span className="text-secondary text-xs italic">
+                      Computer Science
+                    </span>
+                  </div>
+                </label>
+                <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
+                  <input
+                    className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
+                    type="checkbox"
+                    checked={items?.religious}
+                    onChange={(e) => {
+                      setItems({ ...items, religious: e.target.checked });
+                    }}
+                  />
+                  <div className="flex flex-col">
+                    <span className="text-on-surface font-bold">
+                      تربية دينية
+                    </span>
+                    <span className="text-secondary text-xs italic">
+                      Religious Education
+                    </span>
+                  </div>
+                </label>
+                <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
+                  <input
+                    className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
+                    type="checkbox"
+                    checked={items?.art}
+                    onChange={(e) => {
+                      setItems({ ...items, art: e.target.checked });
+                    }}
+                  />
+                  <div className="flex flex-col">
+                    <span className="text-on-surface font-bold">
+                      تربية فنية
+                    </span>
+                    <span className="text-secondary text-xs italic">
+                      Art Education
+                    </span>
+                  </div>
+                </label>
+              </div>
+            </div>
+          )}
+        </div>
+        {openkey && (
+          <div className="bg-surface-container-lowest space-y-10 rounded-xl p-8 shadow-sm">
+            <div className="flex flex-col items-center gap-4 ">
+              <span className="font-semibold border-r-4 border-blue-700 pr-4 bg-gray-200 p-4 rounded-lg shadow-md transition-colors hover:bg-gray-300 w-full text-center">
+                {" "}
+                عدد المواد المختارة:{" "}
+                {
+                  Object.keys(items).filter((key) => items[key] === true).length
+                }{" "}
+                مادة / مواد{" "}
+              </span>
+
+              <span className="font-semibold border-r-4 border-blue-700 pr-4 bg-gray-200 p-4 rounded-lg shadow-md transition-colors hover:bg-gray-300 w-full text-center">
+                {" "}
+                التكلفة الإجمالية:{" "}
+                {Object.keys(items).filter((key) => items[key] === true)
+                  .length *
+                  35 +
+                  5}{" "}
+                جنيه{" "}
+              </span>
+
+              <span className="font-semibold border-r-4 border-blue-700 pr-4 bg-gray-200 p-4 rounded-lg shadow-md transition-colors hover:bg-gray-300 w-full text-center">
+                {" "}
+                رقم الحجز: {items.reservationnumber}{" "}
+              </span>
+
+              <span className="font-semibold border-r-4 border-blue-700 pr-4 bg-gray-200 p-4 rounded-lg shadow-md transition-colors hover:bg-gray-300 w-full text-center">
+                {" "}
+                تاريخ التحديث: {items.$updatedAt}{" "}
               </span>
             </div>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
-                <input
-                  className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
-                  type="checkbox" checked={items?.arabic} onChange={(e) => {setItems({ ...items, arabic: e.target.checked });}}
-                />
-                <div className="flex flex-col">
-                  <span className="text-on-surface font-bold">لغة عربية</span>
-                  <span className="text-secondary text-xs italic">
-                    Arabic Language
-                  </span>
-                </div>
-              </label>
-              <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
-                <input
-                  className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
-                  type="checkbox" checked={items?.english} onChange={(e) => {setItems({ ...items, english: e.target.checked });}}
-                />
-                <div className="flex flex-col">
-                  <span className="text-on-surface font-bold">
-                    لغة إنجليزية
-                  </span>
-                  <span className="text-secondary text-xs italic">
-                    English Language
-                  </span>
-                </div>
-              </label>
-              <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
-                <input
-                  className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
-                  type="checkbox" checked={items?.social} onChange={(e) => {setItems({ ...items, social: e.target.checked });}}
-                />
-                <div className="flex flex-col">
-                  <span className="text-on-surface font-bold">
-                    دراسات إجتماعية
-                  </span>
-                  <span className="text-secondary text-xs italic">
-                    Social Studies
-                  </span>
-                </div>
-              </label>
 
-
-
-              <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
-                <input
-                  className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
-                  type="checkbox" checked={items?.algebra} onChange={(e) => {setItems({ ...items, algebra: e.target.checked });}}
-                />
-                <div className="flex flex-col">
-                  <span className="text-on-surface font-bold">جبر</span>
-                  <span className="text-secondary text-xs italic">
-                    Algebra
-                  </span>
-                </div>
-              </label>
-
-
-              <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
-                <input
-                  className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
-                  type="checkbox" checked={items?.geometry} onChange={(e) => {setItems({ ...items, geometry: e.target.checked })}}
-                />
-                <div className="flex flex-col">
-                  <span className="text-on-surface font-bold">هندسة</span>
-                  <span className="text-secondary text-xs italic">
-                    Geometry
-                  </span>
-                </div>
-              </label>
-
-
-
-              <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
-                <input
-                  className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
-                  type="checkbox" checked={items?.sciense} onChange={(e) => {setItems({ ...items, sciense: e.target.checked });}}
-                />
-                <div className="flex flex-col">
-                  <span className="text-on-surface font-bold">علوم</span>
-                  <span className="text-secondary text-xs italic">Science</span>
-                </div>
-              </label>
-              <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
-                <input
-                  className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
-                  type="checkbox" checked={items?.ict} onChange={(e) => {setItems({ ...items, ict: e.target.checked });}}
-                />
-                <div className="flex flex-col">
-                  <span className="text-on-surface font-bold">حاسب آلي</span>
-                  <span className="text-secondary text-xs italic">
-                    Computer Science
-                  </span>
-                </div>
-              </label>
-              <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
-                <input
-                  className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
-                  type="checkbox" checked={items?.religious} onChange={(e) => {setItems({ ...items, religious: e.target.checked });}}
-                />
-                <div className="flex flex-col">
-                  <span className="text-on-surface font-bold">تربية دينية</span>
-                  <span className="text-secondary text-xs italic">
-                    Religious Education
-                  </span>
-                </div>
-              </label>
-              <label className="group relative flex cursor-pointer items-center rounded-xl bg-gray-200 p-4 transition-colors hover:bg-gray-300">
-                <input
-                  className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
-                  type="checkbox" checked={items?.art} onChange={(e) => {setItems({ ...items, art: e.target.checked });}}
-                />
-                <div className="flex flex-col">
-                  <span className="text-on-surface font-bold">تربية فنية</span>
-                  <span className="text-secondary text-xs italic">
-                    Art Education
-                  </span>
-                </div>
-              </label>
+            <div>
+             <h2 className="text-on-surface text-xl font-bold">
+                المواد المختارة:{" "}
+              </h2>
+              <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {" "}
+                {Object.keys(items)
+                  .filter((key) => items[key] === true)
+                  .map((subject) => (
+                    <div
+                      key={subject}
+                      className="group relative flex cursor-pointer items-center rounded-xl bg-blue-200 p-3 transition-colors hover:bg-blue-300 text-on-surface font-bold"
+                    >
+                      {subject === "arabic"
+                        ? "لغة عربية"
+                        : subject === "english"
+                          ? "لغة إنجليزية"
+                          : subject === "social"
+                            ? "دراسات إجتماعية"
+                            : subject === "algebra"
+                              ? "جبر"
+                              : subject === "geometry"
+                                ? "هندسة"
+                                : subject === "sciense"
+                                  ? "علوم"
+                                  : subject === "ict"
+                                    ? "حاسب آلي"
+                                    : subject === "religious"
+                                      ? "تربية دينية"
+                                      : subject === "art"
+                                        ? "تربية فنية"
+                                        : ""}
+                    </div>
+                  ))}
+              </div>
             </div>
           </div>
-         
-)}
-        </div>
-{ openkey && (<div>
-  عدد المواد المختارة: {Object.keys(items).filter(key => items[key] === true).length}
-  <br />
-  التكلفة الإجمالية: {Object.keys(items).filter(key => items[key] === true).length * 35 + 5} جنيه
-  <br />
-  رقم الحجز: {items.reservationnumber}
-  تاريخ التحديث: {items.$updatedAt}
-  المواضيع المختارة:  {
-  Object.keys(items).filter(key => items[key] === true).join(', ')
-  
-  
-  
-  }
-</div>)
-
-}
+        )}
         {/* <div className="flex items-center justify-between py-6">
           <button className="text-secondary rounded-full px-8 py-3 font-bold transition-all hover:bg-gray-300">
             العودة للسابق
@@ -336,15 +441,15 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, setItems, item
             </span>
           </button>
         </div> */}
-      {items.studentname &&  <button
-          className="group mr-auto flex items-center gap-2 rounded-lg bg-red-700 bg-gradient-to-r px-12 py-3 font-bold text-white shadow-lg transition-all hover:opacity-90 active:scale-95"
-          onClick={(e) => handleSubmit(e,items)}
-        >
-          <span>تسجيل الطلب   </span>
-          <span className="material-symbols-outlined">
-            check_circle
-          </span>
-        </button>}
+        {items.studentname && (
+          <button
+            className="group mr-auto flex items-center gap-2 rounded-lg bg-red-700 bg-gradient-to-r px-12 py-3 font-bold text-white shadow-lg transition-all hover:opacity-90 active:scale-95"
+            onClick={(e) => handleSubmit(e, items)}
+          >
+            <span>تسجيل الطلب </span>
+            <span className="material-symbols-outlined">check_circle</span>
+          </button>
+        )}
       </div>
     </section>
   );
