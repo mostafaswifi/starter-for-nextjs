@@ -1,8 +1,15 @@
 
 import { useEffect, useState } from "react";
 import {swalAlert} from "../../../lib/swal";
+import { v4 as uuid } from 'uuid';
 const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, setItems, items }) => {
   const [openkey, setOpenkey] = useState(false);
+ const options = {
+  node: Uint8Array.of(0x01, 0x23, 0x45, 0x67, 0x89, 0xab),
+  clockseq: 0x1234,
+  msecs: new Date('2011-11-01').getTime(),
+  nsecs: 5678,
+};
   useEffect(() => {
     if (items?.school) {
       //  console.log("Items updated:",items);
@@ -16,10 +23,13 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, setItems, item
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const checkedsubjects = Object.keys(items).filter(key => items[key] === true);
+    console.log("Checked subjects:", checkedsubjects);
+    items = { ...items, subjectnumber: checkedsubjects.length, $updatedAt: new Date().toISOString(),totalcost: checkedsubjects.length * 35 + 5 , reservationnumber: uuid(options) };
     const response = await fetch("/api/put-student", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({items: items}),
+      body: JSON.stringify({ items: items }),
     });
     const result = await response.json();
     if (result.success) {
@@ -296,9 +306,25 @@ const Makeappointment = ({ seatNumber, setSeatNumber, fetchItems, setItems, item
               </label>
             </div>
           </div>
+         
 )}
         </div>
+{ openkey && (<div>
+  عدد المواد المختارة: {Object.keys(items).filter(key => items[key] === true).length}
+  <br />
+  التكلفة الإجمالية: {Object.keys(items).filter(key => items[key] === true).length * 35 + 5} جنيه
+  <br />
+  رقم الحجز: {items.reservationnumber}
+  تاريخ التحديث: {items.$updatedAt}
+  المواضيع المختارة:  {
+  Object.keys(items).filter(key => items[key] === true).join(', ')
+  
+  
+  
+  }
+</div>)
 
+}
         {/* <div className="flex items-center justify-between py-6">
           <button className="text-secondary rounded-full px-8 py-3 font-bold transition-all hover:bg-gray-300">
             العودة للسابق
