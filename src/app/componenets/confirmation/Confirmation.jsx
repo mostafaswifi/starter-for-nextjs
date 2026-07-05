@@ -242,15 +242,15 @@ const Confirmation = ({ items }) => {
           </div>
           {items?.studentname && (
             <ul className="mt-1 flex w-full flex-col items-start justify-between border-t border-slate-100 py-2">
-              <li className="gap-2 rounded-lg px-8 py-3 font-bold my-3 border-b border-color-slate-200 w-100">
+              <li className="gap-2  px-8 py-3 font-bold my-3 border-b border-color-slate-200 w-100">
                 الإسم / {items?.studentname}
               </li>
 
-              <li className="gap-2 rounded-lg px-8 py-3 font-bold my-3 border-b border-color-slate-200 w-100">
+              <li className="gap-2  px-8 py-3 font-bold my-3 border-b border-color-slate-200 w-100">
                 رقم الجلوس / {items?.seatnum}
               </li>
 
-              <li className="gap-2 rounded-lg px-8 py-3 font-bold my-3 border-b border-color-slate-200 w-100">
+              <li className="gap-2  px-8 py-3 font-bold my-3 border-b border-color-slate-200 w-100">
                 المدرسة / {items?.school}
               </li>
             </ul>
