@@ -1,4 +1,5 @@
-const Confirmation = () => {
+
+const Confirmation = ({ items }) => {
   return (
     <section className="flex-1 overflow-y-auto p-8 lg:p-12">
       <div className="relative mb-12 flex items-center justify-between px-4">
@@ -224,6 +225,7 @@ const Confirmation = () => {
           </button>
         </div> */}
       </div>
+     
     </section>
   );
 };

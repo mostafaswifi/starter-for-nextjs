@@ -1,4 +1,6 @@
-const Print = () => {
+import { QRCodeSVG } from 'qrcode.react'; // Or import { QRCodeCanvas }
+
+const Print = ({ items }) => {
   return (
     <section className="mx-auto w-full max-w-5xl flex-1 p-4 md:p-10 lg:p-16">
       <div className="mb-12 text-center">
@@ -27,9 +29,10 @@ const Print = () => {
               رقم الطلب
             </span>
             <div className="flex items-center justify-between">
-              <h2 className="text-on-surface text-4xl font-black tracking-tighter">
-                #REQ-2024-8891
-              </h2>
+              <h6 className="text-on-surface text-md font-black tracking-tighter">
+                {items?.reservationnumber}
+              </h6>
+             <QRCodeSVG value={items.reservationnumber} size={100} level="L"  />
               <button className="bg-surface-container hover:bg-surface-container-high rounded-lg p-2 transition-colors">
                 <span className="material-symbols-outlined text-on-surface-variant cursor-pointer rounded-lg bg-gray-200 p-2 transition-colors hover:bg-gray-300">
                   content_copy
@@ -97,43 +100,38 @@ const Print = () => {
             المواد المختارة
           </span>
           <ul className="space-y-4">
-            <li className="bg-surface-container-low flex items-center justify-between rounded-lg p-3">
-              <span className="text-on-surface font-semibold">
-                اللغة العربية
-              </span>
-              <span
-                className="material-symbols-outlined rounded-full bg-blue-700 text-white"
-                style={{ fontVariationSettings: "'FILL' 1" }}
+            {Object.keys(items).filter((key) => items[key] === true).map((subject, index) => (
+              <li
+                key={index} className="bg-surface-container-low flex items-center justify-between rounded-lg p-3"
               >
-                check_circle
-              </span>
-            </li>
-            <li className="bg-surface-container-low flex items-center justify-between rounded-lg p-3">
-              <span className="text-on-surface font-semibold">الرياضيات</span>
-              <span
-                className="material-symbols-outlined rounded-full bg-blue-700 text-white"
-                style={{ fontVariationSettings: "'FILL' 1" }}
-              >
-                check_circle
-              </span>
-            </li>
-            <li className="bg-surface-container-low flex items-center justify-between rounded-lg p-3">
-              <span className="text-on-surface font-semibold">
-                اللغة الإنجليزية
-              </span>
-              <span
-                className="material-symbols-outlined rounded-full bg-blue-700 text-white"
-                style={{ fontVariationSettings: "'FILL' 1" }}
-              >
-                check_circle
-              </span>
-            </li>
+                <span className="text-on-surface font-semibold">
+                  {subject === "arabic" ? "اللغة العربية" :
+                    subject === "algebra" ? "جبر" :
+                      subject === "geometry" ? "هندسة" :
+                      subject === "sciense" ? "العلوم" :
+                        subject === "english" ? "اللغة الإنجليزية" :
+                          subject === "social" ? "الدراسات الاجتماعية" :
+                            subject === "religious" ? "التربية الدينية" :
+                              subject === "ict" ? "الحاسب الآلي" :
+                                  subject === "art" ? "رسم" :""}
+                </span>
+                <span
+                  className="material-symbols-outlined rounded-full bg-blue-700 text-white"
+                  style={{ fontVariationSettings: "'FILL' 1" }}
+                >
+                  check_circle
+                </span>
+              </li>
+            ))}
+
+        
+          
           </ul>
         </div>
 
-        <div className="relative flex flex-col items-center gap-8 overflow-hidden rounded-xl bg-blue-700 p-8 text-white shadow-md md:col-span-2 md:flex-row">
+        <div className="relative flex flex-col items-center gap-8 overflow-hidden rounded-xl bg-blue-500 text-white p-8 shadow-md md:col-span-2 md:flex-row">
           <div className="absolute top-0 left-0 -mt-32 -ml-32 h-64 w-64 rounded-lg bg-white/5"></div>
-          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-lg bg-white/10">
+          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-lg bg-blue-400">
             <span className="material-symbols-outlined text-4xl">
               assignment_late
             </span>
@@ -181,6 +179,7 @@ const Print = () => {
           <span className="text-primary font-bold">800-EDUCATION</span>
         </p>
       </div>
+      
     </section>
   );
 };

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { swalAlert } from "../../../lib/swal";
 import { v4 as uuid } from "uuid";
+
+
 const Makeappointment = ({
   seatNumber,
   setSeatNumber,
@@ -451,6 +453,7 @@ const Makeappointment = ({
           </button>
         )}
       </div>
+      
     </section>
   );
 };
