@@ -1,4 +1,5 @@
 import { QRCodeSVG } from 'qrcode.react'; // Or import { QRCodeCanvas }
+import Receipt from '../receipt/Reciept';
 
 const Print = ({ items }) => {
   return (
@@ -185,7 +186,7 @@ const Print = ({ items }) => {
           <span className="text-primary font-bold">800-EDUCATION</span>
         </p>
       </div>
-      
+      <Receipt />
     </section>
   );
 };
