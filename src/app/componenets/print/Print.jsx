@@ -1,7 +1,7 @@
 import { QRCodeSVG } from 'qrcode.react'; // Or import { QRCodeCanvas }
-import Receipt from '../receipt/Reciept';
 
-const Print = ({ items }) => {
+const Print = ({ items,step,setStep }) => {
+  {console.log(step)}
   return (
     <section className="mx-auto w-full max-w-5xl flex-1 p-4 md:p-10 lg:p-16">
       <div className="mb-12 text-center">
@@ -169,9 +169,9 @@ const Print = ({ items }) => {
         </div>
       </div>
 
-      <div className="mt-12 flex flex-col items-center justify-center gap-6 sm:flex-row">
-        <button className="to-primary-container flex w-full items-center justify-center gap-3 rounded-lg bg-blue-700 bg-gradient-to-r px-10 py-4 text-lg font-bold text-white shadow-lg transition-transform hover:scale-105 sm:w-auto">
-          <span className="material-symbols-outlined">print</span>
+      <div onClick={()=> setStep( ++step)} className="mt-12 flex flex-col items-center justify-center gap-6 sm:flex-row">
+        <button  className="to-primary-container flex w-full items-center justify-center gap-3 rounded-lg bg-blue-700 bg-gradient-to-r px-10 py-4 text-lg font-bold text-white shadow-lg transition-transform hover:scale-105 sm:w-auto">
+          <span className="material-symbols-outlined" >print</span>
           طباعة الإيصال
         </button>
         <button className="text-on-surface-variant hover:bg-surface-container-highest flex w-full cursor-pointer items-center justify-center gap-3 rounded-lg bg-gray-200 px-10 py-4 text-lg font-bold transition-colors sm:w-auto">
@@ -186,7 +186,7 @@ const Print = ({ items }) => {
           <span className="text-primary font-bold">800-EDUCATION</span>
         </p>
       </div>
-      <Receipt />
+      {/* <Receipt /> */}
     </section>
   );
 };

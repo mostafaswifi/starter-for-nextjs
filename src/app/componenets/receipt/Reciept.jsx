@@ -1,5 +1,5 @@
-
-const Receipt = () => {
+import Barcode from "../barcode/Barcode";
+const Receipt = ({ items }) => {
   return (
       <main className="bg-white text-on-surface font-main-md min-h-screen">
     <header className="bg-white border-b border-outline-variant no-print">
@@ -15,7 +15,7 @@ const Receipt = () => {
             // onClick="window.print()"
           >
             <span className="material-symbols-outlined">print</span>
-            <span className="font-label-bold text-label-bold">طباعة الإيصال</span>
+            <span className="font-label-bold text-label-bold" >طباعة الإيصال</span>
           </button>
           <button
             className="flex items-center gap-2 px-4 py-2 border border-outline text-primary rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer active:opacity-80"
@@ -54,12 +54,17 @@ const Receipt = () => {
             <p
               className="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider mb-1"
             >
-              Receipt Number
+              رقم الإيصال
             </p>
             <p
               className="font-data-mono text-data-mono text-primary bg-white px-2 py-1 border border-outline-variant rounded"
             >
-              ce475e52
+              {items.$id}
+            </p>
+            <p
+              className="flex items-center justify-center px-2 py-3 "
+            >
+              <Barcode value={items.$id} />
             </p>
           </div>
         </div>
@@ -77,17 +82,15 @@ const Receipt = () => {
               className="flex justify-between items-center border-b border-outline-variant pb-2"
             >
               <span className="font-label-bold text-on-surface-variant"
-                >اسم الطالب:</span
-              >
-              <span className="font-body-lg text-on-surface">Arturo West</span>
+                >اسم الطالب:</span>
+              <span className="flex items-center justify-start gap-2 me-auto ms-auto" >{items.studentname}</span>
             </div>
             <div
               className="flex justify-between items-center border-b border-outline-variant pb-2"
             >
               <span className="font-label-bold text-on-surface-variant"
-                >رقم الجلوس:</span
-              >
-              <span className="font-data-mono text-on-surface">222</span>
+                >رقم الجلوس:</span>
+              <span className="flex items-center justify-start gap-2 me-auto ms-auto" >{items.seatnum}</span>
             </div>
             <div
               className="flex justify-between items-center border-b border-outline-variant pb-2"
@@ -95,17 +98,14 @@ const Receipt = () => {
               <span className="font-label-bold text-on-surface-variant"
                 >المدرسة:</span
               >
-              <span className="font-body-lg text-on-surface">viriliter suus</span>
-            </div>
+<span className="flex items-center justify-start gap-2 me-auto ms-auto" >{items.school}</span>            </div>
             <div
               className="flex justify-between items-center border-b border-outline-variant pb-2"
             >
               <span className="font-label-bold text-on-surface-variant"
                 >المرحلة الدراسية:</span
               >
-              <span className="font-body-lg text-on-surface"
-                >الصف الثالث الإعدادي</span
-              >
+              <span className="flex items-center justify-start gap-2 me-auto ms-auto" > الصف الثالث الإعدادي</span>
             </div>
           </div>
         </section>
@@ -116,65 +116,34 @@ const Receipt = () => {
               المواد المختارة للمراجعة
             </h2>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            <div
-              className="flex items-center gap-2 p-3 border border-outline-variant rounded-sm"
-            >
-              <span
-                className="material-symbols-outlined text-primary"
-                
-                >check_circle</span
-              >
-              <span className="font-body-lg text-on-surface">لغة عربية</span>
-            </div>
-            <div
-              className="flex items-center gap-2 p-3 border border-outline-variant rounded-sm"
-            >
-              <span
-                className="material-symbols-outlined text-primary"
-                
-                >check_circle</span
-              >
-              <span className="font-body-lg text-on-surface">لغة إنجليزية</span>
-            </div>
-            <div
-              className="flex items-center gap-2 p-3 border border-outline-variant rounded-sm"
-            >
-              <span
-                className="material-symbols-outlined text-primary"
-               
-                >check_circle</span
-              >
-              <span className="font-body-lg text-on-surface">جبر</span>
-            </div>
-            <div
-              className="flex items-center gap-2 p-3 border border-outline-variant rounded-sm"
-            >
-              <span
-                className="material-symbols-outlined text-primary"
-                >check_circle</span
-              >
-              <span className="font-body-lg text-on-surface">هندسة</span>
-            </div>
-            <div
-              className="flex items-center gap-2 p-3 border border-outline-variant rounded-sm"
-            >
-              <span
-                className="material-symbols-outlined text-primary"
-                >check_circle</span
-              >
-              <span className="font-body-lg text-on-surface">حاسب آلي</span>
-            </div>
-            <div
-              className="flex items-center gap-2 p-3 border border-outline-variant rounded-sm"
-            >
-              <span
-                className="material-symbols-outlined text-primary"
-                >check_circle</span
-              >
-              <span className="font-body-lg text-on-surface">تربية دينية</span>
-            </div>
+          <div className="flex items-center justify-center gap-2 flex-wrap w-full">
+            {Object.keys(items).filter((key) => items[key] === true).map((subject, index) => (
+            <div key={index}  className="material-symbols-outlined grow text-end flex items-center justify-center gap-2 py-2 px-4 border border-outline-variant rounded w-50">
+                <span   className="font-body-lg text-sm text-center mr-2">
+                  {subject === "arabic" ? "اللغة العربية" :
+                    subject === "algebra" ? "جبر" :
+                      subject === "geometry" ? "هندسة" :
+                      subject === "sciense" ? "العلوم" :
+                        subject === "english" ? "اللغة الإنجليزية" :
+                          subject === "social" ? "الدراسات الاجتماعية" :
+                            subject === "religious" ? "التربية الدينية" :
+                              subject === "ict" ? "الحاسب الآلي" :
+                                  subject === "art" ? "رسم" :""}
+                </span>
+                <span
+                  className="material-symbols-outlined rounded-full bg-blue-700 text-white"
+                  style={{ fontVariationSettings: "'FILL' 1" }}
+                >
+                  check_circle
+                </span>
+              </div>
+             
+            ))}
+        
           </div>
+
+
+
         </section>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8 items-start">
           <div className="md:col-span-3 space-y-6">

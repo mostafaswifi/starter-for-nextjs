@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Confirmation from "../componenets/confirmation/Confirmation";
 import Makeappointment from "../componenets/makeappointment/Makeappointment";
 import Print from "../componenets/print/Print";
+import Receipt from "../componenets/receipt/Reciept";
 
 const Appointment = () => {
   const [step, setStep] = useState(1);
@@ -112,8 +113,9 @@ const Appointment = () => {
           />
         )}
         {step === 2 && <Confirmation items={items} />}
-        {step === 3 && <Print items={items} />}
-        {step === 4 ? setStep(1) : null}
+        {step === 3 && <Print items={items} step={step} setStep={setStep} />}
+        {step === 4 &&  <Receipt items={items} setItems={setItems} step={step} setStep={setStep}/>}
+        {step === 5 ? setStep(1) : null}
     
         
 
@@ -129,7 +131,7 @@ const Appointment = () => {
             العودة للسابق
           </button>
         )}
-        {step !== 3 && (
+        {step !== 4 && (
           items?.school && <button
             className="group mr-auto flex items-center gap-2 rounded-lg bg-blue-700 bg-gradient-to-r px-12 py-3 font-bold text-white shadow-lg transition-all hover:opacity-90 active:scale-95"
             onClick={() => setStep(step + 1)}
