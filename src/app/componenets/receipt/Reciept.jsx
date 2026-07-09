@@ -1,4 +1,7 @@
 import Barcode from "../barcode/Barcode";
+import { QRCodeSVG } from 'qrcode.react';
+import logo from "../../../../public/logo.png";
+import Image from "next/image";
 const Receipt = ({ items }) => {
   return (
       <main className="bg-white text-on-surface font-main-md min-h-screen">
@@ -34,11 +37,16 @@ const Receipt = ({ items }) => {
           className="flex flex-col md:flex-row justify-between items-center gap-6 border-b border-outline-variant pb-8 mb-8"
         >
           <div className="flex items-center gap-4">
-            <img
-              className="h-20 w-auto"
+         
+
+              <Image
+                className="h-20 w-auto"
               data-alt="A clean, professional minimalist logo of the Egyptian Ministry of Education"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlTX1T0AAPK8nUeFXFzoJnY280iEhyNRfez6eMLdA-pxhbgzIFmUMquFO_o8mdLFL797IpkwSm81Lzg__-fotWk8mW0XWqz3rD-ebsT-tsSUjZ0NQ3LlAQMYl07YD_AAjyH1p43h5O8myqwKiVSPHVqwVDkZ0_34sBO77RdLJuht3f2LcSumoRP6kPqLqfY4oq83MGcKr2Qa6NFxEfqQI7-S51DgpVkYmYqUWAv_8mtV-m6M6ue5hmVNKoMYR1iP7Z7xL-2AF8ypk"
-            />
+      src={logo.src} // Path from public folder
+      alt="Photo"
+      width={400}
+      height={400}
+    />
             <div className="text-right">
               <h1 className="font-headline-lg text-headline-lg text-primary">
                 بوابة التظلمات الأكاديمية
@@ -64,10 +72,11 @@ const Receipt = ({ items }) => {
             <p
               className="flex items-center justify-center px-2 py-3 "
             >
-              <Barcode value={items.$id} />
+              <Barcode value={items.$id} type="pdf417" />
             </p>
           </div>
         </div>
+      <div className="font-body-md text-on-surface-variant text-center my-3">  برجاء طباعة الإيصال نسختين ( أصل و صور ) و تسليم الأصل لديوان عام الإدارة و تسديد الرسوم و في حالة عدم تسليم الإيصال أو عدم تسديد الرسوم خلال ( 24 ) ساعة يعتبر الإيصال لاغياً</div>
         <section className="mb-10">
           <div className="flex items-center gap-2 mb-4">
             <span className="material-symbols-outlined text-primary">person</span>
@@ -153,7 +162,7 @@ const Receipt = ({ items }) => {
                   >التكلفة الإجمالية:</span
                 >
                 <span className="font-headline-lg text-headline-lg text-primary"
-                  >215 جنيه</span
+                  >{items.totalcost} جنيه</span
                 >
               </div>
               <div
@@ -162,7 +171,7 @@ const Receipt = ({ items }) => {
                 <span className="material-symbols-outlined text-sm"
                   >verified_user</span
                 >
-                تم سداد المبلغ بنجاح عبر بوابة الدفع الحكومية
+                يُرجى سداد الرسوم عبر الحضور إلي ديوان عام الإدارة
               </div>
             </div>
             <div className="p-6 border border-outline-variant rounded-sm">
@@ -203,13 +212,12 @@ const Receipt = ({ items }) => {
             className="md:col-span-2 flex flex-col items-center gap-4 p-6 border border-outline-variant rounded-sm"
           >
             <div
-              className="bg-white flex flex-col p-1 rounded-sm border border-outline shadow-sm relative group flex items-center justify-center"
+              className="flex flex-col p-1 rounded-sm shadow-sm relative group flex items-center justify-center"
             >
-              <img
-                className="w-full"
-                data-alt="Appointment confirmation QR code"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFczyoPSAoa_2CRaoC0x6WblwsTqyyk2CxX8nc7jNo0zwCDugQ8g8OEIrlNBXZJp_5LlA6LOY9-9pAg4AV5m2yhG4Y9r0tbSczFY_9FggLPBeXwaRqDinEuV-1TA6iIRw8-JrO4C3O0Gyc0rSsQXOjOTuhF95Bw8EGCixpE3PqU5i9_9eStdaF3xw7JDg0IDbCXVV0qU247QQRYXIPuD8Rxz5Yq5s6l3v7Frov3BAWtmMvfD38wgm6TJCtDgj12nJxU8hQYdVgFG4"
-              />
+              <Barcode className="my-4" value={items.$id} type="code128" />
+
+              <QRCodeSVG className="my-4" value={items.$id} size={100} level="L"  />
+
               <div
                 className="flex flex-col  bg-primary text-on-primary text-[10px] px-2 py-0.5 rounded-full font-bold uppercase"
               >

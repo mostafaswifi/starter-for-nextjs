@@ -1,6 +1,6 @@
 import bwipjs from 'bwip-js';           // If using the main package import
 
-export default function Barcode({value}) {
+export default function Barcode({value,type}) {
   return (
     <canvas
       ref={(canvas) => {
@@ -9,7 +9,7 @@ export default function Barcode({value}) {
         }
 
         bwipjs.toCanvas(canvas, {
-          bcid:        'pdf417',               // Barcode type
+          bcid:        type,               // Barcode type
           text:        value,            // Text to encode
           scale:       window.devicePixelRatio, // Scaling factor for high-DPI devices
           height:      20,    
