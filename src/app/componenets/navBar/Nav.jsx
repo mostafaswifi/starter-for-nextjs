@@ -28,6 +28,12 @@ const Nav = () => {
               >
                 حجز موعد
               </Link>
+              <Link
+                className="font-mediu font-bold text-slate-600 transition-colors hover:text-blue-600 focus:text-blue-600 dark:text-slate-400 dark:hover:text-blue-300 dark:focus:text-blue-300"
+                href="/admin"
+              >
+               مسئول
+              </Link>
               {/* <Link
                 className="font-mediu font-bold text-slate-600 transition-colors hover:text-blue-600 focus:text-blue-600 dark:text-slate-400 dark:hover:text-blue-300 dark:focus:text-blue-300"
                 href="/confirmation"
