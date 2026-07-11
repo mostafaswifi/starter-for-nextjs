@@ -1,5 +1,6 @@
 'use client';
-const Statistics = () => {
+const Statistics = ({data}) => {
+  console.log(data[0])
   return (
     <div>
       <div className="flex flex-col w-full">

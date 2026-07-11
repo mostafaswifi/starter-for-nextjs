@@ -1,50 +1,96 @@
-'use client'
-const RevisionStartDate = () => {
+"use client";
+import { useState } from "react";
+const RevisionStartDate = ({data}) => {
+  console.log(data[0]);
+  const [enddate, setEndDate] = useState(data[0].enddate.substring(0, 10));
+  const [startdate, setStartDate] = useState(data[0].startdate.substring(0, 10));
+  console.log(enddate.substring(0, 10));
   return (
-            
-          <div className="gap-4 mb-8 grid grid-cols-1">
-            <section className="bg-white p-6 border border-gray-200 rounded-xl shadow-sm">
-              <h4 className="text-xl font-bold text-blue-600 mb-6 gap-2 flex items-center">
-                <span className="material-symbols-outlined">calendar_month</span>
-                فترة المراجعة
-              </h4>
-              <div className="space-y-4">
-                <div className="gap-1 flex flex-col">
-                  <label className="text-sm font-medium text-gray-600">
-                    تاريخ البدء
-                  </label>
-                  <div className="relative">
-                    <input
-                      className="w-full p-4 pr-12 border border-gray-300 rounded-lg bg-gray-50 text-base focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none transition-all"
-                      type="date"
-                    />
-                    <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
-                      event
-                    </span>
-                  </div>
-                </div>
-                <div className="gap-1 flex flex-col">
-                  <label className="text-sm font-medium text-gray-600">
-                    تاريخ الانتهاء
-                  </label>
-                  <div className="relative">
-                    <input
-                      className="w-full p-4 pr-12 border border-gray-300 rounded-lg bg-gray-50 text-base focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none transition-all"
-                      type="date"
-                    />
-                    <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
-                      event
-                    </span>
-                  </div>
-                </div>
-                <button className="w-full mt-4 bg-blue-600 text-white font-bold py-4 px-6 rounded-lg shadow-sm hover:bg-blue-700 hover:-translate-y-0.5 hover:shadow-md transition-all">
-                  تحديث الفترة
-                </button>
-              </div>
-            </section>
+    <div className="mb-8 grid grid-cols-2 gap-4">
+      <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <h4 className="mb-6 flex items-center gap-2 text-xl font-bold text-blue-600">
+          <span className="material-symbols-outlined">calendar_month</span>
+          فترة المراجعة
+        </h4>
+        <div className="space-y-4">
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-gray-600">
+              تاريخ البدء
+            </label>
+            <div className="relative">
+              <input
+                className="w-full rounded-lg border border-gray-300 bg-gray-50 p-4 pr-12 text-base transition-all outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600"
+                type="date"
+                value={startdate}
+                onChange={(e) => setStartDate(e.target.value)}
+              />
+              <span className="material-symbols-outlined pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-gray-500">
+                event
+              </span>
+            </div>
           </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-gray-600">
+              تاريخ الانتهاء
+            </label>
+            <div className="relative">
+              <input
+                className="w-full rounded-lg border border-gray-300 bg-gray-50 p-4 pr-12 text-base transition-all outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600"
+                type="date"
+                value={enddate}
+                onChange={(e) => setEndDate(e.target.value)}
+              />
+              <span className="material-symbols-outlined pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-gray-500">
+                event
+              </span>
+            </div>
+          </div>
+          <button className="mt-4 w-full rounded-lg bg-blue-600 px-6 py-4 font-bold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md">
+            تحديث الفترة
+          </button>
+        </div>
+      </section>
+      <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <h4 className="mb-6 flex items-center gap-2 text-xl font-bold text-blue-600">
+          <span className="material-symbols-outlined">calendar_month</span>
+       فترة تلقي الطلبات
+        </h4>
+        <div className="space-y-4">
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-gray-600">
+              تاريخ البدء
+            </label>
+            <div className="relative">
+              <input
+                className="w-full rounded-lg border border-gray-300 bg-gray-50 p-4 pr-12 text-base transition-all outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600"
+                type="date"
+              />
+              <span className="material-symbols-outlined pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-gray-500">
+                event
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-gray-600">
+              تاريخ الانتهاء
+            </label>
+            <div className="relative">
+              <input
+                className="w-full rounded-lg border border-gray-300 bg-gray-50 p-4 pr-12 text-base transition-all outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600"
+                type="date"
+              />
+              <span className="material-symbols-outlined pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-gray-500">
+                event
+              </span>
+            </div>
+          </div>
+          <button className="mt-4 w-full rounded-lg bg-blue-600 px-6 py-4 font-bold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md">
+            تحديث الفترة
+          </button>
+        </div>
+      </section>
+    </div>
+  );
+};
 
-  )
-}
-
-export default RevisionStartDate
+export default RevisionStartDate;

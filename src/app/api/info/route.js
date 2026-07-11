@@ -1,10 +1,5 @@
 import { NextResponse } from 'next/server';
-import { databases, DATABASE_ID, COLLECTION_ID } from '@/lib/appwrite';
-
-
-
-
-// GET - Fetch items with authentication
+import { databases, DATABASE_ID, COLLECTION_ID } from '@/lib/appwriteAdmin';
 export async function GET() {
   try {
     const response = await databases.listDocuments(

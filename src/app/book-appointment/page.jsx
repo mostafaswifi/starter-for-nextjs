@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Confirmation from "../componenets/confirmation/Confirmation";
 import Makeappointment from "../componenets/makeappointment/Makeappointment";
 import Print from "../componenets/print/Print";
