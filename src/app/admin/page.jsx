@@ -1,13 +1,14 @@
 // app/page.jsx
 "use client";
-
+import  appImg from "../../../public/applicaton.jpg";
 import { useState, useEffect } from "react";
 import { redirect } from "next/navigation";
+import Image from "next/image"
 import Statistics from "../componenets/statistics/Statistics";
 import RevisionStartDate from "../componenets/revisionstartend/RevisionStartDate";
 import DevideStudentsToGroups from "../componenets/devidestudentstogroups/DevideStudentsToGroups";
 import LatestApplications from "../componenets/latestapplications/LatestApplications";
-
+import {swalAlert} from "../../lib/swal";
 
 
 export default function Page() {
@@ -26,13 +27,41 @@ const fetchItems = async () => {
 useEffect(() => {
     fetchItems();
   }, []);
-  const [items, setItems] = useState(null);
+  const [items, setItems] = useState("init");
 
   // localStorage.removeItem('authToken')
   let s;
   if (typeof window !== "undefined") {
     s = localStorage ? localStorage?.getItem("authToken") : "no token";
   }
+
+const handleAlterDate = ((id,data) => {
+// console.log(data,id);
+
+  try {
+    const response = fetch(`/api/info?id=${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    response.then((res) =>
+      res.json().then((data) => {
+       
+        swalAlert("تم التعديل بنجاح","تم التعديل بنجاح","success","نعم")
+      })
+    );
+  } catch (error) {
+   swalAlert("خطأ في التعديل  ","خطأ في التعديل","fail","نعم")    
+  }
+})
+
+const handleLogout = () => {
+  localStorage.removeItem("authToken");
+  redirect("/");
+};
+
 
   return (
     <>
@@ -155,13 +184,15 @@ useEffect(() => {
                       chevron_left
                     </span>
                   </button>
+                  <button className="bg-red-600 p-4 mx-auto rounded-lg text-white my-3 cursor-pointer" onClick={()=>handleLogout()} >تسجيل الخروج</button>
                 </div>
               </div>
             </nav>
           </aside>
           <div className="flex flex-grow flex-col p-6">
+            {items == "init" && <div><Image width={1000} height={1000} alt="app" src={appImg.src} /></div>}
             {items == "statistics" && <Statistics data={data} />}
-            {items == "revisionstartend" && <RevisionStartDate data={data} />}
+            {items == "revisionstartend" && <RevisionStartDate data={data} handleAlterDate={handleAlterDate} />}
             {items == "devidestudentstogroups" && (
               <DevideStudentsToGroups data={data} />
             )}

@@ -4,8 +4,11 @@ import "@appwrite.io/pink-icons";
 import Link from 'next/link'
 import { useState, useEffect, useRef, useCallback } from "react";
 import { client } from "@/lib/appwrite";
+import Image from "next/image";
 import { AppwriteException } from "appwrite";
 import {swalAlert} from "../lib/swal";
+
+import pen from "../../public/pen.png";
 
 export default function Home() {
 
@@ -65,10 +68,14 @@ export default function Home() {
           <div className="relative">
             <div className="bg-primary-fixed absolute -top-12 -right-12 h-64 w-64 rounded-full opacity-20 blur-3xl"></div>
             <div className="bg-surface-container-lowest relative z-10 rotate-2 transform rounded-xl p-4 shadow-xl">
-              <img
+              <Image
                 className="h-[450px] w-full rounded-lg object-cover"
                 data-alt="close-up of a wooden desk with a neat stack of exam papers and a blue fountain pen in a brightly lit academic office"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXvXq6AR7zAb7_ziWa7_8Unj9EMEjyN2s4JHFF4onvBwazjLgI0CDMX9Q5guGRxdOKg23n1dVmdMKmcNqwV6QlPXEzkMnoFcWha2O7QTab6vo_q6UA6661h-iIHYQ0WG8v7PdoYF3iqZLCBl9Mn23l6AHUqtbTwI_oyMUT3Rhzc34nWTN5Yc6bbLXBhqttnC2n-np0bzEMccXYpY4QvM_1YTTKTQVUVxDdv2SHNGpygEy-B9VgkZqMpQOEwsza8N2KNDt4IUSQK0I"
+                src={pen.src}
+                width={450}
+                height={450}
+                alt="close-up of a wooden desk with a neat stack of exam papers and a blue fountain pen in a brightly lit academic office"
+                priority
               />
             </div>
             <div className="absolute -bottom-6 -left-6 z-20 max-w-[240px] rounded-xl border border-slate-100 bg-white p-6 shadow-lg">

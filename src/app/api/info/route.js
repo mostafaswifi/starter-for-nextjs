@@ -19,3 +19,24 @@ export async function GET() {
     );
   }
 }
+
+export async function PUT( request){
+  try {
+    const response = await databases.updateDocument(
+      DATABASE_ID,
+      COLLECTION_ID,
+    await  request.nextUrl.searchParams.get("id"),
+     await request.json()
+    );
+    return NextResponse.json(
+      { success: true, data: response },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error('Error fetching items:', error);
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 500 }
+    );
+  }
+}
