@@ -1,6 +1,24 @@
 'use client';
+
+
+import { useEffect, useState } from "react";
+
+
 const Statistics = ({data}) => {
   console.log(data[0])
+const [studentsDataItems, setStudentsDataItems] = useState([]);
+const studentsData =async ()=>{
+  const data =await fetch('/api/getAllStudents').then(res => res.json()).then(data =>data.data);
+  setStudentsDataItems(data);
+  
+}
+
+useEffect(() => {
+  studentsData();
+  
+}, []);
+console.log(studentsDataItems);
+console.log(studentsDataItems?.filter(student => student?.reservasionconfirm == true).length)
   return (
     <div>
       <div className="flex flex-col w-full">
@@ -31,7 +49,7 @@ const Statistics = ({data}) => {
               <p className="text-gray-600 text-sm font-medium mb-1">
                 إجمالي الطلبات
               </p>
-              <h3 className="text-3xl font-bold text-gray-900">1,284</h3>
+              <h3 className="text-3xl font-bold text-gray-900">{studentsDataItems.length}</h3>
             </div>
             <div className="bg-white p-6 border-r-4 border-teal-600 rounded-xl shadow-sm transition-all duration-300 hover:border-teal-600 hover:-translate-y-0.5 hover:shadow-lg cursor-default">
               <div className="mb-4 flex items-start justify-between">
@@ -43,19 +61,19 @@ const Statistics = ({data}) => {
               <p className="text-gray-600 text-sm font-medium mb-1">
                 طلبات قيد المراجعة
               </p>
-              <h3 className="text-3xl font-bold text-gray-900">432</h3>
+              <h3 className="text-3xl font-bold text-gray-900">{studentsDataItems?.filter(student => student?.reservasionconfirm == false).length}</h3>
             </div>
             <div className="bg-white p-6 border-r-4 border-green-600 rounded-xl shadow-sm transition-all duration-300 hover:border-green-600 hover:-translate-y-0.5 hover:shadow-lg cursor-default">
               <div className="mb-4 flex items-start justify-between">
                 <span className="material-symbols-outlined text-green-600 bg-green-50 p-2 rounded-lg">
                   task_alt
                 </span>
-                <span className="text-green-600 text-sm font-bold">85%</span>
+                <span className="text-green-600 text-sm font-bold">{studentsDataItems?.filter(student => student?.reservasionconfirm == true).length / studentsDataItems?.filter(student => student ).length * 100}%</span>
               </div>
               <p className="text-gray-600 text-sm font-medium mb-1">
                 طلبات مكتملة
               </p>
-              <h3 className="text-3xl font-bold text-gray-900">812</h3>
+              <h3 className="text-3xl font-bold text-gray-900">{studentsDataItems?.filter(student => student?.reservasionconfirm == true).length}</h3>
             </div>
             <div className="bg-white p-6 border-r-4 border-blue-400 rounded-xl shadow-sm transition-all duration-300 hover:border-blue-400 hover:-translate-y-0.5 hover:shadow-lg cursor-default">
               <div className="-mt-2 -mr-2 mb-2 flex justify-end">

@@ -12,7 +12,10 @@ export async function GET(request, { params }) {
         const response = await databases.listDocuments(
             DATABASE_ID,
             COLLECTION_ID,
-            [Query.equal('seatnum', Number(seatnum))] // Replace 'customId' with your field
+            [Query.equal('seatnum', Number(seatnum))],
+  [
+    Query.limit(5000) // Fetch up to 5,000 items in a single call
+  ] // Replace 'customId' with your field
         );
         
         if (response.documents.length === 0) {

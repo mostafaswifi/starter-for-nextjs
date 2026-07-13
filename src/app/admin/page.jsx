@@ -190,7 +190,7 @@ const handleLogout = () => {
             </nav>
           </aside>
           <div className="flex flex-grow flex-col p-6">
-            {items == "init" && <div><Image width={1000} height={1000} alt="app" src={appImg.src} /></div>}
+            {items == "init" && <Image width={800} height={800} className="mx-auto" alt="app" src={appImg.src} />}
             {items == "statistics" && <Statistics data={data} />}
             {items == "revisionstartend" && <RevisionStartDate data={data} handleAlterDate={handleAlterDate} />}
             {items == "devidestudentstogroups" && (
