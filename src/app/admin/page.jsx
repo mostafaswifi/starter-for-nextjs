@@ -66,7 +66,7 @@ const handleLogout = () => {
   return (
     <>
       {s == process.env.NEXT_PUBLIC_ADMIN_PASSWORD ? (
-        <div className="flex bg-gray-50 text-gray-900">
+        <div className="flex bg-gray-50 text-gray-900 h-screen">
           <aside className="flex h-full w-100 flex-col border-l border-gray-200 bg-white p-6 text-right shadow-md">
             <div className="mb-8">
               <h1 className="text-2xl font-bold text-blue-600">

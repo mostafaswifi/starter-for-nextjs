@@ -1,27 +1,24 @@
 "use client";
 
 import "@appwrite.io/pink-icons";
-import Link from 'next/link'
+import Link from "next/link";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { client } from "@/lib/appwrite";
 import Image from "next/image";
 import { AppwriteException } from "appwrite";
-import {swalAlert} from "../lib/swal";
+import { swalAlert } from "../lib/swal";
 
 import pen from "../../public/pen.png";
 
 export default function Home() {
-
-
-    // Fetch all items
+  // Fetch all items
 
   return (
     <main className="checker-background flex flex-col items-center p-5">
-
       <main className="mx-auto max-w-7xl px-6 py-12">
         <section className="asymmetric-grid mb-24 items-center">
           <div className="space-y-8">
-            <div className="inline-flex items-center gap-2 bg-blue-100 text-on-primary-fixed px-4 py-2 rounded-xl text-sm font-semibold">
+            <div className="text-on-primary-fixed inline-flex items-center gap-2 rounded-xl bg-blue-100 px-4 py-2 text-sm font-semibold">
               <span
                 className="material-symbols-outlined text-sm"
                 data-icon="verified"
@@ -44,7 +41,7 @@ export default function Home() {
             <div className="flex flex-wrap gap-4">
               <Link
                 href="/book-appointment"
-                className="from-primary to-primary-container text-white group flex items-center gap-3 rounded-xl bg-blue-700 px-8 py-4 text-lg font-bold transition-all hover:shadow-lg"
+                className="from-primary to-primary-container group flex items-center gap-3 rounded-xl bg-blue-700 px-8 py-4 text-lg font-bold text-white transition-all hover:shadow-lg"
               >
                 <span>بدء طلب إعادة التصحيح</span>
                 <span
@@ -52,16 +49,27 @@ export default function Home() {
                   data-icon="arrow_back"
                 >
                   arrow_back
-               
                 </span>
               </Link>
-             
-              <button onClick={() => swalAlert("دليل المستخدم", "هذا هو دليل المستخدم", "info", "موافق")} className="from-primary to-primary-container group flex items-center gap-3 rounded-xl bg-gray-200 px-8 py-4 text-lg font-bold transition-all hover:shadow-lg">
-               <span> دليل المستخدم</span>
-                  <span
+
+              <button
+                onClick={() =>
+                  swalAlert(
+                    "دليل المستخدم",
+                    "هذا هو دليل المستخدم",
+                    "info",
+                    "موافق",
+                  )
+                }
+                className="from-primary to-primary-container group flex items-center gap-3 rounded-xl bg-gray-200 px-8 py-4 text-lg font-bold transition-all hover:shadow-lg"
+              >
+                <span> دليل المستخدم</span>
+                <span
                   className="material-symbols-outlined transition-transform group-hover:translate-x-[-4px]"
                   data-icon="arrow_back"
-                >arrow_back</span>
+                >
+                  arrow_back
+                </span>
               </button>
             </div>
           </div>
@@ -108,10 +116,10 @@ export default function Home() {
             </p>
           </div>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            <div className="bg-surface-container-lowest border-blue-800 rounded-xl border-t-4 p-8 shadow-sm transition-all hover:translate-y-[-8px]">
+            <div className="bg-surface-container-lowest rounded-xl border-t-4 border-blue-800 p-8 shadow-sm transition-all hover:translate-y-[-8px]">
               <div className="bg-primary-fixed mb-6 flex h-12 w-12 items-center justify-center rounded-lg">
                 <span
-                  className="material-symbols-outlined text-blue-800 bg-gray-200 p-4 rounded-lg"
+                  className="material-symbols-outlined rounded-lg bg-gray-200 p-4 text-blue-800"
                   data-icon="person_search"
                 >
                   person_search
@@ -126,10 +134,10 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="bg-surface-container-lowest border-blue-800 rounded-xl border-t-4 p-8 shadow-sm transition-all hover:translate-y-[-8px]">
+            <div className="bg-surface-container-lowest rounded-xl border-t-4 border-blue-800 p-8 shadow-sm transition-all hover:translate-y-[-8px]">
               <div className="bg-primary-fixed mb-6 flex h-12 w-12 items-center justify-center rounded-lg">
                 <span
-                  className="material-symbols-outlined text-blue-800 bg-gray-200 p-4 rounded-lg"
+                  className="material-symbols-outlined rounded-lg bg-gray-200 p-4 text-blue-800"
                   data-icon="menu_book"
                 >
                   menu_book
@@ -144,10 +152,10 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="bg-surface-container-lowest border-blue-800 rounded-xl border-t-4 p-8 shadow-sm transition-all hover:translate-y-[-8px]">
+            <div className="bg-surface-container-lowest rounded-xl border-t-4 border-blue-800 p-8 shadow-sm transition-all hover:translate-y-[-8px]">
               <div className="bg-primary-fixed mb-6 flex h-12 w-12 items-center justify-center rounded-lg">
                 <span
-                  className="material-symbols-outlined text-blue-800 bg-gray-200 p-4 rounded-lg"
+                  className="material-symbols-outlined rounded-lg bg-gray-200 p-4 text-blue-800"
                   data-icon="calendar_month"
                 >
                   calendar_month
@@ -164,7 +172,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mx-auto mb-24 max-w-4xl bg-gray-200 rounded-3xl p-8 lg:p-12">
+        <section className="mx-auto mb-24 max-w-4xl rounded-3xl bg-gray-200 p-8 lg:p-12">
           <div className="rounded-3xl p-8 lg:p-12">
             <div className="flex flex-col gap-12 md:flex-row">
               <div className="md:w-1/3">
@@ -175,13 +183,13 @@ export default function Home() {
                   كل ما تحتاج معرفته عن عملية إعادة التصحيح والجدولة.
                 </p>
                 <span
-                  className="material-symbols-outlined text-gray-300 text-[length:xxx-large]"
+                  className="material-symbols-outlined text-[length:xxx-large] text-gray-300"
                   data-icon="quiz"
                 >
                   quiz
                 </span>
               </div>
-              <div className="space-y-4 md:w-2/3 bg-white rounded-xl p-6 shadow-sm">
+              <div className="space-y-4 rounded-xl bg-white p-6 shadow-sm md:w-2/3">
                 <details
                   className="group bg-surface-container-lowest rounded-xl p-6 transition-all"
                   open=""
@@ -271,8 +279,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-
-
     </main>
   );
 }
