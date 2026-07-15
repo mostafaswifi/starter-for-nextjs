@@ -1,9 +1,7 @@
-
-
 const Footer = () => {
   return (
     <>
-                <footer className="docked w-full sticky top-0 z-50 shadow-sm backdrop-blur-md dark:shadow-none">
+      <footer className="d-block w-full shadow-sm backdrop-blur-md dark:shadow-none">
         <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between px-8 py-10 md:flex-row">
           <div className="mb-6 text-center md:mb-0 md:text-right">
             <div className="mb-2 text-sm font-semibold tracking-widest text-blue-900 uppercase">
@@ -38,8 +36,9 @@ const Footer = () => {
             </a>
           </div>
         </div>
-      </footer></>
-  )
-}
+      </footer>
+    </>
+  );
+};
 
-export default Footer
+export default Footer;

@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Pagination from "../pagination/Pagination";
 const LatestApplications = ({ data }) => {
-  console.log(data[0]);
+  // console.log(data[0]);
 
   const [studentsDataItems, setStudentsDataItems] = useState([]);
   const [chunks, setChunks] = useState([]);
@@ -43,6 +43,25 @@ const opener =(e)=>{
  e?.target?.parentElement?.classList.toggle("max-h-[500px]")
 
 }
+
+const searcher = (value) =>{
+let filteredData;
+if(typeof Number(value) === 'number'){
+ filteredData = studentsDataItems.filter((item) => item.seatnum.toString().includes(value.toString() ));
+} else {
+
+  filteredData = studentsDataItems.filter((item) => item.studentname.toString().toLowerCase().includes(value.toString().toLowerCase() ));
+}
+  if(value === ''){
+    studentsData()
+        
+
+  }else{
+setStudentsDataItems(filteredData)
+
+  
+  }
+}
   return (
   
     <section className="flex w-full flex-col rounded-xl border border-gray-200 bg-white shadow-sm">
@@ -54,6 +73,7 @@ const opener =(e)=>{
               className="w-full rounded-lg border border-gray-300 bg-white p-2 pr-10 text-sm transition-all outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600"
               type="text"
               placeholder="بحث باسم الطالب أو رقم الطلب..."
+              onChange={(e) => searcher(e.target.value)}
             />
             <span className="material-symbols-outlined pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-sm text-gray-500">
               search
@@ -84,7 +104,7 @@ const opener =(e)=>{
 </div>
          : (
           chunks[chunkNumber]?.map((student,index) => {
-            console.log(student[chunkNumber])
+            // console.log(student[chunkNumber])
             return (
               <div
                 onClick={(e) =>opener(e)}
@@ -103,15 +123,16 @@ const opener =(e)=>{
                       #{student?.reservationnumber}
                     </span>
                   </div>
+                                     {/* <span
+                      className={`material-symbols-outlined rotate-180} text-gray-500 transition-transform duration-300`}
+                    >
+                      expand_more
+                    </span> */}
                   <div className="flex items-center gap-4">
                     <span className="rounded-full bg-teal-100 px-3 py-1 text-xs font-bold text-teal-800">
                       مراجعة
                     </span>
-                    <span
-                      className={`material-symbols-outlined rotate-180} text-gray-500 transition-transform duration-300`}
-                    >
-                      expand_more
-                    </span>
+ 
                   </div>
                 </button>
                 <div
@@ -123,26 +144,62 @@ const opener =(e)=>{
                         <p className="mb-1 text-xs text-gray-600">
                           تاريخ الطلب
                         </p>
-                        <p className="text-sm font-bold">24 أكتوبر 2023</p>
+                        <p className="text-sm font-bold">{student?.preservedate}</p>
                       </div>
                       <div>
                         <p className="mb-1 text-xs text-gray-600">
                           المواد المطلوبة
                         </p>
-                        <p className="text-sm font-bold">
-                          اللغة العربية، الرياضيات
+                        <p className="text-sm font-bold flex flex-row gap-2">
+                         <>
+                {" "}
+                {Object.keys(student)
+                  .filter((key) => student[key] === true)
+                  .map((subject) => (
+                    <span
+                      key={subject}
+                      className="flex flex-row cursor-pointer items-center font-bold"
+                    >
+                      {subject === "arabic"
+                        ? "لغة عربية"
+                        : subject === "english"
+                          ? "لغة إنجليزية"
+                          : subject === "social"
+                            ? "دراسات إجتماعية"
+                            : subject === "algebra"
+                              ? "جبر"
+                              : subject === "geometry"
+                                ? "هندسة"
+                                : subject === "sciense"
+                                  ? "علوم"
+                                  : subject === "ict"
+                                    ? "حاسب آلي"
+                                    : subject === "religious"
+                                      ? "تربية دينية"
+                                      : subject === "art"
+                                        ? "تربية فنية"
+                                        : ""}
+                    </span>
+                  ))}
+              </>
                         </p>
                       </div>
                       <div>
-                        <p className="mb-1 text-xs text-gray-600">نوع الطلب</p>
-                        <p className="text-sm font-bold">إعادة تصحيح يدوي</p>
+                        <p className="mb-1 text-xs text-gray-600"> عدد المواد</p>
+                        <p className="text-sm font-bold">  {
+                  student.subjectnumber
+                } </p>
+                <div>
+                   <p className="mb-1 text-xs text-gray-600"> التكلفة </p>
+                  <p className="text-sm font-bold">{student?.totalcost} جنيها</p>
+                </div>
                       </div>
                       <div>
                         <p className="mb-1 text-xs text-gray-600">
-                          المقر الإداري
+                         رقم الجلوس
                         </p>
                         <p className="text-sm font-bold">
-                          إدارة العاشر من رمضان
+                            {student?.seatnum} 
                         </p>
                       </div>
                     </div>

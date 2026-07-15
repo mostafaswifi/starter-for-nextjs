@@ -66,7 +66,7 @@ const handleLogout = () => {
   return (
     <>
       {s == process.env.NEXT_PUBLIC_ADMIN_PASSWORD ? (
-        <div className="flex bg-gray-50 text-gray-900 h-screen">
+        <div className="flex bg-gray-50 text-gray-900">
           <aside className="flex h-full w-100 flex-col border-l border-gray-200 bg-white p-6 text-right shadow-md">
             <div className="mb-8">
               <h1 className="text-2xl font-bold text-blue-600">
@@ -184,12 +184,12 @@ const handleLogout = () => {
                       chevron_left
                     </span>
                   </button>
-                  <button className="bg-red-600 p-4 mx-auto rounded-lg text-white my-3 cursor-pointer" onClick={()=>handleLogout()} >تسجيل الخروج</button>
+                  <button className="bg-red-600 p-4 mx-auto rounded-lg text-white my-3 cursor-pointer w-full" onClick={()=>handleLogout()} >تسجيل الخروج</button>
                 </div>
               </div>
             </nav>
           </aside>
-          <div className="flex flex-grow flex-col p-6">
+          <div className="flex  flex-col p-6 h-full w-full px-4 mx-auto">
             {items == "init" && <Image width={800} height={800} className="mx-auto" alt="app" src={appImg.src} />}
             {items == "statistics" && <Statistics data={data} />}
             {items == "revisionstartend" && <RevisionStartDate data={data} handleAlterDate={handleAlterDate} />}
