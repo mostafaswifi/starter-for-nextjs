@@ -1,69 +1,143 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import Pagination from "../pagination/Pagination";
-const LatestApplications = ({ data }) => {
-  // console.log(data[0]);
 
+const LatestApplications = () => {
   const [studentsDataItems, setStudentsDataItems] = useState([]);
   const [chunks, setChunks] = useState([]);
-  const [chunkNumber,setChunkNumber] = useState(0)
-  const studentsData = async () => {
-    const data = await fetch("/api/getAllStudents")
-      .then((res) => res.json())
-      .then((data) => data.data);
-    setStudentsDataItems(data);
-  };
+  const [chunkNumber, setChunkNumber] = useState(0);
+  const [inputText, setInputText] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [expandedIndex, setExpandedIndex] = useState(null);
+
+  // Fetch students data
+  const studentsData = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/getAllStudents");
+      const data = await response.json();
+      setStudentsDataItems(data.data || []);
+    } catch (error) {
+      console.error("Error fetching students:", error);
+      setStudentsDataItems([]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     studentsData();
-  
+  }, [studentsData]);
+
+  // Chunk data into pages of 10
+  const chunker = useCallback((students) => {
+    const chunked = [];
+    for (let i = 0; i < students.length; i += 10) {
+      chunked.push(students.slice(i, i + 10));
+    }
+    setChunks(chunked);
+    setChunkNumber(0); // Reset to first page when data changes
   }, []);
 
-  const chunker = (students) =>{
-    let counter = 0
-    let chunked = []
-    while (counter < students.length){
-        chunked.push(students.slice(counter, counter + 10))
-        counter += 10
-    }
-    setChunks(chunked)
-   
-}
-useEffect(() => {
-  chunker(studentsDataItems)
-}, [studentsDataItems])
+  useEffect(() => {
+    chunker(studentsDataItems);
+  }, [studentsDataItems, chunker]);
 
+  // Toggle accordion
+  const toggleAccordion = useCallback((index) => {
+    setExpandedIndex((prev) => (prev === index ? null : index));
+  }, []);
 
-const opener =(e)=>{
-  e.stopPropagation()
-   const siblings = Array.from(e.target.parentNode.childNodes)
-    .filter(node => node.nodeType === 1 && node !== e.target);
+  // Search functionality
+  const searcher = useCallback(
+    (value) => {
+      setInputText(value);
 
-    siblings.forEach(node => node.classList.remove("max-h-[500px]"));
- e?.target?.parentElement?.classList.toggle("max-h-[500px]")
+      if (!value || value.trim() === "") {
+        studentsData(); // Reset to original data
+        return;
+      }
 
-}
+      const trimmedValue = value.trim();
+      const isNumeric = /^\d+$/.test(trimmedValue);
 
-const searcher = (value) =>{
-let filteredData;
-if(typeof Number(value) === 'number'){
- filteredData = studentsDataItems.filter((item) => item.seatnum.toString().includes(value.toString() ));
-} else {
+      // Filter current data without re-fetching
+      setStudentsDataItems((prevData) => {
+        const filteredData = prevData.filter((item) => {
+          if (isNumeric) {
+            return item.seatnum?.toString().includes(trimmedValue);
+          } else {
+            return item.studentname
+              ?.toLowerCase()
+              .includes(trimmedValue.toLowerCase());
+          }
+        });
+        return filteredData;
+      });
+    },
+    [studentsData],
+  );
 
-  filteredData = studentsDataItems.filter((item) => item.studentname.toString().toLowerCase().includes(value.toString().toLowerCase() ));
-}
-  if(value === ''){
-    studentsData()
-        
+  // Get subject display name
+  const getSubjectName = useCallback((subject) => {
+    const subjectMap = {
+      arabic: "لغة عربية",
+      english: "لغة إنجليزية",
+      social: "دراسات إجتماعية",
+      algebra: "جبر",
+      geometry: "هندسة",
+      sciense: "علوم",
+      ict: "حاسب آلي",
+      religious: "تربية دينية",
+      art: "تربية فنية",
+      reservasionconfirm: "مؤكد",
+    };
+    return subjectMap[subject] || subject;
+  }, []);
 
-  }else{
-setStudentsDataItems(filteredData)
+  // Get subjects from student object
+  const getStudentSubjects = useCallback(
+    (student) => {
+      return Object.keys(student)
+        .filter((key) => student[key] === true)
+        .map(getSubjectName);
+    },
+    [getSubjectName],
+  );
 
-  
-  }
-}
+  // Current page data
+  const currentPageData = useMemo(() => {
+    return chunks[chunkNumber] || [];
+  }, [chunks, chunkNumber]);
+
+  // Loading skeleton
+  const LoadingSkeleton = () => (
+    <div className="animate-pulse space-y-4">
+      {[...Array(3)].map((_, i) => (
+        <div
+          key={i}
+          className="rounded-lg border border-gray-200 bg-gray-50 p-4"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex-1 space-y-2">
+              <div className="h-4 w-32 rounded bg-gray-300"></div>
+              <div className="h-3 w-20 rounded bg-gray-300"></div>
+            </div>
+            <div className="h-6 w-16 rounded bg-gray-300"></div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+  // Empty state
+  const EmptyState = () => (
+    <div className="py-8 text-center">
+      <p className="text-gray-500">لا توجد طلبات حالياً</p>
+    </div>
+  );
+
   return (
-  
     <section className="flex w-full flex-col rounded-xl border border-gray-200 bg-white shadow-sm">
       <div className="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-6 py-4">
         <h4 className="text-xl font-bold text-blue-600">أحدث الطلبات</h4>
@@ -74,6 +148,7 @@ setStudentsDataItems(filteredData)
               type="text"
               placeholder="بحث باسم الطالب أو رقم الطلب..."
               onChange={(e) => searcher(e.target.value)}
+              value={inputText}
             />
             <span className="material-symbols-outlined pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-sm text-gray-500">
               search
@@ -84,124 +159,116 @@ setStudentsDataItems(filteredData)
           </button>
         </div>
       </div>
-      {studentsDataItems[0]? <Pagination setChunkNumber={setChunkNumber} chunkNumber={chunkNumber} studentsDataItems={studentsDataItems}/> : ''}
+
+      {studentsDataItems.length > 0 && (
+        <Pagination
+          setChunkNumber={setChunkNumber}
+          chunkNumber={chunkNumber}
+          studentsDataItems={studentsDataItems}
+          totalPages={chunks.length}
+        />
+      )}
+
       <div className="space-y-2 p-6">
-        {/* Accordion Item 1 */}
-        {!studentsDataItems[0] ? 
-          <div>
-           
-<div role="status" className="max-w-sm animate-pulse">
-    <div className="h-2.5 my-4 bg-gray-300 rounded-full w-48 "></div>
-    <div className="h-2 my-4 bg-gray-300 rounded-full w-100 "></div>
-    <div className="h-2 my-4 bg-gray-300 rounded-full w-75 "></div>
-    <div className="h-2 my-4 bg-gray-300 rounded-full w-80 "></div>
-    <div className="h-2 my-4 bg-gray-300 rounded-full w-90 "></div>
-    <div className="h-2 my-4 bg-gray-300 rounded-full w-80"></div>
-    <span className="sr-only">Loading...</span>
-</div>
+        {isLoading ? (
+          <LoadingSkeleton />
+        ) : studentsDataItems.length === 0 ? (
+          <EmptyState />
+        ) : (
+          currentPageData.map((student, index) => {
+            const isExpanded = expandedIndex === chunkNumber * 10 + index;
+            const subjects = getStudentSubjects(student);
+            const date = new Date(student?.preservedate);
 
-
-</div>
-         : (
-          chunks[chunkNumber]?.map((student,index) => {
-            // console.log(student[chunkNumber])
             return (
               <div
-                onClick={(e) =>opener(e)}
-                key={index}
-                className="max-h-[60px] overflow-hidden rounded-lg border border-gray-200/30 bg-gray-50 transition-all duration-300"
+                key={student._id || index}
+                className={`overflow-hidden rounded-lg border border-gray-200 bg-gray-50 shadow shadow-gray-200 transition-all duration-300 ${
+                  isExpanded ? "max-h-[500px]" : "max-h-[60px]"
+                }`}
               >
                 <button
-                  className="flex w-full items-center justify-between p-4 text-right transition-colors hover:bg-gray-200 cursor-pointer"
-                
+                  className="flex w-full cursor-pointer items-center justify-between p-4 text-right transition-colors hover:bg-gray-200"
+                  onClick={() => toggleAccordion(chunkNumber * 10 + index)}
                 >
                   <div className="flex flex-col">
                     <span className="text-base font-bold text-gray-900">
-                      {student?.studentname}
+                      {student?.studentname || "غير معروف"}
                     </span>
                     <span className="text-xs text-gray-600">
-                      #{student?.reservationnumber}
+                      #{student?.reservationnumber || "N/A"}
                     </span>
                   </div>
-                                     {/* <span
-                      className={`material-symbols-outlined rotate-180} text-gray-500 transition-transform duration-300`}
-                    >
-                      expand_more
-                    </span> */}
                   <div className="flex items-center gap-4">
                     <span className="rounded-full bg-teal-100 px-3 py-1 text-xs font-bold text-teal-800">
                       مراجعة
                     </span>
- 
+                    <span className="material-symbols-outlined text-gray-500 transition-transform duration-300">
+                      expand_more
+                    </span>
                   </div>
                 </button>
-                <div
-                  className={`max-h-[500px]} overflow-hidden transition-all duration-300`}
-                >
-                  <div className="space-y-2 border-t border-gray-200/30 bg-white p-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <p className="mb-1 text-xs text-gray-600">
-                          تاريخ الطلب
-                        </p>
-                        <p className="text-sm font-bold">{student?.preservedate}</p>
-                      </div>
-                      <div>
-                        <p className="mb-1 text-xs text-gray-600">
-                          المواد المطلوبة
-                        </p>
-                        <p className="text-sm font-bold flex flex-row gap-2">
-                         <>
-                {" "}
-                {Object.keys(student)
-                  .filter((key) => student[key] === true)
-                  .map((subject) => (
-                    <span
-                      key={subject}
-                      className="flex flex-row cursor-pointer items-center font-bold"
-                    >
-                      {subject === "arabic"
-                        ? "لغة عربية"
-                        : subject === "english"
-                          ? "لغة إنجليزية"
-                          : subject === "social"
-                            ? "دراسات إجتماعية"
-                            : subject === "algebra"
-                              ? "جبر"
-                              : subject === "geometry"
-                                ? "هندسة"
-                                : subject === "sciense"
-                                  ? "علوم"
-                                  : subject === "ict"
-                                    ? "حاسب آلي"
-                                    : subject === "religious"
-                                      ? "تربية دينية"
-                                      : subject === "art"
-                                        ? "تربية فنية"
-                                        : ""}
-                    </span>
-                  ))}
-              </>
-                        </p>
-                      </div>
-                      <div>
-                        <p className="mb-1 text-xs text-gray-600"> عدد المواد</p>
-                        <p className="text-sm font-bold">  {
-                  student.subjectnumber
-                } </p>
-                <div>
-                   <p className="mb-1 text-xs text-gray-600"> التكلفة </p>
-                  <p className="text-sm font-bold">{student?.totalcost} جنيها</p>
-                </div>
-                      </div>
-                      <div>
-                        <p className="mb-1 text-xs text-gray-600">
-                         رقم الجلوس
-                        </p>
+
+                <div className="border-t border-gray-200/30 bg-white p-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="mb-1 text-xs text-gray-600">تاريخ الطلب</p>
+                      <p className="text-sm font-bold">
+                        {
+                        date.toLocaleDateString("ar-EG",{
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        }) || "غير محدد"}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="mb-1 text-xs text-gray-600">
+                        المواد المطلوبة
+                      </p>
+                      <p className="flex flex-wrap gap-2 text-sm font-bold">
+                        {subjects.length > 0 ? (
+                          subjects.map((subject, idx) => (
+                            <span
+                              key={idx}
+                              className={`rounded  px-2 py-1 text-xs ${
+                                subject === "مؤكد"
+                                  ? `bg-blue-200 text-teal-800`
+                                  : "bg-gray-100 text-gray-600"
+                              }`}
+                            >
+                              {subject}
+                            </span>
+                          ))
+                        ) : (
+                          <span className="text-gray-400">لا توجد مواد</span>
+                        )}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="mb-1 text-xs text-gray-600">عدد المواد</p>
+                      <p className="text-sm font-bold">
+                        {student?.subjectnumber || 0}
+                      </p>
+                      <div className="mt-2">
+                        <p className="mb-1 text-xs text-gray-600">التكلفة</p>
                         <p className="text-sm font-bold">
-                            {student?.seatnum} 
+                          {student?.totalcost || 0} جنيها
                         </p>
                       </div>
+                    </div>
+                    <div>
+                      <p className="mb-1 text-xs text-gray-600">رقم الجلوس</p>
+                      <p className="text-sm font-bold">
+                        {student?.seatnum || "N/A"}
+                      </p>
+                                        <div>
+                      <p className="mb-1 text-xs text-gray-600"> رقم المجموعة</p>
+                      <p className="text-sm font-bold">
+                        {student?.groupnumber || "لم يتحدد المجموهة بعد"}
+                      </p>
+
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -209,81 +276,7 @@ setStudentsDataItems(filteredData)
             );
           })
         )}
-
-        {/* Accordion Item 2 */}
-        {/* <div className="overflow-hidden rounded-lg border border-gray-200/30 bg-gray-50">
-          <button
-            className="flex w-full items-center justify-between p-4 text-right transition-colors hover:bg-gray-100"
-            
-          >
-            <div className="flex flex-col">
-              <span className="text-base font-bold text-gray-900">
-                سارة يوسف إبراهيم
-              </span>
-              <span className="text-xs text-gray-600">#RQ-8819</span>
-            </div>
-            <div className="flex items-center gap-4">
-              <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-800">
-                مكتمل
-              </span>
-              <span
-                className={`material-symbols-outlined text-gray-500 transition-transform duration-300  rotate-180}`}
-              >
-                expand_more
-              </span>
-            </div>
-          </button>
-          <div
-            className={`overflow-hidden transition-all duration-300 max-h-[500px]`}
-          >
-            <div className="space-y-2 border-t border-gray-200/30 bg-white p-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="mb-1 text-xs text-gray-600">تاريخ الطلب</p>
-                  <p className="text-sm font-bold">23 أكتوبر 2023</p>
-                </div>
-                <div>
-                  <p className="mb-1 text-xs text-gray-600">المواد المطلوبة</p>
-                  <p className="text-sm font-bold">اللغة الإنجليزية، العلوم</p>
-                </div>
-                <div>
-                  <p className="mb-1 text-xs text-gray-600">النتيجة النهائية</p>
-                  <p className="text-sm font-bold text-blue-600">
-                    تم تعديل الدرجة (+2)
-                  </p>
-                </div>
-                <div>
-                  <p className="mb-1 text-xs text-gray-600">تاريخ الاعتماد</p>
-                  <p className="text-sm font-bold">25 أكتوبر 2023</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> */}
       </div>
-      {/* <nav aria-label="Page navigation example">
-  <ul className="flex -space-x-px text-sm">
-    <li>
-      <a href="#" className="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-s-base text-sm w-9 h-9 focus:outline-none">
-        <span className="sr-only">Previous</span>
-        <svg className="w-4 h-4 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 19-7-7 7-7"/></svg>
-      </a>
-    </li>
-
-    <li>
-      <a href="#" className="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium text-sm w-9 h-9 focus:outline-none">1</a>
-    </li>
-   
-
-    <li>
-      <a href="#" className="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-e-base text-sm w-9 h-9 focus:outline-none">
-        <span className="sr-only">Next</span>
-        <svg className="w-4 h-4 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/></svg>
-      </a>
-    </li>
-  </ul>
-</nav> */}
-
     </section>
   );
 };
