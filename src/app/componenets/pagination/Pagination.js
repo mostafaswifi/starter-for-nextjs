@@ -1,7 +1,7 @@
 const Pagination = ({ studentsDataItems,chunkNumber,setChunkNumber }) => {
   const totalPages = Math.ceil(studentsDataItems?.length / 10);
-console.log(studentsDataItems)
-console.log(chunkNumber)
+// console.log(studentsDataItems)
+// console.log(chunkNumber)
 
 
   let paginator = () => {

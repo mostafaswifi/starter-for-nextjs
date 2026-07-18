@@ -1,6 +1,6 @@
 import { useState } from 'react'
 const DevideStudentsToGroups = ({data}) => {
-  console.log(data[0]);
+  // console.log(data[0]);
   
   return (
               <div className="gap-4 flex flex-col">

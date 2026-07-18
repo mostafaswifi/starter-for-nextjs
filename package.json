@@ -21,7 +21,8 @@
     "react-dom": "^19.1.2",
     "sweetalert2": "^11.26.25",
     "tailwindcss": "^4.1.11",
-    "uuid": "^14.0.1"
+    "uuid": "^14.0.1",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
     "prettier": "3.6.2",

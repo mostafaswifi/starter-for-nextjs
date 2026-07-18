@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import UploadFile from "../uploadfile/UploadFile";
 const RevisionStartDate = ({data,handleAlterDate}) => {
   // console.log(data[0]);
   const [enddate, setEndDate] = useState(data[0]?.enddate.substring(0, 10));
@@ -10,6 +11,9 @@ const RevisionStartDate = ({data,handleAlterDate}) => {
   // console.log(enddate?.substring(0, 10));
   return (
     <div className="mb-8 grid grid-cols-2 gap-4">
+      <section className="rounded-xl col-span-2 border border-gray-200 bg-white p-6 shadow-sm">
+        <UploadFile />
+      </section>
       <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
         <h4 className="mb-6 flex items-center gap-2 text-xl font-bold text-blue-600">
           <span className="material-symbols-outlined">calendar_month</span>
@@ -96,6 +100,7 @@ const RevisionStartDate = ({data,handleAlterDate}) => {
           </button>
         </div>
       </section>
+      
     </div>
   );
 };

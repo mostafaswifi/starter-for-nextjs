@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 
 const Statistics = ({data}) => {
-  console.log(data[0])
+  // console.log(data[0])
 const [studentsDataItems, setStudentsDataItems] = useState([]);
 const studentsData =async ()=>{
   const data =await fetch('/api/getAllStudents').then(res => res.json()).then(data =>data.data);
@@ -17,8 +17,8 @@ useEffect(() => {
   studentsData();
   
 }, []);
-console.log(studentsDataItems);
-console.log(studentsDataItems?.filter(student => student?.reservasionconfirm == true).length)
+// console.log(studentsDataItems);
+// console.log(studentsDataItems?.filter(student => student?.reservasionconfirm == true).length)
   return (
     <div>
       <div className="flex flex-col w-full">
