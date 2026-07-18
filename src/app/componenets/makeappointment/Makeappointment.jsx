@@ -38,9 +38,10 @@ const Makeappointment = ({
     items = {
       ...items,
       subjectnumber: checkedsubjects.length,
-      $updatedAt: new Date().toISOString(),
+      $updatedAt: new Date().toLocaleString(),
       totalcost: checkedsubjects.length * 35 + 5,
       reservationnumber: uuid(options),
+      preservedate: new Date().toLocaleString(),
     };
     const response = await fetch("/api/put-student", {
       method: "PUT",

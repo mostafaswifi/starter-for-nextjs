@@ -1,5 +1,5 @@
-// lib/appwrite.ts
-import { Client, TablesDB, Databases, ID, Query } from 'appwrite';
+// lib/appwriteStudentsData.js
+import { Client, Databases, ID, Query } from 'appwrite';
 
 // Client-side client (for browser)
 export const client = new Client()
@@ -9,11 +9,9 @@ export const client = new Client()
 // Server-side client (for API routes)
 export const serverClient = new Client()
     .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT)
-    .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID)
-    .setKey(process.env.APPWRITE_API_KEY); // API key for server operations
+    .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID);
 
-// Database service instances
-export const tablesDB = new TablesDB(serverClient);
+// For server-side operations, use the API key directly in the Databases constructor
 export const databases = new Databases(serverClient);
 
 // Export helpers
