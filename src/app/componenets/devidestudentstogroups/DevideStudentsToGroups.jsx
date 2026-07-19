@@ -1,6 +1,8 @@
+
 import { useState } from 'react'
 const DevideStudentsToGroups = ({data}) => {
   // console.log(data[0]);
+  const [numberforeachgroup, setNumberForEachGroup] = useState(data[0].numberforeachgroup);
   
   return (
               <div className="gap-4 flex flex-col">
@@ -14,8 +16,11 @@ const DevideStudentsToGroups = ({data}) => {
                       السعة القصوى:
                     </label>
                     <input
+                    onChange={(e)=>setNumberForEachGroup(Number(e.target.value))}
                       type="number"
-                      defaultValue="2"
+                      min="1"
+                      max="500"
+                      value={numberforeachgroup}
                       className="w-16 p-2 border border-gray-300 rounded-lg bg-white text-sm focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none transition-all"
                     />
                   </div>

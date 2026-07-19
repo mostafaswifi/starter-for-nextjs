@@ -168,7 +168,7 @@ const Makeappointment = ({
                   className="bg-surface-container-low focus:ring-primary w-full rounded-lg border-1 p-2 transition-all placeholder:text-slate-400 focus:ring-2"
                   placeholder="مثال: 123456"
                   type="text"
-                  value={nationalid}
+                  value={items?.nationalid || nationalid}
                   onChange={(e) => handleNationalid(e)}
                 />
               </div>

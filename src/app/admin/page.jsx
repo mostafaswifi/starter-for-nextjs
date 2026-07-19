@@ -178,7 +178,7 @@ const handleLogout = () => {
                   >
                     <span className="flex items-center gap-2">
                       <span className="material-symbols-outlined">history</span>
-                      أحدث الطلبات
+                      عرض كافةالطلبات
                     </span>
                     <span className="material-symbols-outlined">
                       chevron_left
