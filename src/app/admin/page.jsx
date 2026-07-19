@@ -113,7 +113,7 @@ const handleLogout = () => {
                       <span className="material-symbols-outlined">
                         calendar_month
                       </span>
-                      تقويم المراجعة
+                      التقويمات و بيانات الطلاب
                     </span>
                     <span className="material-symbols-outlined">
                       chevron_left

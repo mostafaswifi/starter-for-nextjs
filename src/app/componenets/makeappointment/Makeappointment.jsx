@@ -9,6 +9,8 @@ const Makeappointment = ({
   fetchItems,
   setItems,
   items,
+  nationalid,
+  setNationalid,
 }) => {
   const [openkey, setOpenkey] = useState(false);
   const checkedsubjects = [];
@@ -29,6 +31,14 @@ const Makeappointment = ({
     setSeatNumber(e.target.value);
   };
 
+  const handleNationalid = (e) => {
+
+    
+    setNationalid(e.target.value);
+
+   
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const checkedsubjects = Object.keys(items).filter(
@@ -42,6 +52,7 @@ const Makeappointment = ({
       totalcost: checkedsubjects.length * 35 + 5,
       reservationnumber: uuid(options),
       preservedate: new Date().toLocaleString(),
+      nationalid: nationalid,
     };
     const response = await fetch("/api/put-student", {
       method: "PUT",
@@ -137,18 +148,30 @@ const Makeappointment = ({
               {openkey ? (
                 <>
                   {" "}
-                  <div className="space-y-2">
+                  <div className="space-y-2 col-span-2">
                     <label className="text-secondary block px-1 text-sm font-semibold">
                       اسم الطالب رباعي / خماسي
                     </label>
                     <input
-                      className="bg-surface-container-low focus:ring-primary w-full rounded-lg border-0 p-3 transition-all placeholder:text-slate-400 focus:ring-2"
+                      className="bg-gray-200 focus:ring-primary w-full rounded-lg border-0 p-3 transition-all placeholder:text-slate-400 focus:ring-2"
                       placeholder="أدخل اسمك كما هو في البطاقة"
                       type="text"
                       value={items?.studentname}
                       readOnly
                     />
                   </div>
+                  <div className="space-y-2 col-span-2">
+                <label className="text-secondary block px-1 text-sm font-semibold" >
+                  أدخل الرقم القومي للطالب (  من واقع شهادة ميلاد الطالب !!! )
+                </label>
+                <input
+                  className="bg-surface-container-low focus:ring-primary w-full rounded-lg border-1 p-2 transition-all placeholder:text-slate-400 focus:ring-2"
+                  placeholder="مثال: 123456"
+                  type="text"
+                  value={nationalid}
+                  onChange={(e) => handleNationalid(e)}
+                />
+              </div>
                   <div className="space-y-2">
                     <label className="text-secondary block px-1 text-sm font-semibold">
                       الإدارة التعليمية
@@ -196,7 +219,7 @@ const Makeappointment = ({
             <div className="space-y-6">
               <div className="flex items-center justify-between border-r-4 border-blue-700 pr-4">
                 <h2 className="text-on-surface text-xl font-bold">
-                  مواد إعادة التصحيح
+أنقر علي المواد المطلوب إعادة تصحيحها 
                 </h2>
                 <span className="text-on-secondary-fixed-variant rounded-full bg-gray-200 px-3 py-1 text-xs font-medium">
                   اختر مادة واحدة أو أكثر
@@ -363,7 +386,9 @@ const Makeappointment = ({
           )}
         </div>
         {openkey && (
-          <div className="bg-surface-container-lowest space-y-10 rounded-xl p-8 shadow-sm">
+          <div className="bg-surface-container-lowest space-y-10 rounded-xl p-8 shadow-sm "> 
+<p className="flex items-center justify-between border-r-4 border-blue-700 pr-4 text-2xl font-bold">          ملخص الطلب
+</p>
             <div className="flex flex-col items-center gap-4 ">
               <span className="font-semibold border-r-4 border-blue-700 pr-4 bg-gray-200 p-4 rounded-lg shadow-md transition-colors hover:bg-gray-300 w-full text-center">
                 {" "}

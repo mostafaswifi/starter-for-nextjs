@@ -1,11 +1,12 @@
 "use client";
 import * as XLSX from "xlsx";
 import { useState } from "react";
-
+import {swalAlert} from "../../../lib/swal";
 const UploadFile = () => {
   const [finalData, setFinalData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState(null);
+  const [password, setPassword] = useState("");
 
   const handleFile = async (e) => {
     const file = await e.target.files[0];
@@ -37,7 +38,8 @@ const UploadFile = () => {
       // console.log(result);
       
       if (result.success) {
-        setMessage(`Successfully uploaded ${result.count} students!`);
+        setMessage(`تم بنجاح رفع  ${result.count} طالب!`);
+        swalAlert("تم رفع الملف بنجاح"," عملية رفع الملف بنجاح","success","موافق");
       } else {
         setMessage(`Error: ${result.error}`);
       }
@@ -49,9 +51,33 @@ const UploadFile = () => {
     }
   };
 
+  const handleDelete =() =>{
+
+    const response = fetch("/api/addallstudents", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    response.then((res) => {
+      if (res.ok) {
+        swalAlert("تم حذف الملف بنجاح"," عملية حذف الملف بنجاح","success","موافق");
+      }
+    })
+  }
+
+  const showDeleteButton = ()=>{
+    if (password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD){
+      
+      return (
+         <button className="m-4 mt-4 flex items-center justify-center rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 w-full" onClick={handleDelete}> حذف جميع الطلاب</button> 
+      )
+    }
+  }
+
   return (
     <div className="flex w-full flex-col items-center justify-center gap-4">
-      <div className="bg-neutral-secondary-medium border-default-strong rounded-base flex h-64 w-full flex-col items-center justify-center">
+      <div className=" bg-neutral-secondary-medium border-default-strong rounded-base flex h-90 w-full flex-col items-center justify-center">
         <div className="text-body flex flex-col items-center justify-center pt-5 pb-6">
           <svg
             className="mb-4 h-8 w-8"
@@ -70,12 +96,12 @@ const UploadFile = () => {
               d="M12 5v9m-5 0H5a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1h-2M8 9l4-5 4 5m1 8h.01"
             />
           </svg>
-          <p className="mb-2 text-sm">Click the button below to upload</p>
+          <p className="mb-2 text-sm">أنقر الزر التالي لرفع الملف</p>
           <p className="mb-4 text-xs">
-            Max. File Size: <span className="font-semibold">30MB</span>
+            أكبر حجم مسموح: <span className="font-semibold">30MB</span>
           </p>
           <div className="flex items-center justify-center gap-2 rounded-lg bg-blue-700 px-4 py-2 text-sm font-medium text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-            <label htmlFor="file">Choose file to upload</label>
+            <label htmlFor="file">اختر ملف بيانات الطلاب</label>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="ml-2 h-4 w-4"
@@ -100,6 +126,11 @@ const UploadFile = () => {
             />
           </div>
         </div>
+      <div className="flex flex-col items-center justify-center">
+          <p>لحذف جميع الطلاب ادخل كلمة المرور</p>
+        <input type="password" className="my-4 rounded-lg border border-gray-300 bg-gray-50 p-4 pr-12 text-base transition-all outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600" onChange={(e)=>setPassword(e.target.value)}/>
+           {showDeleteButton()}
+      </div>
       </div>
       
       {isLoading && <p className="text-blue-600">Uploading students...</p>}
