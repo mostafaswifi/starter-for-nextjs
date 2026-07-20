@@ -1,9 +1,31 @@
 
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 const DevideStudentsToGroups = ({data}) => {
-  // console.log(data[0]);
-  const [numberforeachgroup, setNumberForEachGroup] = useState(data[0].numberforeachgroup);
+  console.log(data);
   
+  const [numberforeachgroup, setNumberForEachGroup] = useState(data[0].numberforeachgroup);
+  const [students, setStudents] = useState([]);
+  const getAllStudents = async () => {
+    try {
+      const response = await fetch("/api/getAllStudents");
+      const result = await response.json();
+      if (result.success) {
+        setStudents(result.data);
+        console.log("Fetched items:", result.data);
+      }
+    } catch (error) {
+      console.error("Error fetching items:", error);
+    }
+  }
+  useEffect(() => {
+    getAllStudents();
+  },[])
+
+const devideStudentsToGroups =async()=>{
+    for(let i = 1; i <= numberforeachgroup; i++){
+      
+    }
+}
   return (
               <div className="gap-4 flex flex-col">
               <section className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
@@ -24,7 +46,7 @@ const DevideStudentsToGroups = ({data}) => {
                       className="w-16 p-2 border border-gray-300 rounded-lg bg-white text-sm focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none transition-all"
                     />
                   </div>
-                  <button className="bg-blue-600 text-white px-6 py-2 rounded-lg font-bold text-sm hover:bg-blue-700 hover:-translate-y-0.5 hover:shadow-md transition-all gap-2 flex items-center">
+                  <button onClick={() => getAllStudents()} className="bg-blue-600 text-white px-6 py-2 rounded-lg font-bold text-sm hover:bg-blue-700 hover:-translate-y-0.5 hover:shadow-md transition-all gap-2 flex items-center">
                     <span className="material-symbols-outlined">group_add</span>
                     توزيع في مجموعات
                   </button>

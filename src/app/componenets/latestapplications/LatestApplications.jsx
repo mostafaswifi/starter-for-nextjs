@@ -142,6 +142,10 @@ const LatestApplications = () => {
       <div className="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-6 py-4">
         <h4 className="text-xl font-bold text-blue-600">أحدث الطلبات</h4>
         <div className="mr-4 flex flex-grow items-center justify-end gap-4">
+          <span className="text-xs font-bold text-gray-500">
+            {" "}
+            إجمالي عدد الطلبات : {studentsDataItems.length}
+          </span>
           <div className="relative w-full max-w-xs">
             <input
               className="w-full rounded-lg border border-gray-300 bg-white p-2 pr-10 text-sm transition-all outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600"
@@ -192,11 +196,16 @@ const LatestApplications = () => {
                   onClick={() => toggleAccordion(chunkNumber * 10 + index)}
                 >
                   <div className="flex flex-col">
-                    <span className="text-base font-bold text-gray-900">
-                      {student?.studentname || "غير معروف"}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-base font-bold text-gray-900">
+                        {index + 1} -{" "}
+                      </span>
+                      <span className="text-base font-bold text-gray-900">
+                        {student?.studentname || "غير معروف"}
+                      </span>
+                    </div>
                     <span className="text-xs text-gray-600">
-                      #{student?.reservationnumber || "N/A"}
+                      #{student?.reservationnumber || "غير معروف"}
                     </span>
                   </div>
                   <div className="flex items-center gap-4">
@@ -214,8 +223,7 @@ const LatestApplications = () => {
                     <div>
                       <p className="mb-1 text-xs text-gray-600">تاريخ الطلب</p>
                       <p className="text-sm font-bold">
-                        {
-                        date.toLocaleDateString("ar-EG",{
+                        {date.toLocaleDateString("ar-EG", {
                           year: "numeric",
                           month: "long",
                           day: "numeric",
@@ -231,7 +239,7 @@ const LatestApplications = () => {
                           subjects.map((subject, idx) => (
                             <span
                               key={idx}
-                              className={`rounded  px-2 py-1 text-xs ${
+                              className={`rounded px-2 py-1 text-xs ${
                                 subject === "مؤكد"
                                   ? `bg-blue-200 text-teal-800`
                                   : "bg-gray-100 text-gray-600"
@@ -262,13 +270,15 @@ const LatestApplications = () => {
                       <p className="text-sm font-bold">
                         {student?.seatnum || "N/A"}
                       </p>
-                                        <div>
-                      <p className="mb-1 text-xs text-gray-600"> رقم المجموعة</p>
-                      <p className="text-sm font-bold">
-                        {student?.groupnumber || "لم يتحدد المجموهة بعد"}
-                      </p>
-
-                    </div>
+                      <div>
+                        <p className="mb-1 text-xs text-gray-600">
+                          {" "}
+                          رقم المجموعة
+                        </p>
+                        <p className="text-sm font-bold">
+                          {student?.groupnumber || "لم يتحدد المجموهة بعد"}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
