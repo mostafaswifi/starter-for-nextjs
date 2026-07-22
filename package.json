@@ -11,6 +11,7 @@
   "dependencies": {
     "@appwrite.io/pink-icons": "^1.0.0",
     "@tailwindcss/postcss": "^4.1.11",
+    "@tesseract.js-data/ara": "^1.0.0",
     "appwrite": "^18.1.1",
     "bwip-js": "^4.11.2",
     "modern-rdp-pro": "^1.4.2",
@@ -21,6 +22,7 @@
     "react-dom": "^19.1.2",
     "sweetalert2": "^11.26.25",
     "tailwindcss": "^4.1.11",
+    "tesseract.js": "^7.0.0",
     "uuid": "^14.0.1",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },

@@ -4,12 +4,12 @@ import Confirmation from "../componenets/confirmation/Confirmation";
 import Makeappointment from "../componenets/makeappointment/Makeappointment";
 import Print from "../componenets/print/Print";
 import Receipt from "../componenets/receipt/Reciept";
-import {swalAlert} from "../../lib/swal";
+
+
 const Appointment = () => {
   const [step, setStep] = useState(1);
   const [items, setItems] = useState([]);
   const [studentData, setStudentData] = useState(null); // Initialize studentData as null
-  // const [formData, setFormData] = useState({ title: '', description: '' });
  
   const [seatNumber, setSeatNumber] = useState(``);
   const [nationalid, setNationalid] = useState(``);
