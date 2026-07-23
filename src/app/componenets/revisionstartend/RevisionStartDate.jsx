@@ -2,16 +2,54 @@
 
 import { useState } from "react";
 import UploadFile from "../uploadfile/UploadFile";
-const RevisionStartDate = ({data,handleAlterDate}) => {
+const RevisionStartDate = ({ data, handleAlterDate }) => {
   // console.log(data[0]);
   const [enddate, setEndDate] = useState(data[0]?.enddate.substring(0, 10));
-  const [startdate, setStartDate] = useState(data[0]?.startdate.substring(0, 10));
-  const [revisestartdate, setRevisionStartDate] = useState(data[0]?.revisestartdate.substring(0, 10));
-  const [reviseenddate, setRevisionEndDate] = useState(data[0]?.reviseenddate.substring(0, 10));
+  const [startdate, setStartDate] = useState(
+    data[0]?.startdate.substring(0, 10),
+  );
+  const [revisestartdate, setRevisionStartDate] = useState(
+    data[0]?.revisestartdate.substring(0, 10),
+  );
+  const [reviseenddate, setRevisionEndDate] = useState(
+    data[0]?.reviseenddate.substring(0, 10),
+  );
+
+  const [avDates, setAvDates] = useState([]);
   // console.log(enddate?.substring(0, 10));
+
+  const handleDates = () => {
+    const startData = data[0];
+    if (!startData?.startdate || !startData?.enddate) {
+      console.log("Missing start or end date");
+      return [];
+    }
+
+    const start = new Date(startData.startdate);
+    const end = new Date(startData.enddate);
+
+    if (isNaN(start) || isNaN(end)) {
+      console.log("Invalid date format");
+      return [];
+    }
+
+    let datesArr = [];
+    let current = new Date(start);
+
+    while (current <= end) {
+      datesArr.push(current.toLocaleDateString());
+      current.setDate(current.getDate() + 1);
+    }
+    datesArr = datesArr.filter((date) => {
+      const dayOfWeek = new Date(date).getDay();
+      return dayOfWeek !== 5 && dayOfWeek !== 6;
+    });
+
+    setAvDates(datesArr);
+  };
   return (
     <div className="mb-8 grid grid-cols-2 gap-4">
-      <section className="rounded-xl col-span-2 border border-gray-200 bg-white p-6 shadow-sm">
+      <section className="col-span-2 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
         <UploadFile />
       </section>
       <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
@@ -52,7 +90,12 @@ const RevisionStartDate = ({data,handleAlterDate}) => {
               </span>
             </div>
           </div>
-          <button onClick={() => handleAlterDate("1", {...data[0], startdate, enddate})} className="mt-4 w-full rounded-lg bg-blue-600 px-6 py-4 font-bold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md">
+          <button
+            onClick={() =>
+              handleAlterDate("1", { ...data[0], startdate, enddate })
+            }
+            className="mt-4 w-full rounded-lg bg-blue-600 px-6 py-4 font-bold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md"
+          >
             تحديث الفترة
           </button>
         </div>
@@ -60,7 +103,7 @@ const RevisionStartDate = ({data,handleAlterDate}) => {
       <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
         <h4 className="mb-6 flex items-center gap-2 text-xl font-bold text-blue-600">
           <span className="material-symbols-outlined">calendar_month</span>
-       فترة تلقي الطلبات
+          فترة تلقي الطلبات
         </h4>
         <div className="space-y-4">
           <div className="flex flex-col gap-1">
@@ -95,12 +138,75 @@ const RevisionStartDate = ({data,handleAlterDate}) => {
               </span>
             </div>
           </div>
-          <button onClick={() => handleAlterDate("1", {...data[0], revisestartdate, reviseenddate})} className="mt-4 w-full rounded-lg bg-blue-600 px-6 py-4 font-bold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md">
+          <button
+            onClick={() =>
+              handleAlterDate("1", {
+                ...data[0],
+                revisestartdate,
+                reviseenddate,
+              })
+            }
+            className="mt-4 w-full rounded-lg bg-blue-600 px-6 py-4 font-bold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md"
+          >
             تحديث الفترة
           </button>
         </div>
       </section>
-      
+
+      <section
+        className="rounded-custom col-span-2 border border-slate-100 bg-white p-6 shadow-sm"
+        data-purpose="available-dates-management"
+      >
+        <div className="mb-6 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-primary text-xl">🕒</span>
+            <h3 className="text-lg font-bold text-slate-800">
+              المواعيد المتاحة
+            </h3>
+          </div>
+          <button
+            className="text-primary text-sm font-semibold hover:underline"
+            onClick={handleDates}
+          >
+            عرض الكل
+          </button>
+        </div>
+
+        <div className="grid grid-cols-6 gap-4 pb-4">
+          {avDates.map((date, index) => (
+            <div
+              key={index}
+              className="group flex cursor-pointer flex-col items-center gap-3 rounded-2xl border border-gray-300  bg-gray-200 p-6 shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-gray-300"
+            >
+              <span className="material-symbols-outlined text-2xl text-sky-600 group-hover:scale-110 group-hover:rotate-[-8deg]">
+                event
+              </span>
+              <span className="text-sm font-medium text-sky-900">{date}</span>
+              <span className="text-xs text-sky-600">
+                {new Date(date).getDay() == 1
+                  ? "الاثنين"
+                  : new Date(date).getDay() == 2
+                    ? "الثلاثاء"
+                    : new Date(date).getDay() == 3
+                      ? "الأربعاء"
+                      : new Date(date).getDay() == 4
+                        ? "الخميس"
+                        : new Date(date).getDay() == 5
+                          ? "الجمعة"
+                          : new Date(date).getDay() == 6
+                            ? "السبت"
+                            : "الأحد"}
+              </span>
+              <div className="h-0.5 w-8 rounded-full bg-gradient-to-r from-sky-400 to-blue-400" />
+            </div>
+          ))}
+        </div>
+        {/* <div className="mt-6 flex justify-end">
+          <button className="border-primary text-primary hover:bg-primary rounded-custom border px-6 py-2 font-semibold transition-all hover:text-white">
+            إضافة موعد جديد +
+          </button>
+        </div> */}
+      </section>
     </div>
   );
 };
