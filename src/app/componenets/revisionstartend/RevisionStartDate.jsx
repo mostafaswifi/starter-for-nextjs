@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import UploadFile from "../uploadfile/UploadFile";
+import { swalAlert } from "@/lib/swal";
 const RevisionStartDate = ({ data, handleAlterDate }) => {
   // console.log(data[0]);
   const [enddate, setEndDate] = useState(data[0]?.enddate.substring(0, 10));
@@ -17,6 +18,7 @@ const RevisionStartDate = ({ data, handleAlterDate }) => {
 
   const [avDates, setAvDates] = useState([]);
   // console.log(enddate?.substring(0, 10));
+const [returnedDates, setReturnedDates] = useState([]);
 
   const handleDates = () => {
     const startData = data[0];
@@ -46,6 +48,29 @@ const RevisionStartDate = ({ data, handleAlterDate }) => {
     });
 
     setAvDates(datesArr);
+  };
+
+  const datePicker = async (e, date) => {
+    e.target.parentNode.parentNode.classList.add("hidden");
+    try {
+      const res = await fetch(`/api/avaliabledates`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          avaliabledates: date,
+         
+        }),
+      }).then((res) => res.json()).then((data) =>{
+        const localDates =  data.data.avaliabledates.slice(0, 10);
+        setReturnedDates([...returnedDates, localDates]);
+        // console.log(returnedDates);
+    })
+
+      
+      swalAlert("تم تحديث التاريخ بنجاح"," عملية تحديث التاريخ بنجاح","success","موافق");
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div className="mb-8 grid grid-cols-2 gap-4">
@@ -154,7 +179,7 @@ const RevisionStartDate = ({ data, handleAlterDate }) => {
       </section>
 
       <section
-        className="rounded-custom col-span-2 border border-slate-100 bg-white p-6 shadow-sm"
+        className="col-span-2 rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
         data-purpose="available-dates-management"
       >
         <div className="mb-6 flex items-center justify-between">
@@ -172,40 +197,39 @@ const RevisionStartDate = ({ data, handleAlterDate }) => {
           </button>
         </div>
 
-        <div className="grid grid-cols-6 gap-4 pb-4">
+        <div className="grid grid-cols-9 gap-4 pb-4">
           {avDates.map((date, index) => (
             <div
               key={index}
-              className="group flex cursor-pointer flex-col items-center gap-3 rounded-2xl border border-gray-300  bg-gray-200 p-6 shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-gray-300"
+              className="group flex cursor-pointer flex-col items-center gap-3 rounded-2xl bg-blue-100 p-6 font-semibold shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-gray-300"
+             
             >
-              <span className="material-symbols-outlined text-2xl text-sky-600 group-hover:scale-110 group-hover:rotate-[-8deg]">
-                event
-              </span>
-              <span className="text-sm font-medium text-sky-900">{date}</span>
-              <span className="text-xs text-sky-600">
-                {new Date(date).getDay() == 1
-                  ? "الاثنين"
-                  : new Date(date).getDay() == 2
-                    ? "الثلاثاء"
-                    : new Date(date).getDay() == 3
-                      ? "الأربعاء"
-                      : new Date(date).getDay() == 4
-                        ? "الخميس"
-                        : new Date(date).getDay() == 5
-                          ? "الجمعة"
-                          : new Date(date).getDay() == 6
-                            ? "السبت"
-                            : "الأحد"}
-              </span>
-              <div className="h-0.5 w-8 rounded-full bg-gradient-to-r from-sky-400 to-blue-400" />
+              <div className="flex flex-col items-center gap-2 relative">
+                <span className="material-symbols-outlined tranition-all text-2xl text-gray-600 duration-300 group-hover:scale-110 group-hover:rotate-[-8deg]">
+                  event
+                </span>
+                <span className="text-md font-medium text-sky-900 d-block "  onClick={(e) => {
+                datePicker(e, date);
+              }}>{date}</span>
+                <span className="text-xs text-gray-600">
+                  {new Date(date).getDay() == 1
+                    ? "الاثنين"
+                    : new Date(date).getDay() == 2
+                      ? "الثلاثاء"
+                      : new Date(date).getDay() == 3
+                        ? "الأربعاء"
+                        : new Date(date).getDay() == 4
+                          ? "الخميس"
+                          : new Date(date).getDay() == 5
+                            ? "الجمعة"
+                            : new Date(date).getDay() == 6
+                              ? "السبت"
+                              : "الأحد"}
+                </span>
+              </div>
             </div>
           ))}
         </div>
-        {/* <div className="mt-6 flex justify-end">
-          <button className="border-primary text-primary hover:bg-primary rounded-custom border px-6 py-2 font-semibold transition-all hover:text-white">
-            إضافة موعد جديد +
-          </button>
-        </div> */}
       </section>
     </div>
   );

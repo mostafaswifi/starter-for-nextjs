@@ -5,10 +5,10 @@ import { databases, DATABASE_ID, COLLECTION_ID, ID, Query } from '@/lib/appwrite
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { avaliabledates, completed, maxnumforeachdte, numberofaddedstudents } = body;
+    const { avaliabledates } = body;
 
     // Validate required fields
-    if (!avaliabledates || !completed || !maxnumforeachdte || !numberofaddedstudents) {
+    if (!avaliabledates ) {
       return NextResponse.json(
         { success: false, error: 'Missing required fields' },
         { status: 400 }
@@ -21,11 +21,8 @@ export async function POST(request) {
       ID.unique(),
       {
         avaliabledates,
-        completed,
-        maxnumforeachdte,
-        numberofaddedstudents,
-        createdAt: new Date().toLocaleString(),
-        updatedAt: new Date().toLocaleString(),
+        $createdAt: new Date().toLocaleString(),
+        $updatedAt: new Date().toLocaleString(),
         
       }
     );
