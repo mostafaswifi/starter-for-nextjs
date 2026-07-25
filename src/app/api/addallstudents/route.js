@@ -47,7 +47,7 @@ export async function DELETE() {
             process.env.APPWRITE_DATABASE_ID,
             process.env.APPWRITE_POSTS_COLLECTION_ID,
             [
-                Query.limit(2000) // Adjust limit if you have more than 100 documents
+                Query.limit(5000) // Adjust limit if you have more than 100 documents
             ]
         );
         

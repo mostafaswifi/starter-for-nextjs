@@ -1,10 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import UploadFile from "../uploadfile/UploadFile";
 import { swalAlert } from "@/lib/swal";
+import { redirect, useRouter } from "next/navigation";
+const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
 const RevisionStartDate = ({ data, handleAlterDate }) => {
+  const router = useRouter();
   // console.log(data[0]);
+  const [password, setPassword] = useState("");
   const [enddate, setEndDate] = useState(data[0]?.enddate.substring(0, 10));
   const [startdate, setStartDate] = useState(
     data[0]?.startdate.substring(0, 10),
@@ -15,10 +19,11 @@ const RevisionStartDate = ({ data, handleAlterDate }) => {
   const [reviseenddate, setRevisionEndDate] = useState(
     data[0]?.reviseenddate.substring(0, 10),
   );
-
+const [groupnumber, setGroupNumber] = useState(1);
   const [avDates, setAvDates] = useState([]);
   // console.log(enddate?.substring(0, 10));
 const [returnedDates, setReturnedDates] = useState([]);
+const [selectedDate, setSelectedDate] = useState([]);
 
   const handleDates = () => {
     const startData = data[0];
@@ -52,12 +57,14 @@ const [returnedDates, setReturnedDates] = useState([]);
 
   const datePicker = async (e, date) => {
     e.target.parentNode.parentNode.classList.add("hidden");
+    setGroupNumber(groupnumber + 1);
     try {
       const res = await fetch(`/api/avaliabledates`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           avaliabledates: date,
+          groupnumber: `g${groupnumber}`
          
         }),
       }).then((res) => res.json()).then((data) =>{
@@ -72,6 +79,36 @@ const [returnedDates, setReturnedDates] = useState([]);
       console.log(error);
     }
   };
+
+  const dateGrpper = async ()=>{
+     await fetch(`/api/avaliabledates`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    }).then((res) => res.json()).then((data) =>{
+      const finalDates = data?.data?.map((item) => item.avaliabledates.slice(0, 10));
+      setSelectedDate(finalDates);
+    });
+    // console.log(selectedDate);
+  }
+  useEffect(() => {
+    dateGrpper();
+    // console.log(selectedDate);
+  },[]);
+
+  const  handleDelete =()=>{
+    const response = fetch("/api/avaliabledates", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    response.then((res) => {
+      if (res.ok) {
+        swalAlert("تم حذف التاريخ بنجاح"," عملية حذف التاريخ بنجاح","success","موافق");
+      }
+     setTimeout(()=> window.location.reload(true),1500)
+    })
+  }
   return (
     <div className="mb-8 grid grid-cols-2 gap-4">
       <section className="col-span-2 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
@@ -178,7 +215,7 @@ const [returnedDates, setReturnedDates] = useState([]);
         </div>
       </section>
 
-      <section
+    {selectedDate == 0 ?<section
         className="col-span-2 rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
         data-purpose="available-dates-management"
       >
@@ -231,6 +268,55 @@ const [returnedDates, setReturnedDates] = useState([]);
           ))}
         </div>
       </section>
+      :
+<section className="col-span-2 grid grid-cols-9 gap-4 rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
+>
+      <div className="h-6 col-span-9 w-full rounded font-bold text-slate-800 ">
+      <div className="flex items-center gap-2">
+        <span className="text-primary text-xl">🕒</span>
+        <h3 className="text-lg font-bold text-slate-800">المواعيد المحددة</h3>
+        </div>
+        </div>
+
+  {selectedDate.map((date, index) => (
+  <div
+    key={index}
+    className="group flex cursor-pointer flex-col items-center  rounded-2xl bg-blue-100 p-6 font-semibold shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-gray-300"
+    
+  >
+    <div className="flex flex-col items-center gap-2 relative">
+      <span className="material-symbols-outlined tranition-all text-2xl text-gray-600 duration-300 group-hover:scale-110 group-hover:rotate-[-8deg]">
+        event
+      </span>
+      <span className="text-sm font-medium text-red-400 d-block ">{date}</span>
+      <span className="text-xs text-gray-600">
+        {new Date(date).getDay() == 1
+          ? "الاثنين"
+          : new Date(date).getDay() == 2
+            ? "الثلاثاء"
+            : new Date(date).getDay() == 3
+              ? "الأربعاء"
+              : new Date(date).getDay() == 4
+                ? "الخميس"
+                : new Date(date).getDay() == 5
+                  ? "الجمعة"
+                  : new Date(date).getDay() == 6
+                    ? "السبت"
+                    : "الأحد"}
+      </span>
+    </div>
+  </div>
+))}
+
+<div className="col-span-9 flex flex-col items-center justify-center">
+  <label htmlFor="password" className="block text-sm font-medium text-gray-700">لحذف المواعيد المحددة ادخل كلمة المرور</label>
+  <input id="password" type="password" className="my-2 rounded border border-gray-300 p-4" value={password} onChange={(e) => setPassword(e.target.value)} />
+  {password == adminPassword ? 
+  <button className="mt-4 rounded bg-red-500 px-4 py-2 text-white" onClick={handleDelete}>حذف المواعيد المحددة</button> 
+  : null}
+</div>
+</section>}
+
     </div>
   );
 };

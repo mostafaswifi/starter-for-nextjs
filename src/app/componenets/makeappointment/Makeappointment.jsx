@@ -12,6 +12,7 @@ const Makeappointment = ({
   nationalid,
   setNationalid,
 }) => {
+  const [selectedDate, setSelectedDate] = useState([]);
   const [openkey, setOpenkey] = useState(false);
   const checkedsubjects = [];
   const options = {
@@ -20,6 +21,7 @@ const Makeappointment = ({
     msecs: new Date("2011-11-01").getTime(),
     nsecs: 5678,
   };
+  const [allData,setAllData] = useState([]);
   useEffect(() => {
     if (items?.school) {
       //  console.log("Items updated:",items);
@@ -51,7 +53,6 @@ const Makeappointment = ({
       $updatedAt: new Date().toLocaleString(),
       totalcost: checkedsubjects.length * 35 + 5,
       reservationnumber: uuid(options),
-      preservedate: new Date().toLocaleString(),
       nationalid: nationalid,
     };
     const response = await fetch("/api/put-student", {
@@ -72,6 +73,63 @@ const Makeappointment = ({
     }
   };
 
+
+
+
+    const dateGrpper = async ()=>{
+     await fetch(`/api/avaliabledates`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    }).then((res) => res.json()).then((data) =>{
+      setAllData(data?.data);
+     
+      const finalDates = data?.data?.map((item) => item.avaliabledates.slice(0, 10));
+      setSelectedDate(finalDates);
+    });
+    // console.log(selectedDate);
+  }
+  useEffect(() => {
+    dateGrpper();
+    // handleDatePreserveNum();
+  },[]);
+
+
+const handleDatePreserveNum = async (e,i) => {
+  
+   
+    
+    try {
+        const response = await fetch(`/api/avaliabledates?id=${i.$id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+                $id: i.$id,
+                numberofaddedstudents: (i.numberofaddedstudents || 0) + 1 
+            }),
+        });
+        
+        if (response.ok) {
+            console.log("Date updated successfully");
+            dateGrpper();
+        } else {
+            console.error("Error updating date");
+        }
+        handleHideDates(e);
+    } catch (error) {
+        console.error('Error updating date:', error);
+        swalAlert(
+            "خطأ",
+            "حدث خطأ أثناء الاتصال بالخادم",
+            "error",
+            "موافق"
+        );
+    }
+};
+const handleHideDates = (e) => {
+  e.target.parentNode.parentNode.classList.add("hidden");
+  console.log(e.target.parentNode.parentNode.children)
+  
+};
   return (
     <section className="flex-1 overflow-y-auto p-8 lg:p-12">
       <div className="mx-auto max-w-3xl space-y-10">
@@ -382,8 +440,43 @@ const Makeappointment = ({
                   </div>
                 </label>
               </div>
+              <div className="grid grid-cols-3 gap-4">
+                <p className="text-lg font-semibold text-slate-900 col-span-3 border-r-4 border-blue-700 pr-4">اختر التاريخ</p>
+                          {selectedDate.map((date, index) => (
+ <div className="p-0 m-0" key={index} onClick={(e)=>handleDatePreserveNum(e,allData[index])}>
+   <div
+    className=" cursor-pointer flex-col items-center  rounded-2xl bg-blue-100 p-6 font-semibold shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-gray-300"
+    onClick={()=> setItems({ ...items, preservedate: date })}
+  >
+    <div className=" flex flex-col items-center gap-2 relative">
+      <span className="material-symbols-outlined tranition-all text-2xl text-gray-600 duration-300 group-hover:scale-110 group-hover:rotate-[-8deg]">
+        event
+      </span>
+      <span className="text-sm font-medium text-red-400 d-block "  >{date}</span>
+      <span className="text-xs text-gray-600">
+        {new Date(date).getDay() == 1
+          ? "الاثنين"
+          : new Date(date).getDay() == 2
+            ? "الثلاثاء"
+            : new Date(date).getDay() == 3
+              ? "الأربعاء"
+              : new Date(date).getDay() == 4
+                ? "الخميس"
+                : new Date(date).getDay() == 5
+                  ? "الجمعة"
+                  : new Date(date).getDay() == 6
+                    ? "السبت"
+                    : "الأحد"}
+      </span>
+    </div>
+  </div>
+ </div>
+))}
+</div>
             </div>
+            
           )}
+
         </div>
         {openkey && (
           <div className="bg-surface-container-lowest space-y-10 rounded-xl p-8 shadow-sm "> 
@@ -418,6 +511,9 @@ const Makeappointment = ({
                 {" "}
                 تاريخ التحديث: {items.$updatedAt}{" "}
               </span>
+              <div className="font-semibold border-r-4 border-blue-700 pr-4 bg-gray-200 p-4 rounded-lg shadow-md transition-colors hover:bg-gray-300 w-full text-center">
+              <h2>تاريخ الحجز: {new Date(items.preservedate).toLocaleDateString()}</h2>
+            </div>
             </div>
 
             <div>
@@ -456,6 +552,7 @@ const Makeappointment = ({
                   ))}
               </div>
             </div>
+            
           </div>
         )}
         {/* <div className="flex items-center justify-between py-6">
