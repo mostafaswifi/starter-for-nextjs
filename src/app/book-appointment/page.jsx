@@ -126,14 +126,14 @@ const Appointment = () => {
 
 
       <div className="mx-auto flex max-w-5xl items-center justify-between rounded-lg py-6 shadow-sm">
-        {step !== 1 && (
+        {/* {step !== 1 && (
           <button
             className="text-secondary rounded-xl bg-gray-200 px-8 py-3 font-bold transition-all hover:bg-gray-300"
             onClick={() => setStep(step - 1)}
           >
             العودة للسابق
           </button>
-        )}
+        )} */}
         {step !== 4 && (
           items?.school && <button
             className="group mr-auto flex items-center gap-2 rounded-lg bg-blue-700 bg-gradient-to-r px-12 py-3 font-bold text-white shadow-lg transition-all hover:opacity-90 active:scale-95"

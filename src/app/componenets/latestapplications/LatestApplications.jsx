@@ -9,6 +9,7 @@ const LatestApplications = () => {
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [expandedIndex, setExpandedIndex] = useState(null);
+  const [originalData, setOriginalData] = useState([]); // Store original data for search
 
   // Fetch students data
   const studentsData = useCallback(async () => {
@@ -16,10 +17,14 @@ const LatestApplications = () => {
     try {
       const response = await fetch("/api/getAllStudents");
       const data = await response.json();
-      setStudentsDataItems(data.data || []);
+      // Filter out students without nationalid
+      const filteredData = (data.data || []).filter(student => student?.nationalid);
+      setStudentsDataItems(filteredData);
+      setOriginalData(filteredData); // Store original data
     } catch (error) {
       console.error("Error fetching students:", error);
       setStudentsDataItems([]);
+      setOriginalData([]);
     } finally {
       setIsLoading(false);
     }
@@ -48,34 +53,34 @@ const LatestApplications = () => {
     setExpandedIndex((prev) => (prev === index ? null : index));
   }, []);
 
-  // Search functionality
+  // Search functionality - FIXED
   const searcher = useCallback(
     (value) => {
       setInputText(value);
 
       if (!value || value.trim() === "") {
-        studentsData(); // Reset to original data
+        // Reset to original data
+        setStudentsDataItems(originalData);
         return;
       }
 
       const trimmedValue = value.trim();
       const isNumeric = /^\d+$/.test(trimmedValue);
 
-      // Filter current data without re-fetching
-      setStudentsDataItems((prevData) => {
-        const filteredData = prevData.filter((item) => {
-          if (isNumeric) {
-            return item.seatnum?.toString().includes(trimmedValue);
-          } else {
-            return item.studentname
-              ?.toLowerCase()
-              .includes(trimmedValue.toLowerCase());
-          }
-        });
-        return filteredData;
+      // Filter from original data
+      const filteredData = originalData.filter((item) => {
+        if (isNumeric) {
+          return item.seatnum?.toString().includes(trimmedValue);
+        } else {
+          return item.studentname
+            ?.toLowerCase()
+            .includes(trimmedValue.toLowerCase());
+        }
       });
+      
+      setStudentsDataItems(filteredData);
     },
-    [studentsData],
+    [originalData], // Use originalData instead of studentsData
   );
 
   // Get subject display name
@@ -95,10 +100,14 @@ const LatestApplications = () => {
     return subjectMap[subject] || subject;
   }, []);
 
-  // Get subjects from student object
+  // Get subjects from student object - FIXED to include all subjects
   const getStudentSubjects = useCallback(
     (student) => {
-      return Object.keys(student)
+      const subjectKeys = [
+        'arabic', 'english', 'social', 'algebra', 
+        'geometry', 'sciense', 'ict', 'religious', 'art'
+      ];
+      return subjectKeys
         .filter((key) => student[key] === true)
         .map(getSubjectName);
     },
@@ -143,7 +152,6 @@ const LatestApplications = () => {
         <h4 className="text-xl font-bold text-blue-600">أحدث الطلبات</h4>
         <div className="mr-4 flex flex-grow items-center justify-end gap-4">
           <span className="text-xs font-bold text-gray-500">
-            {" "}
             إجمالي عدد الطلبات : {studentsDataItems.length}
           </span>
           <div className="relative w-full max-w-xs">
@@ -182,7 +190,7 @@ const LatestApplications = () => {
           currentPageData.map((student, index) => {
             const isExpanded = expandedIndex === chunkNumber * 10 + index;
             const subjects = getStudentSubjects(student);
-            const date = new Date(student?.preservedate);
+            const date = student?.preservedate ? new Date(student.preservedate) : null;
 
             return (
               <div
@@ -223,11 +231,11 @@ const LatestApplications = () => {
                     <div>
                       <p className="mb-1 text-xs text-gray-600">تاريخ الطلب</p>
                       <p className="text-sm font-bold">
-                        {date.toLocaleDateString("ar-EG", {
+                        {date ? date.toLocaleDateString("ar-EG", {
                           year: "numeric",
                           month: "long",
                           day: "numeric",
-                        }) || "غير محدد"}
+                        }) : "غير محدد"}
                       </p>
                     </div>
                     <div>
@@ -241,7 +249,7 @@ const LatestApplications = () => {
                               key={idx}
                               className={`rounded px-2 py-1 text-xs ${
                                 subject === "مؤكد"
-                                  ? `bg-blue-200 text-teal-800`
+                                  ? "bg-blue-200 text-teal-800"
                                   : "bg-gray-100 text-gray-600"
                               }`}
                             >
@@ -272,7 +280,6 @@ const LatestApplications = () => {
                       </p>
                       <div>
                         <p className="mb-1 text-xs text-gray-600">
-                          {" "}
                           رقم المجموعة
                         </p>
                         <p className="text-sm font-bold">

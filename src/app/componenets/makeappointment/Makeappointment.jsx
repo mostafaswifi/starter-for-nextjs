@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { swalAlert } from "../../../lib/swal";
 import { v4 as uuid } from "uuid";
 
-
 const Makeappointment = ({
   seatNumber,
   setSeatNumber,
@@ -11,6 +10,7 @@ const Makeappointment = ({
   items,
   nationalid,
   setNationalid,
+  studentData,
 }) => {
   const [selectedDate, setSelectedDate] = useState([]);
   const [openkey, setOpenkey] = useState(false);
@@ -21,7 +21,9 @@ const Makeappointment = ({
     msecs: new Date("2011-11-01").getTime(),
     nsecs: 5678,
   };
-  const [allData,setAllData] = useState([]);
+  const [allData, setAllData] = useState([]);
+  const [userSelectedDate, setUserSelectedDate] = useState(null);
+  // console.log(studentData);
   useEffect(() => {
     if (items?.school) {
       //  console.log("Items updated:",items);
@@ -34,11 +36,7 @@ const Makeappointment = ({
   };
 
   const handleNationalid = (e) => {
-
-    
     setNationalid(e.target.value);
-
-   
   };
 
   const handleSubmit = async (e) => {
@@ -46,7 +44,7 @@ const Makeappointment = ({
     const checkedsubjects = Object.keys(items).filter(
       (key) => items[key] === true,
     );
-    console.log("Checked subjects:", checkedsubjects);
+    // console.log("Checked subjects:", checkedsubjects);
     items = {
       ...items,
       subjectnumber: checkedsubjects.length,
@@ -63,73 +61,66 @@ const Makeappointment = ({
     const result = await response.json();
     if (result.success) {
       // setItems({});
+      handleDatePreserveNum(userSelectedDate);
       swalAlert(
         "تم تسجيل الطلب بنجاح",
         "من فضلك اضغط علي 'الخطوة التالية' لتحديد موعد المراجعة",
         "success",
         "موافق",
       );
-      console.log("Submitting items:", items);
+      // console.log("Submitting items:", items);
     }
+    setOpenkey(false);
   };
 
-
-
-
-    const dateGrpper = async ()=>{
-     await fetch(`/api/avaliabledates`, {
+  const dateGrpper = async () => {
+    await fetch(`/api/avaliabledates`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
-    }).then((res) => res.json()).then((data) =>{
-      setAllData(data?.data);
-     
-      const finalDates = data?.data?.map((item) => item.avaliabledates.slice(0, 10));
-      setSelectedDate(finalDates);
-    });
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setAllData(data?.data);
+
+        const finalDates = data?.data?.map((item) =>
+          item.avaliabledates.slice(0, 10),
+        );
+        setSelectedDate(finalDates);
+      });
     // console.log(selectedDate);
-  }
+  };
   useEffect(() => {
     dateGrpper();
     // handleDatePreserveNum();
-  },[]);
+  }, []);
 
-
-const handleDatePreserveNum = async (e,i) => {
-  
-   
-    
+  const handleDatePreserveNum = async (i) => {
     try {
-        const response = await fetch(`/api/avaliabledates?id=${i.$id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ 
-                $id: i.$id,
-                numberofaddedstudents: (i.numberofaddedstudents || 0) + 1 
-            }),
-        });
-        
-        if (response.ok) {
-            console.log("Date updated successfully");
-            dateGrpper();
-        } else {
-            console.error("Error updating date");
-        }
-        handleHideDates(e);
+      const response = await fetch(`/api/avaliabledates?id=${i?.$id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          $id: i?.$id,
+          numberofaddedstudents: (i?.numberofaddedstudents || 0) + 1,
+        }),
+      });
+
+      if (response.ok) {
+        console.log("Date updated successfully");
+        dateGrpper();
+      } else {
+        console.error("Error updating date");
+      }
     } catch (error) {
-        console.error('Error updating date:', error);
-        swalAlert(
-            "خطأ",
-            "حدث خطأ أثناء الاتصال بالخادم",
-            "error",
-            "موافق"
-        );
+      console.error("Error updating date:", error);
+      swalAlert("خطأ", "حدث خطأ أثناء الاتصال بالخادم", "error", "موافق");
     }
-};
-const handleHideDates = (e) => {
-  e.target.parentNode.parentNode.classList.add("hidden");
-  console.log(e.target.parentNode.parentNode.children)
-  
-};
+  };
+  // const handleHideDates = (e) => {
+  //   e.target.parentNode.parentNode.classList.add("hidden");
+  //   console.log(e.target.parentNode.parentNode.children)
+
+  // };
   return (
     <section className="flex-1 overflow-y-auto p-8 lg:p-12">
       <div className="mx-auto max-w-3xl space-y-10">
@@ -206,30 +197,42 @@ const handleHideDates = (e) => {
               {openkey ? (
                 <>
                   {" "}
-                  <div className="space-y-2 col-span-2">
+                  <div className="col-span-2 space-y-2">
                     <label className="text-secondary block px-1 text-sm font-semibold">
                       اسم الطالب رباعي / خماسي
                     </label>
                     <input
-                      className="bg-gray-200 focus:ring-primary w-full rounded-lg border-0 p-3 transition-all placeholder:text-slate-400 focus:ring-2"
+                      className="focus:ring-primary w-full rounded-lg border-0 bg-gray-200 p-3 transition-all placeholder:text-slate-400 focus:ring-2"
                       placeholder="أدخل اسمك كما هو في البطاقة"
                       type="text"
                       value={items?.studentname}
                       readOnly
                     />
                   </div>
-                  <div className="space-y-2 col-span-2">
-                <label className="text-secondary block px-1 text-sm font-semibold" >
-                  أدخل الرقم القومي للطالب (  من واقع شهادة ميلاد الطالب !!! )
-                </label>
-                <input
-                  className="bg-surface-container-low focus:ring-primary w-full rounded-lg border-1 p-2 transition-all placeholder:text-slate-400 focus:ring-2"
-                  placeholder="مثال: 123456"
-                  type="text"
-                  value={items?.nationalid || nationalid}
-                  onChange={(e) => handleNationalid(e)}
-                />
-              </div>
+                  <div className="col-span-2 space-y-2">
+                    <label className="text-secondary block px-1 text-sm font-semibold">
+                      أدخل الرقم القومي للطالب ( من واقع شهادة ميلاد الطالب !!!
+                      )
+                    </label>
+                    <input
+                      className="bg-surface-container-low focus:ring-primary w-full rounded-lg border-1 p-2 transition-all placeholder:text-slate-400 focus:ring-2"
+                      placeholder="مثال: 123456"
+                      type="text"
+                      value={nationalid}
+                      onChange={(e) => handleNationalid(e)}
+                    />
+                    <div className="bg-surface-container-lowest flex items-center gap-2 space-y-2 rounded-lg bg-blue-500 p-4 text-white">
+                      <span className="text-secondary block px-1 text-sm font-semibold">
+                        {" "}
+                        رقم البطاقة المسجل هو
+                      </span>
+                      <span className="text-secondary block px-1 text-sm font-semibold">
+                        {studentData?.nationalid
+                          ? studentData?.nationalid
+                          : "لم يتم تسجيل رقم قومي بعد"}
+                      </span>
+                    </div>
+                  </div>
                   <div className="space-y-2">
                     <label className="text-secondary block px-1 text-sm font-semibold">
                       الإدارة التعليمية
@@ -274,10 +277,10 @@ const handleHideDates = (e) => {
             </div>
           </div>
           {openkey && (
-            <div className="space-y-6">
+            <div className={`space-y-6 ${studentData?.nationalid ? "hidden" : ""}`}>
               <div className="flex items-center justify-between border-r-4 border-blue-700 pr-4">
                 <h2 className="text-on-surface text-xl font-bold">
-أنقر علي المواد المطلوب إعادة تصحيحها 
+                  أنقر علي المواد المطلوب إعادة تصحيحها
                 </h2>
                 <span className="text-on-secondary-fixed-variant rounded-full bg-gray-200 px-3 py-1 text-xs font-medium">
                   اختر مادة واحدة أو أكثر
@@ -440,50 +443,68 @@ const handleHideDates = (e) => {
                   </div>
                 </label>
               </div>
-              <div className="grid grid-cols-3 gap-4">
-                <p className="text-lg font-semibold text-slate-900 col-span-3 border-r-4 border-blue-700 pr-4">اختر التاريخ</p>
-                          {selectedDate.map((date, index) => (
- <div className="p-0 m-0" key={index} onClick={(e)=>handleDatePreserveNum(e,allData[index])}>
-   <div
-    className=" cursor-pointer flex-col items-center  rounded-2xl bg-blue-100 p-6 font-semibold shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-gray-300"
-    onClick={()=> setItems({ ...items, preservedate: date })}
-  >
-    <div className=" flex flex-col items-center gap-2 relative">
-      <span className="material-symbols-outlined tranition-all text-2xl text-gray-600 duration-300 group-hover:scale-110 group-hover:rotate-[-8deg]">
-        event
-      </span>
-      <span className="text-sm font-medium text-red-400 d-block "  >{date}</span>
-      <span className="text-xs text-gray-600">
-        {new Date(date).getDay() == 1
-          ? "الاثنين"
-          : new Date(date).getDay() == 2
-            ? "الثلاثاء"
-            : new Date(date).getDay() == 3
-              ? "الأربعاء"
-              : new Date(date).getDay() == 4
-                ? "الخميس"
-                : new Date(date).getDay() == 5
-                  ? "الجمعة"
-                  : new Date(date).getDay() == 6
-                    ? "السبت"
-                    : "الأحد"}
-      </span>
-    </div>
-  </div>
- </div>
-))}
-</div>
-            </div>
-            
-          )}
+              <div className="relative grid grid-cols-3 gap-4">
+                <p className="col-span-3 border-r-4 border-blue-700 pr-4 text-lg font-semibold text-slate-900">
+                  اختر التاريخ
+                </p>
+                {userSelectedDate ? (
+                  <div className="absolute top-0 right-0 z-10 m-0 flex h-6 h-[200px] w-full items-center justify-center rounded-2xl bg-blue-500 p-0 font-bold text-white">
+                    {" "}
+                    تم إختيار الموعد{" "}
+                  </div>
+                ) : null}
+                {selectedDate.map((date, index) => (
+                  <div
+                    className="m-0 p-0"
+                    key={index}
+                    onClick={() => setUserSelectedDate(allData[index])}
+                  >
+                    {/* onClick={(e)=>handleDatePreserveNum(e,allData[index]) */}
 
+                    {console.log(userSelectedDate)}
+                    <div
+                      className="cursor-pointer flex-col items-center rounded-2xl bg-blue-100 p-6 font-semibold shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-gray-300"
+                      onClick={() => setItems({ ...items, preservedate: date })}
+                    >
+                      <div className="relative flex flex-col items-center gap-2">
+                        <span className="material-symbols-outlined tranition-all text-2xl text-gray-600 duration-300 group-hover:scale-110 group-hover:rotate-[-8deg]">
+                          event
+                        </span>
+                        <span className="d-block text-sm font-medium text-red-400">
+                          {date}
+                        </span>
+                        <span className="text-xs text-gray-600">
+                          {new Date(date).getDay() == 1
+                            ? "الاثنين"
+                            : new Date(date).getDay() == 2
+                              ? "الثلاثاء"
+                              : new Date(date).getDay() == 3
+                                ? "الأربعاء"
+                                : new Date(date).getDay() == 4
+                                  ? "الخميس"
+                                  : new Date(date).getDay() == 5
+                                    ? "الجمعة"
+                                    : new Date(date).getDay() == 6
+                                      ? "السبت"
+                                      : "الأحد"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
+
         {openkey && (
-          <div className="bg-surface-container-lowest space-y-10 rounded-xl p-8 shadow-sm "> 
-<p className="flex items-center justify-between border-r-4 border-blue-700 pr-4 text-2xl font-bold">          ملخص الطلب
-</p>
-            <div className="flex flex-col items-center gap-4 ">
-              <span className="font-semibold border-r-4 border-blue-700 pr-4 bg-gray-200 p-4 rounded-lg shadow-md transition-colors hover:bg-gray-300 w-full text-center">
+          <div className={`bg-surface-container-lowest space-y-10 rounded-xl p-8 shadow-sm ${studentData?.nationalid ? "hidden" : ""}`}>
+            <p className="flex items-center justify-between border-r-4 border-blue-700 pr-4 text-2xl font-bold">
+              {" "}
+              ملخص الطلب
+            </p>
+            <div className="flex flex-col items-center gap-4">
+              <span className="w-full rounded-lg border-r-4 border-blue-700 bg-gray-200 p-4 pr-4 text-center font-semibold shadow-md transition-colors hover:bg-gray-300">
                 {" "}
                 عدد المواد المختارة:{" "}
                 {
@@ -492,7 +513,7 @@ const handleHideDates = (e) => {
                 مادة / مواد{" "}
               </span>
 
-              <span className="font-semibold border-r-4 border-blue-700 pr-4 bg-gray-200 p-4 rounded-lg shadow-md transition-colors hover:bg-gray-300 w-full text-center">
+              <span className="w-full rounded-lg border-r-4 border-blue-700 bg-gray-200 p-4 pr-4 text-center font-semibold shadow-md transition-colors hover:bg-gray-300">
                 {" "}
                 التكلفة الإجمالية:{" "}
                 {Object.keys(items).filter((key) => items[key] === true)
@@ -502,22 +523,25 @@ const handleHideDates = (e) => {
                 جنيه{" "}
               </span>
 
-              <span className="font-semibold border-r-4 border-blue-700 pr-4 bg-gray-200 p-4 rounded-lg shadow-md transition-colors hover:bg-gray-300 w-full text-center">
+              <span className="w-full rounded-lg border-r-4 border-blue-700 bg-gray-200 p-4 pr-4 text-center font-semibold shadow-md transition-colors hover:bg-gray-300">
                 {" "}
                 رقم الحجز: {items.reservationnumber}{" "}
               </span>
 
-              <span className="font-semibold border-r-4 border-blue-700 pr-4 bg-gray-200 p-4 rounded-lg shadow-md transition-colors hover:bg-gray-300 w-full text-center">
+              <span className="w-full rounded-lg border-r-4 border-blue-700 bg-gray-200 p-4 pr-4 text-center font-semibold shadow-md transition-colors hover:bg-gray-300">
                 {" "}
                 تاريخ التحديث: {items.$updatedAt}{" "}
               </span>
-              <div className="font-semibold border-r-4 border-blue-700 pr-4 bg-gray-200 p-4 rounded-lg shadow-md transition-colors hover:bg-gray-300 w-full text-center">
-              <h2>تاريخ الحجز: {new Date(items.preservedate).toLocaleDateString()}</h2>
-            </div>
+              <div className="w-full rounded-lg border-r-4 border-blue-700 bg-gray-200 p-4 pr-4 text-center font-semibold shadow-md transition-colors hover:bg-gray-300">
+                <h2>
+                  تاريخ الحجز:{" "}
+                  {new Date(items.preservedate).toLocaleDateString()}
+                </h2>
+              </div>
             </div>
 
             <div>
-             <h2 className="text-on-surface text-xl font-bold">
+              <h2 className="text-on-surface text-xl font-bold">
                 المواد المختارة:{" "}
               </h2>
               <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -527,7 +551,7 @@ const handleHideDates = (e) => {
                   .map((subject) => (
                     <div
                       key={subject}
-                      className="group relative flex cursor-pointer items-center rounded-xl bg-blue-200 p-3 transition-colors hover:bg-blue-300 text-on-surface font-bold"
+                      className="group text-on-surface relative flex cursor-pointer items-center rounded-xl bg-blue-200 p-3 font-bold transition-colors hover:bg-blue-300"
                     >
                       {subject === "arabic"
                         ? "لغة عربية"
@@ -552,31 +576,21 @@ const handleHideDates = (e) => {
                   ))}
               </div>
             </div>
-            
           </div>
         )}
-        {/* <div className="flex items-center justify-between py-6">
-          <button className="text-secondary rounded-full px-8 py-3 font-bold transition-all hover:bg-gray-300">
-            العودة للسابق
-          </button>
-          <button className="group flex items-center gap-2 rounded-lg bg-blue-700 bg-gradient-to-r px-12 py-3 font-bold text-white shadow-lg transition-all hover:opacity-90 active:scale-95">
-            <span>الخطوة التالية</span>
-            <span className="material-symbols-outlined rotate-180">
-              arrow_forward
-            </span>
-          </button>
-        </div> */}
-        {items.studentname && (
-          <button
-            className="group mr-auto flex items-center gap-2 rounded-lg bg-red-700 bg-gradient-to-r px-12 py-3 font-bold text-white shadow-lg transition-all hover:opacity-90 active:scale-95"
+
+      
+        {openkey && (
+            <button
+            className={`group mr-auto flex items-center gap-2 rounded-lg bg-red-700 bg-gradient-to-r px-12 py-3 font-bold text-white shadow-lg transition-all hover:opacity-90 active:scale-95 ${studentData?.nationalid ? "hidden" : ""}`}
             onClick={(e) => handleSubmit(e, items)}
           >
             <span>تسجيل الطلب </span>
             <span className="material-symbols-outlined">check_circle</span>
           </button>
         )}
-      </div>
       
+      </div>
     </section>
   );
 };
