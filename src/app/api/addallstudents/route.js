@@ -82,36 +82,135 @@ export async function POST(request) {
 }
 
 export async function DELETE() {
-    // Delete all rows in datatable
     try {
-        // First, list all documents to get their IDs
-        const documents = await databases.listDocuments(
-            process.env.APPWRITE_DATABASE_ID,
-            process.env.APPWRITE_POSTS_COLLECTION_ID,
-            [
-                Query.limit(5000) // Adjust limit if you have more than 100 documents
-            ]
-        );
+        // Fetch all documents with pagination
+        const allDocuments = [];
+        let offset = 0;
+        const LIMIT = 100;
         
-        // Delete each document
-        const deletePromises = documents.documents.map(doc => 
-            databases.deleteDocument(
+        console.log('Fetching all documents...');
+        while (true) {
+            const response = await databases.listDocuments(
                 process.env.APPWRITE_DATABASE_ID,
                 process.env.APPWRITE_POSTS_COLLECTION_ID,
-                doc.$id
-            )
-        );
+                [
+                    Query.limit(LIMIT),
+                    Query.offset(offset)
+                ]
+            );
+            
+            allDocuments.push(...response.documents);
+            
+            if (response.documents.length < LIMIT) {
+                break;
+            }
+            
+            offset += LIMIT;
+            console.log(`Fetched ${allDocuments.length} documents so far...`);
+        }
         
-        await Promise.all(deletePromises);
+        console.log(`Total documents to delete: ${allDocuments.length}`);
+        
+        if (allDocuments.length === 0) {
+            return NextResponse.json({ 
+                success: true, 
+                message: 'No documents to delete',
+                count: 0 
+            });
+        }
+        
+        // Delete in small batches but sequential within each batch
+        const BATCH_SIZE = 5; // Very small batch size
+        const DELAY_BETWEEN_DELETIONS = 200;
+        const DELAY_BETWEEN_BATCHES = 1000;
+        const MAX_RETRIES = 3;
+        let deletedCount = 0;
+        const errors = [];
+        
+        for (let i = 0; i < allDocuments.length; i += BATCH_SIZE) {
+            const batch = allDocuments.slice(i, i + BATCH_SIZE);
+            const batchNumber = Math.floor(i / BATCH_SIZE) + 1;
+            
+            console.log(`Processing batch ${batchNumber} (${batch.length} documents)...`);
+            
+            // Process each document in the batch sequentially
+            for (let j = 0; j < batch.length; j++) {
+                const doc = batch[j];
+                const globalIndex = i + j + 1;
+                let retries = 0;
+                let success = false;
+                
+                while (!success && retries <= MAX_RETRIES) {
+                    try {
+                        await databases.deleteDocument(
+                            process.env.APPWRITE_DATABASE_ID,
+                            process.env.APPWRITE_POSTS_COLLECTION_ID,
+                            doc.$id
+                        );
+                        
+                        deletedCount++;
+                        success = true;
+                        
+                        if (globalIndex % 10 === 0) {
+                            console.log(`Deleted ${globalIndex}/${allDocuments.length} documents`);
+                        }
+                        
+                    } catch (error) {
+                        if (error.code === 429 || error.type === 'general_rate_limit_exceeded') {
+                            retries++;
+                            if (retries <= MAX_RETRIES) {
+                                const waitTime = Math.pow(2, retries) * 1000;
+                                console.log(`Rate limit hit. Retrying document ${doc.$id} in ${waitTime/1000}s...`);
+                                await new Promise(resolve => setTimeout(resolve, waitTime));
+                            } else {
+                                errors.push({
+                                    docId: doc.$id,
+                                    error: 'Rate limit exceeded after multiple retries'
+                                });
+                                break;
+                            }
+                        } else {
+                            errors.push({
+                                docId: doc.$id,
+                                error: error.message
+                            });
+                            break;
+                        }
+                    }
+                }
+                
+                // Delay between deletions
+                if (globalIndex < allDocuments.length) {
+                    await new Promise(resolve => setTimeout(resolve, DELAY_BETWEEN_DELETIONS + (Math.random() * 100)));
+                }
+            }
+            
+            // Longer delay between batches
+            if (i + BATCH_SIZE < allDocuments.length) {
+                console.log(`Batch ${batchNumber} complete. Waiting before next batch...`);
+                await new Promise(resolve => setTimeout(resolve, DELAY_BETWEEN_BATCHES));
+            }
+        }
         
         return NextResponse.json({ 
-            success: true, 
-            count: documents.documents.length 
+            success: true,
+            totalDocuments: allDocuments.length,
+            deletedCount: deletedCount,
+            failedCount: allDocuments.length - deletedCount,
+            errors: errors.length > 0 ? errors : undefined,
+            hasErrors: errors.length > 0,
+            message: errors.length > 0 
+                ? `Deleted ${deletedCount} of ${allDocuments.length} documents. ${errors.length} failed.`
+                : `Successfully deleted all ${deletedCount} documents`
         });
+        
     } catch (error) {
         console.error('Error deleting documents:', error);
         return NextResponse.json(
-            { error: error.message },
+            { 
+                error: error.message,
+                details: 'Failed to delete documents'
+            },
             { status: 500 }
         );
     }
