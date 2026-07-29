@@ -116,7 +116,7 @@ const Appointment = () => {
           />
         )}
         {step === 2 && <Confirmation items={items} />}
-        {step === 3 && <Print items={items} step={step} setStep={setStep} />}
+        {step === 3 && <Print items={items} step={step} setStep={setStep} setItems={setItems} />}
         {step === 4 &&  <Receipt items={items} setItems={setItems} step={step} setStep={setStep}/>}
         {step === 5 ? setStep(1) : null}
     

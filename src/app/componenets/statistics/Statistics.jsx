@@ -47,7 +47,7 @@ useEffect(() => {
                 <span className="text-blue-600 text-sm font-bold">+12%</span>
               </div>
               <p className="text-gray-600 text-sm font-medium mb-1">
-                إجمالي الطلبات
+                إجمالي الطلاب
               </p>
               <h3 className="text-3xl font-bold text-gray-900">{studentsDataItems.length}</h3>
             </div>
@@ -61,7 +61,7 @@ useEffect(() => {
               <p className="text-gray-600 text-sm font-medium mb-1">
                 طلبات قيد المراجعة
               </p>
-              <h3 className="text-3xl font-bold text-gray-900">{studentsDataItems?.filter(student => student?.reservasionconfirm == false).length}</h3>
+              <h3 className="text-3xl font-bold text-gray-900">{studentsDataItems?.filter(student => student?.nationalid).length}</h3>
             </div>
             <div className="bg-white p-6 border-r-4 border-green-600 rounded-xl shadow-sm transition-all duration-300 hover:border-green-600 hover:-translate-y-0.5 hover:shadow-lg cursor-default">
               <div className="mb-4 flex items-start justify-between">

@@ -1,9 +1,9 @@
 import { QRCodeSVG } from 'qrcode.react'; // Or import { QRCodeCanvas }
 
-const Print = ({ items,step,setStep }) => {
-  {console.log(step)}
+const Print = ({ items,step,setStep,setItems }) => {
+//  console.log(items)
   return (
-    <section className="mx-auto w-full max-w-5xl flex-1 p-4 md:p-10 lg:p-16">
+    <section className="mx-auto w-full max-w-5xl flex-1 p-4 md:p-10 lg:p-16" >
       <div className="mb-12 text-center">
         <div className="text-primary mb-6 inline-flex h-20 w-20 items-center justify-center rounded-lg bg-blue-100">
           <span
@@ -170,7 +170,7 @@ const Print = ({ items,step,setStep }) => {
       </div>
 
       <div onClick={()=> setStep( ++step)} className="mt-12 flex flex-col items-center justify-center gap-6 sm:flex-row">
-        <button  className="to-primary-container flex w-full items-center justify-center gap-3 rounded-lg bg-blue-700 bg-gradient-to-r px-10 py-4 text-lg font-bold text-white shadow-lg transition-transform hover:scale-105 sm:w-auto">
+        <button  className="to-primary-container flex w-full items-center justify-center gap-3 rounded-lg bg-blue-700 bg-gradient-to-r px-10 py-4 text-lg font-bold text-white shadow-lg transition-transform hover:scale-105 sm:w-auto" >
           <span className="material-symbols-outlined" >print</span>
           طباعة الإيصال
         </button>
