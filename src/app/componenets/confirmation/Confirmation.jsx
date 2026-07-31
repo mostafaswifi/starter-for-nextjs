@@ -1,9 +1,14 @@
 import { DateTimeField } from "modern-rdp-pro";
-
+import { useState,useEffect } from "react";
 const Confirmation = ({ items }) => {
-  const myVariableDate = new Date();
-  myVariableDate.setDate(myVariableDate.getDate()); // Set to 7 days from now
-  myVariableDate.setHours(myVariableDate.getHours()); // Set to 3:00 PM
+  const [myVariableDate, setMyVariableDate] = useState(new Date(items?.preservedate));
+  // Set to 7 days from now
+  // myVariableDate.setHours(myVariableDate.getHours()); // Set to 3:00 PM
+
+  useEffect(() => {
+    setMyVariableDate(new Date(items?.preservedate));
+  },[])
+
   return (
     <section className="h-min flex-1 overflow-y-auto p-8 lg:p-12">
       <div className="relative mb-12 flex items-center justify-between px-4">
@@ -228,8 +233,7 @@ const Confirmation = ({ items }) => {
               year: "numeric",
               month: "long",
               day: "numeric",
-              hour: "numeric",
-              minute: "numeric",
+            
             })}
           </p>
         </div>
@@ -265,7 +269,7 @@ const Confirmation = ({ items }) => {
             <div>
               <h4 className="text-sm font-bold">مقر المراجعة الرئيسي</h4>
               <p className="text-secondary text-xs leading-relaxed">
-                شارع الوزارات، منطقة البطين، أبوظبي - الطابق الأرضي، القاعة 4
+               مديرية التربية و التعليم - الزقازيق - بجوار مدرسة الثانوية العسكرية
               </p>
             </div>
           </div>

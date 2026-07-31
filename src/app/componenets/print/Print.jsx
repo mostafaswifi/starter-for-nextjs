@@ -1,7 +1,11 @@
 import { QRCodeSVG } from 'qrcode.react'; // Or import { QRCodeCanvas }
-
+import { useEffect,useState } from 'react';
 const Print = ({ items,step,setStep,setItems }) => {
+  const [reviseDate, setReviseDate] = useState(new Date(items?.preservedate));
 //  console.log(items)
+useEffect(() => {
+  setReviseDate(new Date(items?.preservedate));
+},[])
   return (
     <section className="mx-auto w-full max-w-5xl flex-1 p-4 md:p-10 lg:p-16" >
       <div className="mb-12 text-center">
@@ -49,10 +53,16 @@ const Print = ({ items,step,setStep,setItems }) => {
                 </div>
                 <div>
                   <p className="text-secondary text-xs font-medium">التاريخ</p>
-                  <p className="text-on-surface font-bold">15 أكتوبر 2024</p>
+                  <p className="text-on-surface font-bold">{reviseDate.toLocaleDateString("ar-EG", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            
+            })}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-4">
+              {/* <div className="flex items-center gap-4">
                 <div className="text-on-secondary-fixed flex h-12 w-12 items-center justify-center rounded-xl bg-gray-200">
                   <span className="material-symbols-outlined">schedule</span>
                 </div>
@@ -60,7 +70,7 @@ const Print = ({ items,step,setStep,setItems }) => {
                   <p className="text-secondary text-xs font-medium">الوقت</p>
                   <p className="text-on-surface font-bold">09:30 صباحاً</p>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -77,22 +87,13 @@ const Print = ({ items,step,setStep,setItems }) => {
               <span className="material-symbols-outlined text-primary mt-1 text-sm">
                 location_on
               </span>
-              المبنى الإداري الرئيسي، الطابق الثالث، قاعة المراجعة الأكاديمية
+             مديرية التربية و التعليم - الزقازيق - بجوار مدرسة الثانوية العسكرية
             </p>
           </div>
           <div className="bg-surface-container relative mt-6 h-24 overflow-hidden rounded-lg">
-            <img
-              alt="Map Location"
-              className="h-full w-full object-cover opacity-50 grayscale"
-              data-alt="minimalist architectural map representation with clean lines and soft blue tones"
-              data-location="Cairo"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAa1ylsuosQbp356UgNEzWz-T2CQ06-H1NloOM04kqgb5-gIoLoRXKmFAMK8BD_xouxonpwMWBls2xdUzx6vNJF87IMLBlikgoqKtsHN5Vj_IEoCGVNuRvvAi_MgV5JhdZqHWcqS4Jl-KYJz_nn4ZgBwvYNibWlvLiWbVTP5ts5WiuquGV2tDolTca6O1QSeknGa2R4Q0sbuyUdHaoOb_iK3r9uCKq9nXaamOVW9NAD7pJcavt0K_xuaMrjTWfZMyBKQtP6IlG8Qpk"
-            />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-primary rounded-full bg-white px-3 py-1 text-xs font-bold shadow-sm">
-                عرض الخريطة
-              </span>
-            </div>
+           
+            <iframe className="absolute inset-0"  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d340.77683485881016!2d31.493781396104676!3d30.582773481037552!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14f7f0ff3ced8279%3A0x213dbe4d58b92ecc!2sEducation%20Directorate%20-%20El%20Sharqeya!5e0!3m2!1sen!2seg!4v1785515933170!5m2!1sen!2seg" width="600" height="450" style={{marginRight: 10}} allowFullScreen={true} loading="lazy" referrerPolicy="strict-origin-when-cross-origin"></iframe>
+           
           </div>
         </div>
 

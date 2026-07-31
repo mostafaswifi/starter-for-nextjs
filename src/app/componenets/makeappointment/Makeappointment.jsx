@@ -12,7 +12,7 @@ const Makeappointment = ({
   setNationalid,
   studentData,
 }) => {
-  console.log(items)
+  // console.log(items);
   const [selectedDate, setSelectedDate] = useState([]);
   const [openkey, setOpenkey] = useState(false);
   const checkedsubjects = [];
@@ -24,13 +24,13 @@ const Makeappointment = ({
   };
   const [allData, setAllData] = useState([]);
   const [userSelectedDate, setUserSelectedDate] = useState(null);
-  
+
   const updateTotalCost = (updatedItems) => {
-  const checkedCount = Object.keys(updatedItems).filter(
-    key => updatedItems[key] === true
-  ).length;
-  return checkedCount * 35 + 5;
-};
+    const checkedCount = Object.keys(updatedItems).filter(
+      (key) => updatedItems[key] === true,
+    ).length;
+    return checkedCount * 35 + 5;
+  };
 
   // console.log(studentData);
   useEffect(() => {
@@ -89,12 +89,13 @@ const Makeappointment = ({
     })
       .then((res) => res.json())
       .then((data) => {
-        setAllData(data?.data);
+        setAllData(data?.data?.filter((item) => item.numberofaddedstudents < item.maxnumforeachdte ));
 
-        const finalDates = data?.data?.map((item) =>
+        const finalDates = data?.data?.filter((item) => item.numberofaddedstudents < item.maxnumforeachdte ).map((item) =>
           item.avaliabledates.slice(0, 10),
         );
         setSelectedDate(finalDates);
+
       });
     // console.log(selectedDate);
   };
@@ -115,7 +116,7 @@ const Makeappointment = ({
       });
 
       if (response.ok) {
-        console.log("Date updated successfully");
+        // console.log("Date updated successfully");
         dateGrpper();
       } else {
         console.error("Error updating date");
@@ -218,37 +219,41 @@ const Makeappointment = ({
                       readOnly
                     />
                   </div>
-
-
-
                   <div className="col-span-2 space-y-2">
-                   {!studentData?.nationalid ? (
-                    <>
-                       <label className="text-secondary block px-1 text-sm font-semibold">
-                      أدخل الرقم القومي للطالب ( من واقع شهادة ميلاد الطالب !!!
-                      )
-                    </label>
-                    <input
-                      className="bg-surface-container-low focus:ring-primary w-full rounded-lg border-1 p-2 transition-all placeholder:text-slate-400 focus:ring-2"
-                      placeholder="مثال: 123456"
-                      type="text"
-                      value={nationalid}
-                      onChange={(e) => handleNationalid(e)}
-                    /></>
-                   ):""}
-                    <div className="bg-surface-container-lowest flex flex-column items-center  gap-2 space-y-2 rounded-lg bg-blue-500 p-4 text-white">
-                      <span className="text-secondary  px-1 text-sm font-semibold m-0">
+                    {!studentData?.nationalid ? (
+                      <>
+                        <label className="text-secondary block px-1 text-sm font-semibold">
+                          أدخل الرقم القومي للطالب ( من واقع شهادة ميلاد الطالب
+                          !!! )
+                        </label>
+                        <input
+                          className="bg-surface-container-low focus:ring-primary w-full rounded-lg border-1 p-2 transition-all placeholder:text-slate-400 focus:ring-2"
+                          placeholder="مثال: 123456"
+                          type="text"
+                          value={nationalid}
+                          onChange={(e) => handleNationalid(e)}
+                        />
+                      </>
+                    ) : (
+                      ""
+                    )}
+                    <div className="bg-surface-container-lowest flex-column flex items-center gap-2 space-y-2 rounded-lg bg-blue-500 p-4 text-white">
+                      <span className="text-secondary m-0 px-1 text-sm font-semibold">
                         {" "}
-                        تم تسجيل طلب من قبل ورقم البطاقة المسجل هو 
+                        تم تسجيل طلب من قبل ورقم البطاقة المسجل هو
                       </span>
-                      <span className="text-secondary  px-1  font-bold text-md tracking-widest">
+                      <span className="text-secondary text-md px-1 font-bold tracking-widest">
                         {studentData?.nationalid
                           ? studentData?.nationalid
                           : "لم يتم تسجيل رقم قومي بعد"}
                       </span>
                     </div>
+                    <span className="text-secondary text-md px-1 font-bold tracking-widest">
+                      {studentData?.nationalid
+                        ? "لتعديل الرغبات الخاصة بك يرجى التوجه للادارة التعليمية"
+                        : ""}
+                    </span>
                   </div>
-
                   <div className="space-y-2">
                     <label className="text-secondary block px-1 text-sm font-semibold">
                       الإدارة التعليمية
@@ -261,9 +266,6 @@ const Makeappointment = ({
                       readOnly
                     />
                   </div>
-
-
-
                   <div className="space-y-2">
                     <label className="text-secondary block px-1 text-sm font-semibold">
                       اسم المدرسة
@@ -296,7 +298,9 @@ const Makeappointment = ({
             </div>
           </div>
           {openkey && (
-            <div className={`space-y-6 ${studentData?.nationalid ? "hidden" : ""}`}>
+            <div
+              className={`space-y-6 ${studentData?.nationalid ? "hidden" : ""}`}
+            >
               <div className="flex items-center justify-between border-r-4 border-blue-700 pr-4">
                 <h2 className="text-on-surface text-xl font-bold">
                   أنقر علي المواد المطلوب إعادة تصحيحها
@@ -312,10 +316,13 @@ const Makeappointment = ({
                     type="checkbox"
                     checked={items?.arabic}
                     onChange={(e) => {
-  const updatedItems = { ...items, arabic: e.target.checked };
-  updatedItems.totalcost = updateTotalCost(updatedItems);
-  setItems(updatedItems);
-}}
+                      const updatedItems = {
+                        ...items,
+                        arabic: e.target.checked,
+                      };
+                      updatedItems.totalcost = updateTotalCost(updatedItems);
+                      setItems(updatedItems);
+                    }}
                   />
                   <div className="flex flex-col">
                     <span className="text-on-surface font-bold">لغة عربية</span>
@@ -330,10 +337,13 @@ const Makeappointment = ({
                     type="checkbox"
                     checked={items?.english}
                     onChange={(e) => {
-  const updatedItems = { ...items, english: e.target.checked };
-  updatedItems.totalcost = updateTotalCost(updatedItems);
-  setItems(updatedItems);
-}}
+                      const updatedItems = {
+                        ...items,
+                        english: e.target.checked,
+                      };
+                      updatedItems.totalcost = updateTotalCost(updatedItems);
+                      setItems(updatedItems);
+                    }}
                   />
                   <div className="flex flex-col">
                     <span className="text-on-surface font-bold">
@@ -350,10 +360,13 @@ const Makeappointment = ({
                     type="checkbox"
                     checked={items?.social}
                     onChange={(e) => {
-  const updatedItems = { ...items, social: e.target.checked };
-  updatedItems.totalcost = updateTotalCost(updatedItems);
-  setItems(updatedItems);
-}}
+                      const updatedItems = {
+                        ...items,
+                        social: e.target.checked,
+                      };
+                      updatedItems.totalcost = updateTotalCost(updatedItems);
+                      setItems(updatedItems);
+                    }}
                   />
                   <div className="flex flex-col">
                     <span className="text-on-surface font-bold">
@@ -370,11 +383,14 @@ const Makeappointment = ({
                     className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
                     type="checkbox"
                     checked={items?.algebra}
-                   onChange={(e) => {
-  const updatedItems = { ...items, algebra: e.target.checked };
-  updatedItems.totalcost = updateTotalCost(updatedItems);
-  setItems(updatedItems);
-}}
+                    onChange={(e) => {
+                      const updatedItems = {
+                        ...items,
+                        algebra: e.target.checked,
+                      };
+                      updatedItems.totalcost = updateTotalCost(updatedItems);
+                      setItems(updatedItems);
+                    }}
                   />
                   <div className="flex flex-col">
                     <span className="text-on-surface font-bold">جبر</span>
@@ -390,10 +406,13 @@ const Makeappointment = ({
                     type="checkbox"
                     checked={items?.geometry}
                     onChange={(e) => {
-  const updatedItems = { ...items, geometry: e.target.checked };
-  updatedItems.totalcost = updateTotalCost(updatedItems);
-  setItems(updatedItems);
-}}
+                      const updatedItems = {
+                        ...items,
+                        geometry: e.target.checked,
+                      };
+                      updatedItems.totalcost = updateTotalCost(updatedItems);
+                      setItems(updatedItems);
+                    }}
                   />
                   <div className="flex flex-col">
                     <span className="text-on-surface font-bold">هندسة</span>
@@ -425,10 +444,10 @@ const Makeappointment = ({
                     type="checkbox"
                     checked={items?.ict}
                     onChange={(e) => {
-  const updatedItems = { ...items, ict: e.target.checked };
-  updatedItems.totalcost = updateTotalCost(updatedItems);
-  setItems(updatedItems);
-}}
+                      const updatedItems = { ...items, ict: e.target.checked };
+                      updatedItems.totalcost = updateTotalCost(updatedItems);
+                      setItems(updatedItems);
+                    }}
                   />
                   <div className="flex flex-col">
                     <span className="text-on-surface font-bold">حاسب آلي</span>
@@ -442,11 +461,14 @@ const Makeappointment = ({
                     className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
                     type="checkbox"
                     checked={items?.religious}
-                   onChange={(e) => {
-  const updatedItems = { ...items, religious: e.target.checked };
-  updatedItems.totalcost = updateTotalCost(updatedItems);
-  setItems(updatedItems);
-}}
+                    onChange={(e) => {
+                      const updatedItems = {
+                        ...items,
+                        religious: e.target.checked,
+                      };
+                      updatedItems.totalcost = updateTotalCost(updatedItems);
+                      setItems(updatedItems);
+                    }}
                   />
                   <div className="flex flex-col">
                     <span className="text-on-surface font-bold">
@@ -462,11 +484,11 @@ const Makeappointment = ({
                     className="text-primary border-outline-variant focus:ring-primary ml-4 h-5 w-5 rounded"
                     type="checkbox"
                     checked={items?.art}
-                   onChange={(e) => {
-  const updatedItems = { ...items, art: e.target.checked };
-  updatedItems.totalcost = updateTotalCost(updatedItems);
-  setItems(updatedItems);
-}}
+                    onChange={(e) => {
+                      const updatedItems = { ...items, art: e.target.checked };
+                      updatedItems.totalcost = updateTotalCost(updatedItems);
+                      setItems(updatedItems);
+                    }}
                   />
                   <div className="flex flex-col">
                     <span className="text-on-surface font-bold">
@@ -478,62 +500,97 @@ const Makeappointment = ({
                   </div>
                 </label>
               </div>
-              <div className="relative grid grid-cols-3 gap-4">
-                <p className="col-span-3 border-r-4 border-blue-700 pr-4 text-lg font-semibold text-slate-900">
+              <div className="relative grid grid-cols-2 gap-2.5 rounded-2xl border border-slate-100 bg-white p-4 shadow-xl shadow-slate-200/50 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+                {/* Header Title */}
+                <p className="col-span-full border-r-4 border-blue-600 pr-3 text-base font-bold tracking-tight text-slate-800">
                   اختر التاريخ
                 </p>
-                {userSelectedDate ? (
-                  <div className= "transition-all duration-300 absolute top-0 right-0 z-10 m-0 flex h-full w-full items-center justify-center  bg-blue-500 p-0 font-bold text-white ">
-                    {" "}
-                    تم إختيار الموعد{" "}
-                  </div>
-                ) : null}
-                {selectedDate.map((date, index) => (
-                  <div
-                    className="m-0 p-0 "
-                    key={index}
-                    onClick={() => setUserSelectedDate(allData[index])}
-                  >
-                    {/* onClick={(e)=>handleDatePreserveNum(e,allData[index]) */}
 
-                    {/* {console.log(userSelectedDate)} */}
+                {/* Selection Overlay Banner with Animated Checkmark */}
+                <div
+                  className={`absolute inset-0 z-20 m-0 flex flex-col items-center justify-center rounded-2xl bg-blue-600/95 p-4 font-bold text-white shadow-xl backdrop-blur-sm transition-all duration-300 ease-out ${
+                    userSelectedDate
+                      ? "pointer-events-auto scale-100 opacity-100"
+                      : "pointer-events-none scale-95 opacity-0"
+                  }`}
+                >
+                  {/* Animated Checkmark Circle */}
+                  <div
+                    className={`mb-1 flex h-10 w-10 items-center justify-center rounded-full bg-white/20 transition-all duration-500 ease-out ${
+                      userSelectedDate
+                        ? "scale-100 rotate-0 opacity-100"
+                        : "scale-0 -rotate-45 opacity-0"
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-xl">
+                      done
+                    </span>
+                  </div>
+
+                  <span className="text-base tracking-wide">
+                    تم إختيار الموعد
+                  </span>
+                </div>
+
+                {/* Date Cards Grid (Arranged Chronologically) */}
+                {/* {console.log(allData.filter((item) => item.numberofaddedstudents < item.maxnumforeachdte ))} */}
+                {[...selectedDate]
+                  .sort((a, b) => new Date(a) - new Date(b))
+                  .map((date, index) => (
                     <div
-                      className="cursor-pointer flex-col items-center rounded-2xl bg-blue-100 p-6 font-semibold shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-gray-300"
-                      onClick={() => setItems({ ...items, preservedate: date })}
+                      className="m-0 p-0"
+                      key={index}
+                      onClick={() => setUserSelectedDate(allData[index])}
                     >
-                      <div className="relative flex flex-col items-center gap-2">
-                        <span className="material-symbols-outlined tranition-all text-2xl text-gray-600 duration-300 group-hover:scale-110 group-hover:rotate-[-8deg]">
-                          event
-                        </span>
-                        <span className="d-block text-sm font-medium text-red-400">
-                          {date}
-                        </span>
-                        <span className="text-xs text-gray-600">
-                          {new Date(date).getDay() == 1
-                            ? "الاثنين"
-                            : new Date(date).getDay() == 2
-                              ? "الثلاثاء"
-                              : new Date(date).getDay() == 3
-                                ? "الأربعاء"
-                                : new Date(date).getDay() == 4
-                                  ? "الخميس"
-                                  : new Date(date).getDay() == 5
-                                    ? "الجمعة"
-                                    : new Date(date).getDay() == 6
-                                      ? "السبت"
-                                      : "الأحد"}
-                        </span>
+                      {/* onClick={(e)=>handleDatePreserveNum(e,allData[index]) */}
+
+                      {/* {console.log(userSelectedDate)} */}
+                      <div
+                        className="group relative flex cursor-pointer flex-col items-center justify-center rounded-lg border border-slate-200/80 bg-slate-50 p-2.5 font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-600 hover:bg-blue-600 hover:shadow-md hover:shadow-blue-500/20"
+                        onClick={() =>
+                          setItems({ ...items, preservedate: date })
+                        }
+                      >
+                        <div className="relative flex flex-col items-center gap-1">
+                          {/* Calendar Icon */}
+                          <span className="material-symbols-outlined text-lg text-slate-400 transition-colors duration-200 group-hover:text-white">
+                            event
+                          </span>
+
+                          {/* Date Text */}
+                          <span className="d-block text-xs font-bold text-slate-800 transition-colors duration-200 group-hover:text-white">
+                            {date}
+                          </span>
+
+                          {/* Arabic Day Name */}
+                          <span className="text-[11px] font-medium text-slate-500 transition-colors duration-200 group-hover:text-blue-100">
+                            {new Date(date).getDay() == 1
+                              ? "الاثنين"
+                              : new Date(date).getDay() == 2
+                                ? "الثلاثاء"
+                                : new Date(date).getDay() == 3
+                                  ? "الأربعاء"
+                                  : new Date(date).getDay() == 4
+                                    ? "الخميس"
+                                    : new Date(date).getDay() == 5
+                                      ? "الجمعة"
+                                      : new Date(date).getDay() == 6
+                                        ? "السبت"
+                                        : "الأحد"}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             </div>
           )}
         </div>
 
-       {Object.keys(items).filter((key) => items[key] === true).length > 0 ?
-          <div className={`bg-surface-container-lowest space-y-10 rounded-xl p-8 shadow-sm ${studentData?.nationalid ? "hidden" : ""}`}>
+        {Object.keys(items).filter((key) => items[key] === true).length > 0 ? (
+          <div
+            className={`bg-surface-container-lowest space-y-10 rounded-xl p-8 shadow-sm ${studentData?.nationalid ? "hidden" : ""}`}
+          >
             <p className="flex items-center justify-between border-r-4 border-blue-700 pr-4 text-2xl font-bold">
               {" "}
               ملخص الطلب
@@ -556,20 +613,15 @@ const Makeappointment = ({
                   35 +
                   5}{" "}
                 جنيه{" "}
-                
               </span>
-
-
 
               <span className="w-full rounded-lg border-r-4 border-blue-700 bg-gray-200 p-4 pr-4 text-center font-semibold shadow-md transition-colors hover:bg-gray-300">
                 {" "}
                 تاريخ تقديم الطلب: {new Date().toLocaleDateString()}{" "}
               </span>
-
             </div>
 
-           
-             <div>
+            <div>
               <h2 className="text-on-surface text-xl font-bold">
                 المواد المختارة:{" "}
               </h2>
@@ -604,16 +656,14 @@ const Makeappointment = ({
                     </div>
                   ))}
               </div>
-            </div> 
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
 
-
-
-          </div>: ""}
-        
-
-      
         {openkey && (
-            <button
+          <button
             className={`group mr-auto flex items-center gap-2 rounded-lg bg-red-700 bg-gradient-to-r px-12 py-3 font-bold text-white shadow-lg transition-all hover:opacity-90 active:scale-95 ${studentData?.nationalid ? "hidden" : ""}`}
             onClick={(e) => handleSubmit(e, items)}
           >
@@ -621,7 +671,6 @@ const Makeappointment = ({
             <span className="material-symbols-outlined">check_circle</span>
           </button>
         )}
-      
       </div>
     </section>
   );

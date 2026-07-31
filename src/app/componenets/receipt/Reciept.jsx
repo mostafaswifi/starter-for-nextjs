@@ -206,8 +206,14 @@ const Receipt = ({ items }) => {
                     <span className="material-symbols-outlined text-sm">calendar_today</span>
                     <span className="font-label-bold">موعد المراجعة</span>
                   </div>
-                  <p className="font-body-lg font-bold text-headline-md">15 أكتوبر 2024</p>
-                  <p className="font-body-md text-on-surface-variant">09:30 صباحاً</p>
+                  <p className="font-body-lg font-bold text-headline-md">{new Date(items?.preservedate).toLocaleDateString("ar-EG", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            
+            })}</p>
+                  {/* <p className="font-body-md text-on-surface-variant">09:30 صباحاً</p> */}
                 </div>
 
                 <div className="border-t border-outline-variant pt-3">
@@ -216,10 +222,10 @@ const Receipt = ({ items }) => {
                     <span className="font-label-bold">الموقع</span>
                   </div>
                   <p className="font-body-md leading-tight text-on-surface font-bold text-body-lg">
-                    مديرية التربية والتعليم - المبنى الإداري الرئيسي
+                    مديرية التربية والتعليم - الزقازيق - الشرقية
                   </p>
                   <p className="text-[10px] text-on-surface-variant mt-1" data-location="Cairo">
-                    City Center, Cairo
+                    محافظة الشرقية - الزقازيق
                   </p>
                 </div>
               </div>
