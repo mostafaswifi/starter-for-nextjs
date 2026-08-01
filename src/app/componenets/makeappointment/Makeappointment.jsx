@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { swalAlert } from "../../../lib/swal";
 import { v4 as uuid } from "uuid";
 
+
 const Makeappointment = ({
   seatNumber,
   setSeatNumber,
@@ -12,6 +13,7 @@ const Makeappointment = ({
   setNationalid,
   studentData,
 }) => {
+    
   // console.log(items);
   const [selectedDate, setSelectedDate] = useState([]);
   const [openkey, setOpenkey] = useState(false);
@@ -123,7 +125,6 @@ const Makeappointment = ({
       }
     } catch (error) {
       console.error("Error updating date:", error);
-      swalAlert("خطأ", "حدث خطأ أثناء الاتصال بالخادم", "error", "موافق");
     }
   };
   // const handleHideDates = (e) => {
@@ -292,7 +293,7 @@ const Makeappointment = ({
                 </>
               ) : (
                 <div className="text-sm font-semibold text-red-500">
-                  لا توجد بيانات متاحة لرقم الجلوس المدخل
+                 من فضلك اضغط علي استعلام بعد إدخال رقم الجلوس
                 </div>
               )}
             </div>

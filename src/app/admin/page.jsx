@@ -37,8 +37,9 @@ useEffect(() => {
 
 const handleAlterDate = ((id,data) => {
 // console.log(data,id);
-
-  try {
+ 
+ 
+    try {
     const response = fetch(`/api/info?id=${id}`, {
       method: "PUT",
       headers: {
@@ -55,6 +56,8 @@ const handleAlterDate = ((id,data) => {
   } catch (error) {
    swalAlert("خطأ في التعديل  ","خطأ في التعديل","fail","نعم")    
   }
+  
+ 
 })
 
 const handleLogout = () => {
@@ -96,6 +99,27 @@ const handleLogout = () => {
                   إجراءات سريعة
                 </h4>
                 <div className="space-y-2">
+                   <button
+                    onClick={() => setItems("devidestudentstogroups")}
+                    className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-gray-300 p-4 font-bold text-gray-600 transition-all hover:-translate-y-0.5 hover:bg-gray-100 hover:shadow-md"
+                    style={
+                      items == "devidestudentstogroups"
+                        ? {
+                            color: "white",
+                            backgroundColor: "#3b82f6",
+                            transition: "all 0.3s ease-in-out",
+                          }
+                        : { color: "black", backgroundColor: "white" }
+                    }
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className="material-symbols-outlined">groups</span>
+                      تقسيم المجموعات
+                    </span>
+                    <span className="material-symbols-outlined">
+                      chevron_left
+                    </span>
+                  </button>
                   <button
                     onClick={() => setItems("revisionstartend")}
                     className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-gray-300 p-4 font-bold text-gray-600 transition-all hover:-translate-y-0.5 hover:bg-gray-100 hover:shadow-md"
@@ -119,6 +143,7 @@ const handleLogout = () => {
                       chevron_left
                     </span>
                   </button>
+
                   <button
                     onClick={() => setItems("statistics")}
                     className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-gray-300 p-4 font-bold text-gray-600 transition-all hover:-translate-y-0.5 hover:bg-gray-100 hover:shadow-md"
@@ -142,27 +167,9 @@ const handleLogout = () => {
                       chevron_left
                     </span>
                   </button>
-                  <button
-                    onClick={() => setItems("devidestudentstogroups")}
-                    className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-gray-300 p-4 font-bold text-gray-600 transition-all hover:-translate-y-0.5 hover:bg-gray-100 hover:shadow-md"
-                    style={
-                      items == "devidestudentstogroups"
-                        ? {
-                            color: "white",
-                            backgroundColor: "#3b82f6",
-                            transition: "all 0.3s ease-in-out",
-                          }
-                        : { color: "black", backgroundColor: "white" }
-                    }
-                  >
-                    <span className="flex items-center gap-2">
-                      <span className="material-symbols-outlined">groups</span>
-                      تقسيم المجموعات
-                    </span>
-                    <span className="material-symbols-outlined">
-                      chevron_left
-                    </span>
-                  </button>
+
+                 
+
                   <button
                     onClick={() => setItems("latestapplications")}
                     className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-gray-300 p-4 font-bold text-gray-600 transition-all hover:-translate-y-0.5 hover:bg-gray-100 hover:shadow-md"
@@ -184,18 +191,19 @@ const handleLogout = () => {
                       chevron_left
                     </span>
                   </button>
+
                   <button className="bg-red-600 p-4 mx-auto rounded-lg text-white my-3 cursor-pointer w-full" onClick={()=>handleLogout()} >تسجيل الخروج</button>
                 </div>
               </div>
             </nav>
           </aside>
           <div className="flex  flex-col p-6 h-full w-full px-4 mx-auto">
+            {items == "devidestudentstogroups" && (
+              <DevideStudentsToGroups data={data} handleAlterDate={handleAlterDate}/>
+            )}
             {items == "init" && <Image width={800} height={800} className="mx-auto" alt="app" src={appImg.src} />}
             {items == "statistics" && <Statistics data={data} />}
             {items == "revisionstartend" && <RevisionStartDate data={data} handleAlterDate={handleAlterDate} />}
-            {items == "devidestudentstogroups" && (
-              <DevideStudentsToGroups data={data} />
-            )}
             {items == "latestapplications" && (
               <LatestApplications data={data} />
             )}

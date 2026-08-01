@@ -1,7 +1,7 @@
 
 import { useState,useEffect } from 'react'
-const DevideStudentsToGroups = ({data}) => {
-  console.log(data);
+const DevideStudentsToGroups = ({data,handleAlterDate}) => {
+  console.log(data[0].numberforeachgroup);
   
   const [numberforeachgroup, setNumberForEachGroup] = useState(data[0].numberforeachgroup);
   const [students, setStudents] = useState([]);
@@ -11,7 +11,7 @@ const DevideStudentsToGroups = ({data}) => {
       const result = await response.json();
       if (result.success) {
         setStudents(result.data);
-        console.log("Fetched items:", result.data);
+       
       }
     } catch (error) {
       console.error("Error fetching items:", error);
@@ -21,10 +21,20 @@ const DevideStudentsToGroups = ({data}) => {
     getAllStudents();
   },[])
 
+
+
 const devideStudentsToGroups =async()=>{
     for(let i = 1; i <= numberforeachgroup; i++){
       
     }
+}
+
+
+const handleGroupNum = (e)=>{
+ setNumberForEachGroup(Number(e.target.value))
+setTimeout(()=>{
+  handleAlterDate(data[0].$id,{numberforeachgroup:Number(e.target.value)})
+},1000)
 }
   return (
               <div className="gap-4 flex flex-col">
@@ -34,17 +44,22 @@ const devideStudentsToGroups =async()=>{
                     تقسيم الطلاب
                   </h4>
                   <div className="gap-2 mr-4 flex items-center">
-                    <label className="text-sm font-medium text-gray-600">
+                    <label htmlFor="number" className="text-sm font-medium text-gray-600">
                       السعة القصوى:
                     </label>
-                    <input
-                    onChange={(e)=>setNumberForEachGroup(Number(e.target.value))}
-                      type="number"
-                      min="1"
-                      max="500"
+                    {/* <input
+                    onChange={(e)=>handleGroupNum(e)}
+                      type="text"
+                    
                       value={numberforeachgroup}
                       className="w-16 p-2 border border-gray-300 rounded-lg bg-white text-sm focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none transition-all"
-                    />
+                    /> */}
+                    <select id="number" name="number" onChange={(e)=>handleGroupNum(e)} className="border border-gray-300 rounded-lg bg-white text-sm focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none p-2 w-20">
+  <option value="100" defaultValue={numberforeachgroup}>100</option>
+  <option value="200">200</option>
+  <option value="300">300</option>
+  <option value="400">400</option>
+</select>
                   </div>
                   <button onClick={() => getAllStudents()} className="bg-blue-600 text-white px-6 py-2 rounded-lg font-bold text-sm hover:bg-blue-700 hover:-translate-y-0.5 hover:shadow-md transition-all gap-2 flex items-center">
                     <span className="material-symbols-outlined">group_add</span>

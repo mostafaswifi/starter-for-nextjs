@@ -5,7 +5,7 @@ import { databases, DATABASE_ID, COLLECTION_ID, ID, Query } from '@/lib/appwrite
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { avaliabledates , groupnumber} = body;
+    const { avaliabledates , groupnumber, maxnumforeachdte} = body;
 
     // Validate required fields
     if (!avaliabledates ) {
@@ -24,7 +24,7 @@ export async function POST(request) {
         groupnumber,
         $createdAt: new Date().toLocaleString(),
         $updatedAt: new Date().toLocaleString(),
-        
+        maxnumforeachdte
       }
     );
 

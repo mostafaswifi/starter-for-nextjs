@@ -68,35 +68,25 @@ useEffect(() => {
                 <span className="material-symbols-outlined text-green-600 bg-green-50 p-2 rounded-lg">
                   task_alt
                 </span>
-                <span className="text-green-600 text-sm font-bold">{studentsDataItems?.filter(student => student?.reservasionconfirm == true).length / studentsDataItems?.filter(student => student ).length * 100}%</span>
+                <span className="text-green-600 text-sm font-bold">{(studentsDataItems?.filter(student => student?.reservasionconfirm == true).length / studentsDataItems?.filter(student => student ).length * 100).toFixed(2)}%</span>
               </div>
               <p className="text-gray-600 text-sm font-medium mb-1">
-                طلبات مكتملة
+                طلبات مؤكدة
               </p>
               <h3 className="text-3xl font-bold text-gray-900">{studentsDataItems?.filter(student => student?.reservasionconfirm == true).length}</h3>
             </div>
             <div className="bg-white p-6 border-r-4 border-blue-400 rounded-xl shadow-sm transition-all duration-300 hover:border-blue-400 hover:-translate-y-0.5 hover:shadow-lg cursor-default">
-              <div className="-mt-2 -mr-2 mb-2 flex justify-end">
-                <button
-                  className="gap-1 text-blue-600 hover:bg-blue-50 px-3 py-1 text-sm font-medium flex items-center rounded transition-colors"
-                  title="عرض جميع المواعيد"
-                >
-                  <span>عرض الكل</span>
-                  <span className="material-symbols-outlined text-sm">
-                    chevron_left
-                  </span>
-                </button>
-              </div>
+         
               <div className="mb-4 flex items-start justify-between">
                 <span className="material-symbols-outlined text-blue-600 bg-blue-100 p-2 rounded-lg">
                   event_available
                 </span>
-                <span className="text-blue-600 text-sm font-bold">اليوم</span>
+             
               </div>
               <p className="text-gray-600 text-sm font-medium mb-1">
-                مواعيد اليوم
+               المبلغ الإجمالي
               </p>
-              <h3 className="text-3xl font-bold text-gray-900">45</h3>
+              <h3 className="text-3xl font-bold text-gray-900">{studentsDataItems?.map(student => student?.totalcost).reduce((total, price) => total + price, 0)}</h3>
             </div>
           </section>
 

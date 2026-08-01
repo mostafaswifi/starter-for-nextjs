@@ -7,7 +7,7 @@ import { redirect, useRouter } from "next/navigation";
 const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
 const RevisionStartDate = ({ data, handleAlterDate }) => {
   const router = useRouter();
-  // console.log(data[0]);
+  console.log(data[0]);
   const [password, setPassword] = useState("");
   const [enddate, setEndDate] = useState(data[0]?.enddate.substring(0, 10));
   const [startdate, setStartDate] = useState(
@@ -58,13 +58,15 @@ const [selectedDate, setSelectedDate] = useState([]);
   const datePicker = async (e, date) => {
     e.target.parentNode.parentNode.classList.add("hidden");
     setGroupNumber(groupnumber + 1);
+    
     try {
-      const res = await fetch(`/api/avaliabledates`, {
+      await fetch(`/api/avaliabledates`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           avaliabledates: date,
-          groupnumber: `g${groupnumber}`
+          groupnumber: `g${groupnumber}`,
+          maxnumforeachdte: data[0].numberforeachgroup,
          
         }),
       }).then((res) => res.json()).then((data) =>{
@@ -86,6 +88,7 @@ const [selectedDate, setSelectedDate] = useState([]);
       headers: { "Content-Type": "application/json" },
     }).then((res) => res.json()).then((data) =>{
       const finalDates = data?.data?.map((item) => item.avaliabledates.slice(0, 10));
+     
       setSelectedDate(finalDates);
     });
     // console.log(selectedDate);
