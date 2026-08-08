@@ -2,18 +2,28 @@
 
 import "@appwrite.io/pink-icons";
 import Link from "next/link";
-import { useState, useEffect, useRef, useCallback } from "react";
-import { client } from "@/lib/appwrite";
+import { useEffect } from "react";
+
 import Image from "next/image";
-import { AppwriteException } from "appwrite";
+
 import { swalAlert } from "../lib/swal";
 
 import pen from "../../public/pen.png";
 
 export default function Home() {
   // Fetch all items
-
+// function update () {
+//   {swalAlert("تم تحديث التاريخ بنجاح"," عملية تحديث التاريخ بنجاح","success","موافق")}
+// }
+// update();
+useEffect(() => {
+  const update = () => {
+    swalAlert("تنبيه هام !!! "," البوابة الإلكترونية لطلبات التظلم تعمل علي الكمبيوتر و اللاب توب فقط , و لا تعمل علي الموبايل","success","موافق")
+  };
+  update();
+})
   return (
+    
     <main className="checker-background flex flex-col items-center p-5">
       <main className="mx-auto max-w-7xl px-6 py-12">
         <section className="asymmetric-grid mb-24 items-center">
@@ -27,6 +37,15 @@ export default function Home() {
               </span>
               بوابة تقديم طلبات إعادة التصحيح الرسمية
             </div>
+            <div className="text-on-primary-fixed inline-flex items-center gap-2 rounded-xl bg-green-100 px-4 py-2 text-sm font-semibold">
+              <span
+                className="material-symbols-outlined text-sm"
+                data-icon="info"
+              >
+                info
+              </span>
+             الموقع يعمل علي اجهزة الكمبيوتر و اللاب توب ( لا يعمل علي الموبايل )
+            </div>
             <h1 className="text-on-surface text-5xl leading-[1.1] font-extrabold tracking-tighter lg:text-7xl">
               نظام مواعيد <br />
               <span className="from-primary to-primary-container bg-gradient-to-l bg-clip-text text-blue-700">
@@ -35,7 +54,7 @@ export default function Home() {
             </h1>
             <p className="text-secondary max-w-xl text-lg leading-relaxed">
               بوابة مخصصة لطلاب الصف التاسع لتقديم طلبات مراجعة النتائج
-              الأكاديمية للعام الدراسي 2023/24. تضمن البوابة الشفافية الكاملة
+              الأكاديمية للعام الدراسي 2027/ 2028. تضمن البوابة الشفافية الكاملة
               وجدولة المواعيد بشكل منظم لضمان حق الطالب.
             </p>
             <div className="flex flex-wrap gap-4">
@@ -165,7 +184,7 @@ export default function Home() {
                 3. جدولة الموعد تلقائياً
               </h3>
               <p className="text-secondary text-sm leading-relaxed">
-                اختر الموعد والمكان المناسبين للمقابلة من خلال التقويم التفاعلي
+                اختر الموعدالمناسب للمقابلة من خلال التقويم التفاعلي
                 المتاح في النظام لتأكيد طلبك.
               </p>
             </div>
@@ -204,8 +223,8 @@ export default function Home() {
                     </span>
                   </summary>
                   <p className="text-secondary mt-4 text-sm leading-relaxed">
-                    تبلغ رسوم إعادة التصحيح 100 جنيه لكل مادة، يتم دفعها من خلال
-                    منافذ التحصيل الإلكتروني المعتمدة قبل حضور الموعد.
+                    تبلغ رسوم إعادة التصحيح 35 جنيه لكل مادة + 5 جنيه مصاريف إدارية (  للطالب )، يتم دفعها من خلال
+                       ديوان عام الإدارة  قبل حضور الموعد.
                   </p>
                 </details>
                 <details className="group bg-surface-container-lowest rounded-xl p-6 transition-all">
@@ -219,8 +238,7 @@ export default function Home() {
                     </span>
                   </summary>
                   <p className="text-secondary mt-4 text-sm leading-relaxed">
-                    نعم، يمكنك تعديل الموعد لمرة واحدة فقط قبل 48 ساعة من الموعد
-                    الأصلي من خلال قسم "مواعيدي" في البوابة.
+                لا ، يمكنك تغيير الموعد من خلال التقويم التفاعلي المتاح في النظام. 
                   </p>
                 </details>
                 <details className="group bg-surface-container-lowest rounded-xl p-6 transition-all">
@@ -234,8 +252,7 @@ export default function Home() {
                     </span>
                   </summary>
                   <p className="text-secondary mt-4 text-sm leading-relaxed">
-                    تظهر النتائج عادة خلال 10 إلى 15 يوم عمل من تاريخ المقابلة،
-                    وسيتم إخطارك عبر الرسائل النصية القصيرة.
+                    تظهر النتائج عادة خلال 10 إلى 15 يوم عمل من تاريخ المقابلة.
                   </p>
                 </details>
               </div>

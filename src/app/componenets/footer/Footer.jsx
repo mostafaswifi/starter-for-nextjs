@@ -11,26 +11,26 @@ const Footer = () => {
           </div>
           <div className="flex gap-8">
             <a
-              className="transition-colors hover:text-slate-900 dark:hover:text-white"
-              href="#"
+              className="transition-colors hover:text-slate-900 cursor-pointer"
+           
             >
               Privacy Policy
             </a>
             <a
-              className="transition-colors hover:text-slate-900 dark:hover:text-white"
-              href="#"
+              className="transition-colors hover:text-slate-900 cursor-pointer"
+           
             >
               Terms of Service
             </a>
             <a
-              className="transition-colors hover:text-slate-900 dark:hover:text-white"
-              href="#"
+              className="transition-colors hover:text-slate-900 cursor-pointer"
+           
             >
               Contact Support
             </a>
             <a
-              className="transition-colors hover:text-slate-900 dark:hover:text-white"
-              href="#"
+              className="transition-colors hover:text-slate-900 cursor-pointer"
+          
             >
               Technical Office
             </a>

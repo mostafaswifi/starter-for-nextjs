@@ -1,9 +1,9 @@
 
 import { useState,useEffect } from 'react'
 const DevideStudentsToGroups = ({data,handleAlterDate}) => {
-  console.log(data[0].numberforeachgroup);
+  console.log(data[0]?.numberforeachgroup);
   
-  const [numberforeachgroup, setNumberForEachGroup] = useState(data[0].numberforeachgroup);
+  const [numberforeachgroup, setNumberForEachGroup] = useState(data[0]?.numberforeachgroup);
   const [students, setStudents] = useState([]);
   const getAllStudents = async () => {
     try {

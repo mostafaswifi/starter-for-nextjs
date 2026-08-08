@@ -247,11 +247,7 @@ const LatestApplications = () => {
                           subjects.map((subject, idx) => (
                             <span
                               key={idx}
-                              className={`rounded px-2 py-1 text-xs ${
-                                subject === "مؤكد"
-                                  ? "bg-blue-200 text-teal-800"
-                                  : "bg-gray-100 text-gray-600"
-                              }`}
+                              className={`rounded px-2 py-1 text-xs bg-blue-200 text-teal-800 cursor-pointer transition-colors hover:bg-teal-100 hover:text-teal-800`} 
                             >
                               {subject}
                             </span>
@@ -271,6 +267,7 @@ const LatestApplications = () => {
                         <p className="text-sm font-bold">
                           {student?.totalcost || 0} جنيها
                         </p>
+                        <p>{student?.$id}</p>
                       </div>
                     </div>
                     <div>
@@ -287,6 +284,7 @@ const LatestApplications = () => {
                         </p>
                       </div>
                     </div>
+                        <button className="mt-2 w-fit self-end rounded bg-blue-500 text-white transition-colors hover:bg-green-600 px-3 py-1 cursor-pointer"> تأكيد الحجز </button>
                   </div>
                 </div>
               </div>

@@ -218,7 +218,7 @@ const [selectedDate, setSelectedDate] = useState([]);
         </div>
       </section>
 
-    {selectedDate == 0 ?<section
+   {selectedDate?  selectedDate == 0 ?<section
         className="col-span-2 rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
         data-purpose="available-dates-management"
       >
@@ -318,7 +318,7 @@ const [selectedDate, setSelectedDate] = useState([]);
   <button className="mt-4 rounded bg-red-500 px-4 py-2 text-white" onClick={handleDelete}>حذف المواعيد المحددة</button> 
   : null}
 </div>
-</section>}
+</section>:null}
 
     </div>
   );
