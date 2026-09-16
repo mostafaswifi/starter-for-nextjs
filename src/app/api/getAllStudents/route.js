@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { databases, DATABASE_ID, COLLECTION_ID,Query } from '@/lib/appwrite';
+
 export async function GET() {
   try {
     const response = await databases.listDocuments(

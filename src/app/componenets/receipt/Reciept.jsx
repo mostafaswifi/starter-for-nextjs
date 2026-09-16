@@ -5,10 +5,11 @@ import Image from "next/image";
 import { useRef } from 'react';
 import html2canvas from 'html2canvas-pro';
 import { jsPDF } from 'jspdf';
+import { useReactToPrint } from "react-to-print";
 
 const Receipt = ({ items }) => {
   const contentRef = useRef(null);
-
+  const handlePrint = useReactToPrint({ contentRef });
  const handleDownload = async () => {
   const element = contentRef.current;
   if (!element) return;
@@ -48,6 +49,7 @@ const Receipt = ({ items }) => {
             </button>
             <button
               className="flex items-center gap-2 px-4 py-2 border border-outline text-primary rounded-lg hover:bg-surface-container-low transition-colors cursor-pointer active:opacity-80"
+              onClick={handlePrint}
             >
               <span className="material-symbols-outlined">share</span>
               <span className="font-label-bold text-label-bold">مشاركة</span>
