@@ -36,7 +36,7 @@ useEffect(() => {
   }
 
 const handleAlterDate = ((id,data) => {
-// console.log(data,id);
+console.log(data,id);
  
  
     try {
@@ -199,7 +199,7 @@ const handleLogout = () => {
           </aside>
           <div className="flex  flex-col p-6 h-full w-full px-4 mx-auto">
             {items == "devidestudentstogroups" && (
-              <DevideStudentsToGroups data={data} handleAlterDate={handleAlterDate}/>
+              <DevideStudentsToGroups data={data} />
             )}
             {items == "init" && <Image width={800} height={800} className="mx-auto" alt="app" src={appImg.src} />}
             {items == "statistics" && <Statistics data={data} />}

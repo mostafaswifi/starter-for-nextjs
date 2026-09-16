@@ -9,15 +9,15 @@ const RevisionStartDate = ({ data, handleAlterDate }) => {
   const router = useRouter();
   console.log(data[0]);
   const [password, setPassword] = useState("");
-  const [enddate, setEndDate] = useState(data[0]?.enddate.substring(0, 10));
+  const [enddate, setEndDate] = useState(data[0]?.enddate?.substring(0, 10));
   const [startdate, setStartDate] = useState(
     data[0]?.startdate.substring(0, 10),
   );
   const [revisestartdate, setRevisionStartDate] = useState(
-    data[0]?.revisestartdate.substring(0, 10),
+    data[0]?.revisestartdate?.substring(0, 10),
   );
   const [reviseenddate, setRevisionEndDate] = useState(
-    data[0]?.reviseenddate.substring(0, 10),
+    data[0]?.reviseenddate?.substring(0, 10),
   );
 const [groupnumber, setGroupNumber] = useState(1);
   const [avDates, setAvDates] = useState([]);
@@ -157,7 +157,7 @@ const [selectedDate, setSelectedDate] = useState([]);
           </div>
           <button
             onClick={() =>
-              handleAlterDate("1", { ...data[0], startdate, enddate })
+              handleAlterDate(`6aaaed9e0010cc20d08f`, { ...data[0], startdate, enddate })
             }
             className="mt-4 w-full rounded-lg bg-blue-600 px-6 py-4 font-bold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md"
           >
@@ -165,7 +165,7 @@ const [selectedDate, setSelectedDate] = useState([]);
           </button>
         </div>
       </section>
-      <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+      {/* <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
         <h4 className="mb-6 flex items-center gap-2 text-xl font-bold text-blue-600">
           <span className="material-symbols-outlined">calendar_month</span>
           فترة تلقي الطلبات
@@ -205,7 +205,7 @@ const [selectedDate, setSelectedDate] = useState([]);
           </div>
           <button
             onClick={() =>
-              handleAlterDate("1", {
+              handleAlterDate(2, {
                 ...data[0],
                 revisestartdate,
                 reviseenddate,
@@ -216,7 +216,7 @@ const [selectedDate, setSelectedDate] = useState([]);
             تحديث الفترة
           </button>
         </div>
-      </section>
+      </section> */}
 
    {selectedDate?  selectedDate == 0 ?<section
         className="col-span-2 rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
