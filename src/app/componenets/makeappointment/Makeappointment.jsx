@@ -63,6 +63,7 @@ const Makeappointment = ({
       totalcost: checkedsubjects.length * 35 + 5,
       reservationnumber: uuid(options),
       nationalid: nationalid,
+      groupnumber: userSelectedDate?.groupnumber
     };
     const response = await fetch("/api/put-student", {
       method: "PUT",
@@ -91,6 +92,7 @@ const Makeappointment = ({
     })
       .then((res) => res.json())
       .then((data) => {
+        // console.log(data)
         setAllData(data?.data?.filter((item) => item.numberofaddedstudents < item.maxnumforeachdte ));
 
         const finalDates = data?.data?.filter((item) => item.numberofaddedstudents < item.maxnumforeachdte ).map((item) =>
@@ -107,6 +109,7 @@ const Makeappointment = ({
   }, []);
 
   const handleDatePreserveNum = async (i) => {
+    console.log(i.groupnumber);
     try {
       const response = await fetch(`/api/avaliabledates?id=${i?.$id}`, {
         method: "PUT",
@@ -126,6 +129,8 @@ const Makeappointment = ({
     } catch (error) {
       console.error("Error updating date:", error);
     }
+
+
   };
   // const handleHideDates = (e) => {
   //   e.target.parentNode.parentNode.classList.add("hidden");
