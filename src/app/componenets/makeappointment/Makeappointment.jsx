@@ -109,7 +109,7 @@ const Makeappointment = ({
   }, []);
 
   const handleDatePreserveNum = async (i) => {
-    console.log(i.groupnumber);
+    // console.log(i.groupnumber);
     try {
       const response = await fetch(`/api/avaliabledates?id=${i?.$id}`, {
         method: "PUT",

@@ -1,5 +1,6 @@
 import Link from "next/link";
-
+import Image from "next/image";
+import logo from "../../../../public/grader.jpg";
 const Nav = () => {
   return (
     <>
@@ -62,11 +63,13 @@ const Nav = () => {
                 help
               </span>
             </button>
-            <div className="border-surface-container h-10 w-10 overflow-hidden rounded-full border-2">
-              <img
-                alt="Student Profile Avatar"
+            <div className="border-surface-container h-30 w-30 overflow-hidden rounded-full">
+              <Image
+                alt="Logo"
                 data-alt="close-up portrait of a young student smiling in a library setting with soft natural window light"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnzUpSgTH-AvtL3giYA2gYgMI1ldgYliZg_a6Jbd7M28XJdg5FXGBqt6exbD1M220qvOn1PKD0yr3Amn1F5fpyleSIrsg4sWqcsJX-y5FGO_SVlejXos2IWlIyXhz7wT6g_489_aiEVv26kieRDt8RunXVFAlStX1nJsVgIKtM1SzTLHXQkwcOQsJMJ8RP92GMCD3qj43hw_fg_84SvuaBWYWWKHNzfKC570QcU_ghnXeskvGz4Zn7prk0P8cZbEIxcpA6FUbfH9E"
+                src={logo}
+                width={150}
+                height={150}
               />
             </div>
           </div>
