@@ -7,7 +7,7 @@ import { redirect, useRouter } from "next/navigation";
 const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
 const RevisionStartDate = ({ data, handleAlterDate }) => {
   const router = useRouter();
-  console.log(data[0]);
+  // console.log(data[0]);
   const [password, setPassword] = useState("");
   const [enddate, setEndDate] = useState(data[0]?.enddate?.substring(0, 10));
   const [startdate, setStartDate] = useState(

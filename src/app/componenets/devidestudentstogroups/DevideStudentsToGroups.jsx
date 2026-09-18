@@ -1,156 +1,177 @@
-
-import { useState,useEffect } from 'react'
-const DevideStudentsToGroups = ({data,handleAlterDate}) => {
-  console.log(data[0]?.numberforeachgroup);
-  
-  const [numberforeachgroup, setNumberForEachGroup] = useState(data[0]?.numberforeachgroup);
+import { useState, useEffect, useMemo } from "react";
+const DevideStudentsToGroups = ({ data, handleAlterDate }) => {
+  const [numberforeachgroup, setNumberForEachGroup] = useState(
+    data[0]?.numberforeachgroup,
+  );
   const [students, setStudents] = useState([]);
+  const [groupedStudents, setGroupedStudents] = useState([]);
+
   const getAllStudents = async () => {
     try {
       const response = await fetch("/api/getAllStudents");
       const result = await response.json();
       if (result.success) {
         setStudents(result.data);
-       
+        setGroupedStudents(groupStudentsByNumber(result.data));
       }
     } catch (error) {
       console.error("Error fetching items:", error);
     }
-  }
+  };
+  const groupStudentsByNumber = (studentArray) => {
+    return studentArray.reduce((acc, student) => {
+      const groupKey = student.groupnumber || "ungrouped";
+
+      // If the group array doesn't exist yet, initialize it
+      if (!acc[groupKey]) {
+        acc[groupKey] = [];
+      }
+
+      // Push the student into their respective group array
+      acc[groupKey].push(student);
+
+      return acc;
+    }, {});
+  };
+
   useEffect(() => {
     getAllStudents();
-  },[])
+  }, []);
+  const caller = async () => {
+    console.log(groupedStudents);
+  };
 
+  const handleGroupNum = (e) => {
+    setNumberForEachGroup(Number(e.target.value));
+    setTimeout(() => {
+      handleAlterDate(data[0].$id, {
+        numberforeachgroup: Number(e.target.value),
+      });
+    }, 1000);
+  };
 
-
-const devideStudentsToGroups =async()=>{
-    for(let i = 1; i <= numberforeachgroup; i++){
-      
-    }
-}
-
-
-const handleGroupNum = (e)=>{
- setNumberForEachGroup(Number(e.target.value))
-setTimeout(()=>{
-  handleAlterDate(data[0].$id,{numberforeachgroup:Number(e.target.value)})
-},1000)
-}
   return (
-              <div className="gap-4 flex flex-col">
-              <section className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
-                <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-gray-50">
-                  <h4 className="text-xl font-bold text-blue-600">
-                    تقسيم الطلاب
-                  </h4>
-                  <div className="gap-2 mr-4 flex items-center">
-                    <label htmlFor="number" className="text-sm font-medium text-gray-600">
-                      السعة القصوى:
-                    </label>
-                    {/* <input
-                    onChange={(e)=>handleGroupNum(e)}
-                      type="text"
-                    
-                      value={numberforeachgroup}
-                      className="w-16 p-2 border border-gray-300 rounded-lg bg-white text-sm focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none transition-all"
-                    /> */}
-                    <select id="number" name="number" onChange={(e)=>handleGroupNum(e)} className="border border-gray-300 rounded-lg bg-white text-sm focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none p-2 w-20">
-  <option value="100" defaultValue={numberforeachgroup}>100</option>
-  <option value="200">200</option>
-  <option value="300">300</option>
-  <option value="400">400</option>
-</select>
-                  </div>
-                  <button onClick={() => getAllStudents()} className="bg-blue-600 text-white px-6 py-2 rounded-lg font-bold text-sm hover:bg-blue-700 hover:-translate-y-0.5 hover:shadow-md transition-all gap-2 flex items-center">
-                    <span className="material-symbols-outlined">group_add</span>
-                    توزيع في مجموعات
-                  </button>
-                </div>
-                <div className="p-6 gap-4 grid grid-cols-1 md:grid-cols-2">
-                  {/* Group 1 */}
-                  <div className="border border-gray-200 rounded-lg p-4 bg-teal-50/30 border-t-4 border-teal-600">
-                    <div className="mb-2 flex items-center justify-between">
-                      <span className="font-bold text-blue-600">
-                        المجموعة ١ (طالبان)
-                      </span>
-                      <span className="text-sm text-gray-500">٢٥ أكتوبر</span>
-                      <span className="bg-teal-600 text-white px-3 py-1 rounded-full text-xs font-bold">
-                        نشط
-                      </span>
-                    </div>
-                    <div className="space-y-1">
-                      <div className="text-sm p-2 bg-white rounded border border-gray-200/50 flex justify-between">
-                        <span>أحمد محمد علي</span>
-                        <span className="text-xs text-gray-600">#RQ-8821</span>
-                      </div>
-                      <div className="text-sm p-2 bg-white rounded border border-gray-200/50 flex justify-between">
-                        <span>سارة يوسف إبراهيم</span>
-                        <span className="text-xs text-gray-600">#RQ-8819</span>
-                      </div>
-                    </div>
-                  </div>
-                  {/* Group 2 */}
-                  <div className="border border-gray-200 rounded-lg p-4 bg-red-50/30 border-t-4 border-red-600">
-                    <div className="mb-2 flex items-center justify-between">
-                      <span className="font-bold text-blue-600">
-                        المجموعة ٢ (طالبان)
-                      </span>
-                      <span className="text-sm text-gray-500">٢٦ أكتوبر</span>
-                      <span className="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold">
-                        مكتمل
-                      </span>
-                    </div>
-                    <div className="space-y-1">
-                      <div className="text-sm p-2 bg-white rounded border border-gray-200/50 flex justify-between">
-                        <span>ياسين خالد حسن</span>
-                        <span className="text-xs text-gray-600">#RQ-8815</span>
-                      </div>
-                      <div className="text-sm p-2 bg-white rounded border border-gray-200/50 flex justify-between">
-                        <span>مريم محمود السيد</span>
-                        <span className="text-xs text-gray-600">#RQ-8812</span>
-                      </div>
-                    </div>
-                  </div>
-                  {/* Group 3 */}
-                  <div className="border border-gray-200 rounded-lg p-4 bg-teal-50/30 border-t-4 border-teal-600 md:col-span-2">
-                    <div className="mb-2 flex items-center justify-between">
-                      <span className="font-bold text-blue-600">
-                        المجموعة ٣ (طالب واحد)
-                      </span>
-                      <span className="text-sm text-gray-500">٢٧ أكتوبر</span>
-                      <span className="bg-teal-600 text-white px-3 py-1 rounded-full text-xs font-bold">
-                        حالي
-                      </span>
-                    </div>
-                    <div className="space-y-1">
-                      <div className="text-sm p-2 bg-white rounded border border-gray-200/50 flex justify-between">
-                        <span>محمد خالد محمود</span>
-                        <span className="text-xs text-gray-600">#RQ-8810</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </section>
+    <div className="flex flex-col gap-4">
+      <section className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div className="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-6 py-4">
+          <h4 className="text-xl font-bold text-blue-600">تقسيم الطلاب</h4>
+          <div className="mr-4 flex items-center gap-2">
+            <label
+              htmlFor="number"
+              className="text-sm font-medium text-gray-600"
+            >
+              السعة القصوى:
+            </label>
 
-              {/* System Alert */}
-              <section className="bg-blue-900 text-white p-6 rounded-xl shadow-md overflow-hidden relative hover:shadow-lg transition-shadow">
-                <div className="relative z-10">
-                  <h4 className="text-xl font-bold mb-2">تنبيه النظام</h4>
-                  <p className="text-sm opacity-90 mb-6">
-                    هناك 12 طلباً بانتظار التوزيع على المقرات الإدارية المختصة.
-                  </p>
-                  <button className="bg-white text-blue-600 px-6 py-1 rounded-full text-xs font-bold hover:bg-gray-50 hover:-translate-y-0.5 hover:shadow-md transition-all">
-                    توزيع الآن
-                  </button>
+            <select
+              id="number"
+              name="number"
+              onChange={(e) => handleGroupNum(e)}
+              className="w-20 rounded-lg border border-gray-300 bg-white p-2 text-sm outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600"
+            >
+              <option value="100" defaultValue={numberforeachgroup}>
+                100
+              </option>
+              <option value="200">200</option>
+              <option value="300">300</option>
+              <option value="400">400</option>
+            </select>
+          </div>
+          <button
+            onClick={caller}
+            className="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2 text-sm font-bold text-white transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md"
+          >
+            <span className="material-symbols-outlined">print</span>
+            طباعة المجموعات
+          </button>
+        </div>
+        <div className="grid grid-cols-1 gap-4 p-6 md:grid-cols-2">
+          {Object.entries(groupedStudents).map(([groupKey, students]) =>
+            groupKey !== "ungrouped" ? (
+              <div
+                key={groupKey}
+                className="h-100 overflow-y-auto rounded-lg border border-t-4 border-blue-600 border-gray-200 bg-blue-50/30 p-4"
+              >
+                <div className="mb-2 flex items-center justify-between">
+                  <span className="font-bold text-blue-600">
+                    المجموعة {groupKey}
+                  </span>
+                  <span className="text-sm text-gray-500">
+                    {students[0]?.preservedate?.substring(0, 10)}
+                  </span>
+                  <span
+                    className={`rounded-full ${students?.length < numberforeachgroup ? "bg-red-600" : "bg-green-600"} px-3 py-1 text-xs font-bold text-white`}
+                  >
+                    {students.length}
+                    {students?.length < numberforeachgroup
+                      ? " / غير مكتمل"
+                      : " / مكتمل"}
+                  </span>
                 </div>
-                <span className="material-symbols-outlined absolute -bottom-4 -left-4 text-8xl opacity-10">
-                  warning
-                </span>
-              </section>
+                <div className="space-y-1">
+                  {students.map((student, idx) => (
+                    <div
+                      key={student.$id}
+                      className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-2"
+                    >
+                      {idx + 1}
+                      <span className="text-sm font-bold text-gray-600">
+                        {student.studentname}
+                      </span>
+                      <span className="text-sm font-bold text-gray-600">
+                        {student.arabic ? "عربي" : ""}
+                      </span>
+                      <span className="text-sm font-bold text-gray-600">
+                        {student.english ? "انجليزي" : ""}
+                      </span>
+                      <span className="text-sm font-bold text-gray-600">
+                        {student.social ? "دراسات" : ""}
+                      </span>
+                      <span className="text-sm font-bold text-gray-600">
+                        {student.algebra ? "جبر" : ""}
+                      </span>
+                      <span className="text-sm font-bold text-gray-600">
+                        {student.geometry ? "هندسة" : ""}
+                      </span>
+                      <span className="text-sm font-bold text-gray-600">
+                        {student.sciense ? "علوم" : ""}
+                      </span>
+                      <span className="text-sm font-bold text-gray-600">
+                        {student.ict ? "كمبيوتر " : ""}
+                      </span>
+                      <span className="text-sm font-bold text-gray-600">
+                        {student.religious ? "دين" : ""}
+                      </span>
+                      <span className="text-sm font-bold text-gray-600">
+                        {student.art ? "رسم" : ""}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null,
+          )}
+        </div>
+      </section>
 
-             
-            </div>
-  )
-}
+      {/* System Alert */}
+      <section className="relative overflow-hidden rounded-xl bg-blue-900 p-6 text-white shadow-md transition-shadow hover:shadow-lg">
+        <div className="relative z-10">
+          <h4 className="mb-2 text-xl font-bold">تنبيه النظام</h4>
+          <p className="mb-6 text-sm opacity-90">
+            هناك {Object.entries(groupedStudents).length - 1} مجموعة تم توزيعها
+            على المقرات الإدارية المختصة.
+          </p>
+          <button className="rounded-full bg-white px-6 py-1 text-xs font-bold text-blue-600 transition-all hover:-translate-y-0.5 hover:bg-gray-50 hover:shadow-md">
+            تم التوزيع
+          </button>
+        </div>
+        <span className="material-symbols-outlined absolute -bottom-4 -left-4 text-8xl opacity-10">
+          warning
+        </span>
+      </section>
+    </div>
+  );
+};
 
-export default DevideStudentsToGroups
+export default DevideStudentsToGroups;

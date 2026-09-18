@@ -50,7 +50,7 @@ const Nav = () => {
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <button className="rounded-full p-2 text-slate-600 transition-all hover:bg-slate-50">
+            {/* <button className="rounded-full p-2 text-slate-600 transition-all hover:bg-slate-50">
               <span
                 className="material-symbols-outlined"
                 data-icon="notifications"
@@ -62,7 +62,7 @@ const Nav = () => {
               <span className="material-symbols-outlined" data-icon="help">
                 help
               </span>
-            </button>
+            </button> */}
             <div className="border-surface-container h-30 w-30 overflow-hidden rounded-full">
               <Image
                 alt="Logo"

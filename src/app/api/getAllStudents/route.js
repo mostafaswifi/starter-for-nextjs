@@ -1,18 +1,61 @@
+// import { NextResponse } from 'next/server';
+// import { databases, DATABASE_ID, COLLECTION_ID,Query } from '@/lib/appwrite';
+
+// export async function GET() {
+//   try {
+//     const response = await databases.listDocuments(
+//       DATABASE_ID,
+//       COLLECTION_ID,
+//   [
+//     Query.limit(100000) // Fetch up to 5,000 items in a single call
+//   ]
+//     );
+
+//     return NextResponse.json(
+//       { success: true, data: response.documents },
+//       { status: 200 }
+//     );
+//   } catch (error) {
+//     console.error('Error fetching items:', error);
+//     return NextResponse.json(
+//       { success: false, error: error.message },
+//       { status: 500 }
+//     );
+//   }
+// }
 import { NextResponse } from 'next/server';
-import { databases, DATABASE_ID, COLLECTION_ID,Query } from '@/lib/appwrite';
+import { databases, DATABASE_ID, COLLECTION_ID, Query } from '@/lib/appwrite';
 
 export async function GET() {
   try {
-    const response = await databases.listDocuments(
-      DATABASE_ID,
-      COLLECTION_ID,
-  [
-    Query.limit(100000) // Fetch up to 5,000 items in a single call
-  ]
-    );
+    let allStudents = [];
+    let offset = 0;
+    const limit = 5000;
+    let hasMore = true;
+
+    // حلقة تكرارية لجلب كل البيانات على دفعات لتجنب انهيار السيرفر
+    while (hasMore) {
+      const response = await databases.listDocuments(
+        DATABASE_ID,
+        COLLECTION_ID,
+        [
+          Query.limit(limit),
+          Query.offset(offset)
+        ]
+      );
+
+      allStudents = [...allStudents, ...response.documents];
+
+      // إذا كان عدد المستندات المسترجعة أقل من الـ limit، فهذا يعني أننا وصلنا للنهاية
+      if (response.documents.length < limit) {
+        hasMore = false;
+      } else {
+        offset += limit;
+      }
+    }
 
     return NextResponse.json(
-      { success: true, data: response.documents },
+      { success: true, data: allStudents },
       { status: 200 }
     );
   } catch (error) {
