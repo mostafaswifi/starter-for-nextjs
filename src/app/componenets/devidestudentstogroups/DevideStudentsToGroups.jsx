@@ -1,4 +1,5 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
+import html2pdf from 'html2pdf.js';
 const DevideStudentsToGroups = ({ data, handleAlterDate }) => {
   const [numberforeachgroup, setNumberForEachGroup] = useState(
     data[0]?.numberforeachgroup,
@@ -37,9 +38,82 @@ const DevideStudentsToGroups = ({ data, handleAlterDate }) => {
   useEffect(() => {
     getAllStudents();
   }, []);
-  const caller = async () => {
-    console.log(groupedStudents);
-  };
+const printGroup = async (students) => {
+  try {
+    // 1. Create a container element for the PDF content with RTL support
+    const element = document.createElement('div');
+    element.dir = 'rtl'; // Sets Right-to-Left direction natively for Arabic
+    element.style.padding = '0';
+    element.style.fontFamily = 'Cairo, sans-serif';
+    element.style.color = '#000000';
+
+    // 2. Build the HTML structure (Title, Date, and Table)
+    let rowsHTML = students.map((item,idx) => `
+      <tr>
+        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${idx+1}</td>
+        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.groupnumber || ''}</td>
+        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: right;font-size: 16px">${item.studentname || ''}</td>
+        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.seatnum || ''}</td>
+        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.adminstration || ''}</td>
+        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.algebra? '✓' : '' || ''}</td>
+        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.arabic? '✓' : '' || ''}</td>
+        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.art? '✓' : '' || ''}</td>
+        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.english? '✓' : '' || ''}</td>
+        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.geometry? '✓' : '' || ''}</td>
+        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.ict? '✓' : '' || ''}</td>
+        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.religious? '✓' : '' || ''}</td>
+        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.sciense? '✓' : '' || ''}</td>
+        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.social? '✓' : '' || ''}</td>
+        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.subjectnumber || ''}</td>
+        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.totalcost || ''}</td>
+      </tr>
+    `).join('');
+
+    element.innerHTML = `
+      <h2 style="color: #010101; margin-bottom: 5px;">تقرير بيانات الطلاب</h2>
+      <p style="font-size: 12px; color: #000000; margin-bottom: 20px;">Generated: ${new Date().toLocaleString()}</p>
+      <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+        <thead>
+          <tr style="background-color: #2980b9; color: white;border: 1px solid #010101;">
+            <th style="border: 1px solid #000000; padding: 8px;">#</th>
+            <th style="border: 1px solid #000; padding: 8px;">رقم المجموعة</th>
+            <th style="border: 1px solid #000000; padding: 8px;">الاسم</th>
+            <th style="border: 1px solid #000; padding: 8px;">الرقم</th>
+            <th style="border: 1px solid #000; padding: 8px;">Admin</th>
+            <th style="border: 1px solid #000; padding: 8px;">Algebra</th>
+            <th style="border: 1px solid #000; padding: 8px;">Arabic</th>
+            <th style="border: 1px solid #000; padding: 8px;">Art</th>
+            <th style="border: 1px solid #000; padding: 8px;">English</th>
+            <th style="border: 1px solid #000; padding: 8px;">Geometry</th>
+            <th style="border: 1px solid #000; padding: 8px;">ICT</th>
+            <th style="border: 1px solid #000; padding: 8px;">Religious</th>
+            <th style="border: 1px solid #000; padding: 8px;">Science</th>
+            <th style="border: 1px solid #000; padding: 8px;">Social</th>
+            <th style="border: 1px solid #000; padding: 8px;">Sub No.</th>
+            <th style="border: 1px solid #000; padding: 8px;">Total Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rowsHTML}
+        </tbody>
+      </table>
+    `;
+
+    // 3. Configure and trigger PDF export
+    const options = {
+      margin:       20,
+      filename:   `${students[0].groupnumber}-تقرير بيانات الطلاب في المجموعة ${new Date().toLocaleString()}.pdf`,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2, useCORS: true },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
+    };
+
+    await html2pdf().from(element).set(options).save();
+
+  } catch (error) {
+    console.error('Failed to download PDF:', error);
+  }
+};
 
   const handleGroupNum = (e) => {
     setNumberForEachGroup(Number(e.target.value));
@@ -77,13 +151,6 @@ const DevideStudentsToGroups = ({ data, handleAlterDate }) => {
               <option value="400">400</option>
             </select>
           </div>
-          <button
-            onClick={caller}
-            className="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2 text-sm font-bold text-white transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md"
-          >
-            <span className="material-symbols-outlined">print</span>
-            طباعة المجموعات
-          </button>
         </div>
         <div className="grid grid-cols-1 gap-4 p-6 md:grid-cols-2">
           {Object.entries(groupedStudents).map(([groupKey, students]) =>
@@ -92,21 +159,28 @@ const DevideStudentsToGroups = ({ data, handleAlterDate }) => {
                 key={groupKey}
                 className="h-100 overflow-y-auto rounded-lg border border-t-4 border-blue-600 border-gray-200 bg-blue-50/30 p-4"
               >
-                <div className="mb-2 flex items-center justify-between">
+                <div className="mb-2 flex items-center justify-between bg-gray-200 p-4">
                   <span className="font-bold text-blue-600">
                     المجموعة {groupKey}
                   </span>
-                  <span className="text-sm text-gray-500">
+                  <span className="font-bold text-blue-600">
                     {students[0]?.preservedate?.substring(0, 10)}
                   </span>
                   <span
-                    className={`rounded-full ${students?.length < numberforeachgroup ? "bg-red-600" : "bg-green-600"} px-3 py-1 text-xs font-bold text-white`}
+                    className={`flex items-center gap-2 font-bold ${students?.length < numberforeachgroup ? "text-red-600" : "text-green-600"}`}
                   >
                     {students.length}
                     {students?.length < numberforeachgroup
                       ? " / غير مكتمل"
                       : " / مكتمل"}
                   </span>
+                  <button
+                    onClick={() => printGroup(students)}
+                    className="flex cursor-pointer items-center gap-2 rounded-lg bg-blue-600 px-6 py-2 text-sm font-bold text-white transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md"
+                  >
+                    <span className="material-symbols-outlined">print</span>
+                    طباعة المجموعة
+                  </button>
                 </div>
                 <div className="space-y-1">
                   {students.map((student, idx) => (
