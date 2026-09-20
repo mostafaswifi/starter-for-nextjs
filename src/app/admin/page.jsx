@@ -1,30 +1,37 @@
 // app/page.jsx
 "use client";
-import  appImg from "../../../public/applicaton.jpg";
+import appImg from "../../../public/applicaton.jpg";
 import { useState, useEffect } from "react";
 import { redirect } from "next/navigation";
-import Image from "next/image"
+import dynamic from "next/dynamic";
+import Image from "next/image";
 import Statistics from "../componenets/statistics/Statistics";
 import RevisionStartDate from "../componenets/revisionstartend/RevisionStartDate";
-import DevideStudentsToGroups from "../componenets/devidestudentstogroups/DevideStudentsToGroups";
+// import DevideStudentsToGroups from "../componenets/devidestudentstogroups/DevideStudentsToGroups";
 import LatestApplications from "../componenets/latestapplications/LatestApplications";
-import {swalAlert} from "../../lib/swal";
-
+import { swalAlert } from "../../lib/swal";
+const DevideStudentsToGroups = dynamic(
+  () =>
+    import(
+      "@/app/componenets/devidestudentstogroups/DevideStudentsToGroups.jsx"
+    ),
+  { ssr: false },
+);
 
 export default function Page() {
   const [data, setData] = useState([]);
-const fetchItems = async () => {
-  try {
-    const response = await fetch("/api/info");
-    const result = await response.json();
-    if (result.success) {
-      setData(result.data);
+  const fetchItems = async () => {
+    try {
+      const response = await fetch("/api/info");
+      const result = await response.json();
+      if (result.success) {
+        setData(result.data);
+      }
+    } catch (error) {
+      console.error("Error fetching items:", error);
     }
-  } catch (error) {
-    console.error("Error fetching items:", error);
-  }
-};
-useEffect(() => {
+  };
+  useEffect(() => {
     fetchItems();
   }, []);
   const [items, setItems] = useState("init");
@@ -35,36 +42,31 @@ useEffect(() => {
     s = localStorage ? localStorage?.getItem("authToken") : "no token";
   }
 
-const handleAlterDate = ((id,data) => {
-console.log(data,id);
- 
- 
+  const handleAlterDate = (id, data) => {
+    console.log(data, id);
+
     try {
-    const response = fetch(`/api/info?id=${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    response.then((res) =>
-      res.json().then((data) => {
-       
-        swalAlert("تم التعديل بنجاح","تم التعديل بنجاح","success","نعم")
-      })
-    );
-  } catch (error) {
-   swalAlert("خطأ في التعديل  ","خطأ في التعديل","fail","نعم")    
-  }
-  
- 
-})
+      const response = fetch(`/api/info?id=${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      response.then((res) =>
+        res.json().then((data) => {
+          swalAlert("تم التعديل بنجاح", "تم التعديل بنجاح", "success", "نعم");
+        }),
+      );
+    } catch (error) {
+      swalAlert("خطأ في التعديل  ", "خطأ في التعديل", "fail", "نعم");
+    }
+  };
 
-const handleLogout = () => {
-  localStorage.removeItem("authToken");
-  redirect("/");
-};
-
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    redirect("/");
+  };
 
   return (
     <>
@@ -99,7 +101,7 @@ const handleLogout = () => {
                   إجراءات سريعة
                 </h4>
                 <div className="space-y-2">
-                   <button
+                  <button
                     onClick={() => setItems("devidestudentstogroups")}
                     className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-gray-300 p-4 font-bold text-gray-600 transition-all hover:-translate-y-0.5 hover:bg-gray-100 hover:shadow-md"
                     style={
@@ -115,29 +117,6 @@ const handleLogout = () => {
                     <span className="flex items-center gap-2">
                       <span className="material-symbols-outlined">groups</span>
                       تقسيم المجموعات
-                    </span>
-                    <span className="material-symbols-outlined">
-                      chevron_left
-                    </span>
-                  </button>
-                  <button
-                    onClick={() => setItems("revisionstartend")}
-                    className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-gray-300 p-4 font-bold text-gray-600 transition-all hover:-translate-y-0.5 hover:bg-gray-100 hover:shadow-md"
-                    style={
-                      items == "revisionstartend"
-                        ? {
-                            color: "white",
-                            backgroundColor: "#3b82f6",
-                            transition: "all 0.3s ease-in-out",
-                          }
-                        : { color: "black", backgroundColor: "white" }
-                    }
-                  >
-                    <span className="flex items-center gap-2">
-                      <span className="material-symbols-outlined">
-                        calendar_month
-                      </span>
-                      التقويمات و بيانات الطلاب
                     </span>
                     <span className="material-symbols-outlined">
                       chevron_left
@@ -168,8 +147,6 @@ const handleLogout = () => {
                     </span>
                   </button>
 
-                 
-
                   <button
                     onClick={() => setItems("latestapplications")}
                     className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-gray-300 p-4 font-bold text-gray-600 transition-all hover:-translate-y-0.5 hover:bg-gray-100 hover:shadow-md"
@@ -192,20 +169,62 @@ const handleLogout = () => {
                     </span>
                   </button>
 
-                  <button className="bg-red-600 p-4 mx-auto rounded-lg text-white my-3 cursor-pointer w-full" onClick={()=>handleLogout()} >تسجيل الخروج</button>
+                  <button
+                    onClick={() => setItems("revisionstartend")}
+                    className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-gray-300 p-4 font-bold text-gray-600 transition-all hover:-translate-y-0.5 hover:bg-gray-100 hover:shadow-md"
+                    style={
+                      items == "revisionstartend"
+                        ? {
+                            color: "white",
+                            backgroundColor: "#3b82f6",
+                            transition: "all 0.3s ease-in-out",
+                          }
+                        : { color: "black", backgroundColor: "white" }
+                    }
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className="material-symbols-outlined">
+                        calendar_month
+                      </span>
+                      التقويمات و بيانات الطلاب
+                    </span>
+                    <span className="material-symbols-outlined">
+                      chevron_left
+                    </span>
+                  </button>
+
+                  <button
+                    className="mx-auto my-3 w-full cursor-pointer rounded-lg bg-red-600 p-4 text-white"
+                    onClick={() => handleLogout()}
+                  >
+                    تسجيل الخروج
+                  </button>
                 </div>
               </div>
             </nav>
           </aside>
-          <div className="flex  flex-col p-6 h-full w-full px-4 mx-auto">
+          <div className="mx-auto flex h-full w-full flex-col p-6 px-4">
             {items == "devidestudentstogroups" && (
-              <DevideStudentsToGroups data={data} />
+  <DevideStudentsToGroups data={data} handleAlterDate={handleAlterDate} />
+)}
+            {items == "init" && (
+              <Image
+                width={800}
+                height={800}
+                className="mx-auto"
+                alt="app"
+                src={appImg.src}
+              />
             )}
-            {items == "init" && <Image width={800} height={800} className="mx-auto" alt="app" src={appImg.src} />}
             {items == "statistics" && <Statistics data={data} />}
-            {items == "revisionstartend" && <RevisionStartDate data={data} handleAlterDate={handleAlterDate} />}
             {items == "latestapplications" && (
               <LatestApplications data={data} />
+            )}
+            {items == "revisionstartend" && (
+              <RevisionStartDate
+                data={data}
+                handleAlterDate={handleAlterDate}
+              />
             )}
           </div>
         </div>

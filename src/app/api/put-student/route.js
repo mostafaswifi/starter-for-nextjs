@@ -47,7 +47,7 @@ export async function PUT(request) {
       DATABASE_ID,
       COLLECTION_ID,
       storedId,
-      items // Pass items directly - no need to spread in an object
+      items 
     );
 
     return NextResponse.json(

@@ -268,6 +268,8 @@ const LatestApplications = () => {
                           {student?.totalcost || 0} جنيها
                         </p>
                         <p>{student?.$id}</p>
+                        <p className="mb-1 text-xs text-gray-600">هاتف</p>
+                        <p>{student?.nationalid}</p>
                       </div>
                     </div>
                     <div>

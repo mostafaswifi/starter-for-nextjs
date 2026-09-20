@@ -25,7 +25,8 @@ export async function GET(request) {
       [
         Query.equal("seatnum", queryValue),
         Query.limit(1)
-      ]
+      ],
+      86400
     );
 
     if (response.documents.length === 0) {

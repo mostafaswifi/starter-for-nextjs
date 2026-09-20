@@ -5,17 +5,17 @@ import { NextResponse } from 'next/server';
 const { Query } = require('appwrite');
 
 export async function GET(request, { params }) {
-    const { seatnum } = await params; // Note: params is async in newer Next.js
+    const { seatnum } = await params; 
     
     try {
-        // Using a custom 'slug' or 'customId' field instead of $id
+      
         const response = await databases.listDocuments(
             DATABASE_ID,
             COLLECTION_ID,
             [Query.equal('seatnum', Number(seatnum))],
   [
-    Query.limit(5000) // Fetch up to 5,000 items in a single call
-  ] // Replace 'customId' with your field
+    Query.limit(15000) 
+  ] 
   ,
             86400
         );

@@ -6,7 +6,7 @@ export async function GET() {
       DATABASE_ID,
       COLLECTION_ID,
   [
-    Query.limit(100000) // Fetch up to 100,000 items in a single call
+    Query.limit(15000) // Fetch up to 100,000 items in a single call
   ],
       86400
     );

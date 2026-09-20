@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+// import html2pdf from 'html2pdf.js';
+
+
 
 const Statistics = ({ data }) => {
   // console.log(data[0])
@@ -37,9 +40,70 @@ const totalTrue = Object.values(students).reduce((count, student) => {
 return totalTrue;
   }
 
+  const printReport = async () => {
+    const html2pdf = (await import('html2pdf.js')).default;
+  try {
+    // 1. Create a container element for the PDF content with RTL support
+    const element = document.createElement('div');
+    element.dir = 'rtl'; // Sets Right-to-Left direction natively for Arabic
+    element.style.padding = '0';
+    element.style.fontFamily = 'Cairo, sans-serif';
+    element.style.color = '#000000';
+
+    // 2. Build the HTML structure (Title, Date, and Table)
+    let rowsHTML =  `
+      <tr>
+        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${studentsDataItems?.length}</td>
+        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${
+                  studentsDataItems?.filter((student) => student?.nationalid)
+                    .length
+                }</td>
+        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 16px">${studentsDataItems
+                  ? countAllSubjects(studentsDataItems)
+                  : 0}</td>
+        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${studentsDataItems
+                  ?.map((student) => student?.totalcost)
+                  .reduce((total, price) => total + price, 0)}</td>
+      </tr>
+    `;
+
+    element.innerHTML = `
+      <h2 style="color: #010101; margin-bottom: 5px;">تقرير بيانات - إجمالي (عدد الطلاب - عدد الطلبات - عدد المواد - المبلغ)</h2>
+      <p style="font-size: 12px; color: #000000; margin-bottom: 20px;">تاريخ الإنشاء: ${new Date().toLocaleString()}</p>
+      <table style="width: 100%; border-collapse: collapse; font-size: 12px;padding: 30px">
+        <thead>
+          <tr style="background-color: #2980b9; color: white;border: 1px solid #010101;">
+            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">إجمالي عدد الطلاب</th>
+            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">إجمالي عدد الطلبات المقدمة حتي تاريخه</th>
+            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">عدد المواد المحجوزة</th>
+            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">إجمالي المبلغ</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rowsHTML}
+        </tbody>
+      </table>
+    `;
+
+    // 3. Configure and trigger PDF export
+    const options = {
+      margin:       5,
+      filename:   ` ( عدد الطلاب - عدد الطلبات - عدد المواد - المبلغ) تقرير بيانات الطلاب ${new Date().toLocaleString()}.pdf`,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2, useCORS: true },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
+    };
+
+    await html2pdf().from(element).set(options).save();
+
+  } catch (error) {
+    console.error('Failed to download PDF:', error);
+  }
+};
+
 
   return (
-    <div>
+    <>
       <div className="flex w-full flex-col">
         {/* Main Content */}
         <main className="mx-auto w-full max-w-7xl flex-grow p-2">
@@ -228,7 +292,8 @@ return totalTrue;
           </div>
         </main>
       </div>
-    </div>
+      <button onClick={printReport} className="w-30 mt-8 rounded text-white bg-blue-600 px-4 py-2 cursor-pointer hover:bg-blue-700 transition-colors">طباعة التقرير</button>
+    </>
   );
 };
 

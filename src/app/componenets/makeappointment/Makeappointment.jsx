@@ -229,12 +229,11 @@ const Makeappointment = ({
                     {!studentData?.nationalid ? (
                       <>
                         <label className="text-secondary block px-1 text-sm font-semibold">
-                          أدخل الرقم القومي للطالب ( من واقع شهادة ميلاد الطالب
-                          !!! )
+                         أدخل رقم هاتف ولي الأمر
                         </label>
                         <input
                           className="bg-surface-container-low focus:ring-primary w-full rounded-lg border-1 p-2 transition-all placeholder:text-slate-400 focus:ring-2"
-                          placeholder="مثال: 123456"
+                          placeholder="مثال: 01112523211"
                           type="text"
                           value={nationalid}
                           onChange={(e) => handleNationalid(e)}
@@ -246,12 +245,12 @@ const Makeappointment = ({
                     <div className="bg-surface-container-lowest flex-column flex items-center gap-2 space-y-2 rounded-lg bg-blue-500 p-4 text-white">
                       <span className="text-secondary m-0 px-1 text-sm font-semibold">
                         {" "}
-                        تم تسجيل طلب من قبل ورقم البطاقة المسجل هو
+                        تم تسجيل طلب من قبل ورقم الهاتف المسجل هو
                       </span>
                       <span className="text-secondary text-md px-1 font-bold tracking-widest">
                         {studentData?.nationalid
                           ? studentData?.nationalid
-                          : "لم يتم تسجيل رقم قومي بعد"}
+                          : "لم يتم تسجيل رقم هاتف بعد"}
                       </span>
                     </div>
                     <span className="text-secondary text-md px-1 font-bold tracking-widest">

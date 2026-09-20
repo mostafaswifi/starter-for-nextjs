@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import html2pdf from 'html2pdf.js';
-const DevideStudentsToGroups = ({ data, handleAlterDate }) => {
+
+const DevideStudentsToGroups = ({ data = [], handleAlterDate }) => {
   const [numberforeachgroup, setNumberForEachGroup] = useState(
-    data[0]?.numberforeachgroup,
+    data[0]?.numberforeachgroup || 100,
   );
   const [students, setStudents] = useState([]);
   const [groupedStudents, setGroupedStudents] = useState([]);
@@ -19,16 +20,15 @@ const DevideStudentsToGroups = ({ data, handleAlterDate }) => {
       console.error("Error fetching items:", error);
     }
   };
+
   const groupStudentsByNumber = (studentArray) => {
     return studentArray.reduce((acc, student) => {
       const groupKey = student.groupnumber || "ungrouped";
 
-      // If the group array doesn't exist yet, initialize it
       if (!acc[groupKey]) {
         acc[groupKey] = [];
       }
 
-      // Push the student into their respective group array
       acc[groupKey].push(student);
 
       return acc;
@@ -38,89 +38,92 @@ const DevideStudentsToGroups = ({ data, handleAlterDate }) => {
   useEffect(() => {
     getAllStudents();
   }, []);
-const printGroup = async (students) => {
-  try {
-    // 1. Create a container element for the PDF content with RTL support
-    const element = document.createElement('div');
-    element.dir = 'rtl'; // Sets Right-to-Left direction natively for Arabic
-    element.style.padding = '0';
-    element.style.fontFamily = 'Cairo, sans-serif';
-    element.style.color = '#000000';
 
-    // 2. Build the HTML structure (Title, Date, and Table)
-    let rowsHTML = students.map((item,idx) => `
-      <tr>
-        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${idx+1}</td>
-        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.groupnumber || ''}</td>
-        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: right;font-size: 16px">${item.studentname || ''}</td>
-        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.seatnum || ''}</td>
-        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.adminstration || ''}</td>
-        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.arabic? '✓' : '' || ''}</td>
-        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.english? '✓' : '' || ''}</td>
-        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.social? '✓' : '' || ''}</td>
-        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.algebra? '✓' : '' || ''}</td>
-        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.geometry? '✓' : '' || ''}</td>
-        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.sciense? '✓' : '' || ''}</td>
-        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.ict? '✓' : '' || ''}</td>
-        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.art? '✓' : '' || ''}</td>
-        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.religious? '✓' : '' || ''}</td>
-        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.subjectnumber || ''}</td>
-        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.totalcost || ''}</td>
-      </tr>
-    `).join('');
+  const printGroup = async (studentsGroup) => {
+    try {
+      const element = document.createElement('div');
+      element.dir = 'rtl';
+      element.style.padding = '0';
+      element.style.fontFamily = 'Cairo, sans-serif';
+      element.style.color = '#000000';
 
-    element.innerHTML = `
-      <h2 style="color: #010101; margin-bottom: 5px;">تقرير بيانات الطلاب</h2>
-      <p style="font-size: 12px; color: #000000; margin-bottom: 20px;">تاريخ الإنشاء: ${new Date().toLocaleString()}</p>
-      <table style="width: 100%; border-collapse: collapse; font-size: 12px;padding: 30px;height: 90vh;">
-        <thead>
-          <tr style="background-color: #2980b9; color: white;border: 1px solid #010101;">
-            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">م</th>
-            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">مجموعة</th>
-            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">الاســـــــــــــــم</th>
-            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">جلوس</th>
-            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">الإدارة</th>
-            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px"> العربية</th>
-            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px"> الإنجليزية</th>
-            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">دراسات </th>
-            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">الجبر</th>
-            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">الهندسة</th>
-            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">العلوم</th>
-            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">ICT</th>
-            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">الرسم</th>
-            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px"> الدينية</th>
-            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">عدد المواد</th>
-            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">التكلفة</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${rowsHTML}
-        </tbody>
-      </table>
-    `;
+      let rowsHTML = studentsGroup.map((item, idx) => `
+        <tr>
+          <td style="border: 1px solid #010101; padding: 6px; padding-bottom:12px; text-align: center; font-size: 12px">${idx + 1}</td>
+          <td style="border: 1px solid #010101; padding: 6px; padding-bottom:12px; text-align: center; font-size: 12px">${item.groupnumber || ''}</td>
+          <td style="border: 1px solid #010101; padding: 6px; padding-bottom:12px; text-align: right; font-size: 16px">${item.studentname || ''}</td>
+          <td style="border: 1px solid #010101; padding: 6px; padding-bottom:12px; text-align: center; font-size: 12px">${item.seatnum || ''}</td>
+          <td style="border: 1px solid #010101; padding: 6px; padding-bottom:12px; text-align: center; font-size: 12px">${item.adminstration || ''}</td>
+          <td style="border: 1px solid #010101; padding: 6px; padding-bottom:12px; text-align: center; font-size: 12px">${item.arabic ? '✓' : ''}</td>
+          <td style="border: 1px solid #010101; padding: 6px; padding-bottom:12px; text-align: center; font-size: 12px">${item.english ? '✓' : ''}</td>
+          <td style="border: 1px solid #010101; padding: 6px; padding-bottom:12px; text-align: center; font-size: 12px">${item.social ? '✓' : ''}</td>
+          <td style="border: 1px solid #010101; padding: 6px; padding-bottom:12px; text-align: center; font-size: 12px">${item.algebra ? '✓' : ''}</td>
+          <td style="border: 1px solid #010101; padding: 6px; padding-bottom:12px; text-align: center; font-size: 12px">${item.geometry ? '✓' : ''}</td>
+          <td style="border: 1px solid #010101; padding: 6px; padding-bottom:12px; text-align: center; font-size: 12px">${item.sciense ? '✓' : ''}</td>
+          <td style="border: 1px solid #010101; padding: 6px; padding-bottom:12px; text-align: center; font-size: 12px">${item.ict ? '✓' : ''}</td>
+          <td style="border: 1px solid #010101; padding: 6px; padding-bottom:12px; text-align: center; font-size: 12px">${item.art ? '✓' : ''}</td>
+          <td style="border: 1px solid #010101; padding: 6px; padding-bottom:12px; text-align: center; font-size: 12px">${item.religious ? '✓' : ''}</td>
+          <td style="border: 1px solid #010101; padding: 6px; padding-bottom:12px; text-align: center; font-size: 12px">${item.subjectnumber || ''}</td>
+          <td style="border: 1px solid #010101; padding: 6px; padding-bottom:12px; text-align: center; font-size: 12px">${item.totalcost || ''}</td>
+        </tr>
+      `).join('');
 
-    // 3. Configure and trigger PDF export
-    const options = {
-      margin:       5,
-      filename:   `${students[0].groupnumber}-تقرير بيانات الطلاب في المجموعة ${new Date().toLocaleString()}.pdf`,
-      image:        { type: 'jpeg', quality: 0.98 },
-      html2canvas:  { scale: 2, useCORS: true },
-      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
-    };
+      element.innerHTML = `
+        <h2 style="color: #010101; margin-bottom: 5px;">تقرير بيانات الطلاب</h2>
+        <p style="font-size: 12px; color: #000000; margin-bottom: 20px;">تاريخ الإنشاء: ${new Date().toLocaleString()}</p>
+        <table style="width: 100%; border-collapse: collapse; font-size: 12px; padding: 30px">
+          <thead>
+            <tr style="background-color: #2980b9; color: white; border: 1px solid #010101;">
+              <th style="border: 1px solid #000; padding: 8px; padding-bottom:18px; font-size:14px">م</th>
+              <th style="border: 1px solid #000; padding: 8px; padding-bottom:18px; font-size:14px">مجموعة</th>
+              <th style="border: 1px solid #000; padding: 8px; padding-bottom:18px; font-size:14px">الاســـــــــــــــم</th>
+              <th style="border: 1px solid #000; padding: 8px; padding-bottom:18px; font-size:14px">جلوس</th>
+              <th style="border: 1px solid #000; padding: 8px; padding-bottom:18px; font-size:14px">الإدارة</th>
+              <th style="border: 1px solid #000; padding: 8px; padding-bottom:18px; font-size:14px">العربية</th>
+              <th style="border: 1px solid #000; padding: 8px; padding-bottom:18px; font-size:14px">الإنجليزية</th>
+              <th style="border: 1px solid #000; padding: 8px; padding-bottom:18px; font-size:14px">دراسات</th>
+              <th style="border: 1px solid #000; padding: 8px; padding-bottom:18px; font-size:14px">الجبر</th>
+              <th style="border: 1px solid #000; padding: 8px; padding-bottom:18px; font-size:14px">الهندسة</th>
+              <th style="border: 1px solid #000; padding: 8px; padding-bottom:18px; font-size:14px">العلوم</th>
+              <th style="border: 1px solid #000; padding: 8px; padding-bottom:18px; font-size:14px">ICT</th>
+              <th style="border: 1px solid #000; padding: 8px; padding-bottom:18px; font-size:14px">الرسم</th>
+              <th style="border: 1px solid #000; padding: 8px; padding-bottom:18px; font-size:14px">دين</th>
+              <th style="border: 1px solid #000; padding: 8px; padding-bottom:18px; font-size:14px">عدد المواد</th>
+              <th style="border: 1px solid #000; padding: 8px; padding-bottom:18px; font-size:14px">التكلفة</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rowsHTML}
+          </tbody>
+        </table>
+      `;
 
-    await html2pdf().from(element).set(options).save();
+      const options = {
+        margin: 5,
+        filename: `${studentsGroup[0]?.groupnumber || 'group'}-تقرير بيانات الطلاب.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+      };
 
-  } catch (error) {
-    console.error('Failed to download PDF:', error);
-  }
-};
+      await html2pdf().from(element).set(options).save();
+    } catch (error) {
+      console.error('Failed to download PDF:', error);
+    }
+  };
 
   const handleGroupNum = (e) => {
-    setNumberForEachGroup(Number(e.target.value));
+    const newValue = Number(e.target.value);
+    setNumberForEachGroup(newValue);
+    
     setTimeout(() => {
-      handleAlterDate(data[0].$id, {
-        numberforeachgroup: Number(e.target.value),
-      });
+      if (typeof handleAlterDate === "function" && data[0]?.$id) {
+        handleAlterDate(data[0].$id, {
+          numberforeachgroup: newValue,
+        });
+      } else {
+        console.warn("handleAlterDate prop is missing or invalid.");
+      }
     }, 1000);
   };
 
@@ -140,12 +143,11 @@ const printGroup = async (students) => {
             <select
               id="number"
               name="number"
+              value={numberforeachgroup}
               onChange={(e) => handleGroupNum(e)}
               className="w-20 rounded-lg border border-gray-300 bg-white p-2 text-sm outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600"
             >
-              <option value="100" defaultValue={numberforeachgroup}>
-                100
-              </option>
+              <option value="100">100</option>
               <option value="200">200</option>
               <option value="300">300</option>
               <option value="400">400</option>
@@ -153,7 +155,7 @@ const printGroup = async (students) => {
           </div>
         </div>
         <div className="grid grid-cols-1 gap-4 p-6 md:grid-cols-2">
-          {Object.entries(groupedStudents).map(([groupKey, students]) =>
+          {Object.entries(groupedStudents).map(([groupKey, groupStudentsList]) =>
             groupKey !== "ungrouped" ? (
               <div
                 key={groupKey}
@@ -164,18 +166,18 @@ const printGroup = async (students) => {
                     المجموعة {groupKey}
                   </span>
                   <span className="font-bold text-blue-600">
-                    {students[0]?.preservedate?.substring(0, 10)}
+                    {groupStudentsList[0]?.preservedate?.substring(0, 10)}
                   </span>
                   <span
-                    className={`flex items-center gap-2 font-bold ${students?.length < numberforeachgroup ? "text-red-600" : "text-green-600"}`}
+                    className={`flex items-center gap-2 font-bold ${groupStudentsList?.length < numberforeachgroup ? "text-red-600" : "text-green-600"}`}
                   >
-                    {students.length}
-                    {students?.length < numberforeachgroup
+                    {groupStudentsList.length}
+                    {groupStudentsList?.length < numberforeachgroup
                       ? " / غير مكتمل"
                       : " / مكتمل"}
                   </span>
                   <button
-                    onClick={() => printGroup(students)}
+                    onClick={() => printGroup(groupStudentsList)}
                     className="flex cursor-pointer items-center gap-2 rounded-lg bg-blue-600 px-6 py-2 text-sm font-bold text-white transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md"
                   >
                     <span className="material-symbols-outlined">print</span>
@@ -183,7 +185,7 @@ const printGroup = async (students) => {
                   </button>
                 </div>
                 <div className="space-y-1">
-                  {students.map((student, idx) => (
+                  {groupStudentsList.map((student, idx) => (
                     <div
                       key={student.$id}
                       className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-2"
