@@ -50,47 +50,47 @@ const printGroup = async (students) => {
     // 2. Build the HTML structure (Title, Date, and Table)
     let rowsHTML = students.map((item,idx) => `
       <tr>
-        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${idx+1}</td>
-        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.groupnumber || ''}</td>
-        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: right;font-size: 16px">${item.studentname || ''}</td>
-        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.seatnum || ''}</td>
-        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.adminstration || ''}</td>
-        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.algebra? '✓' : '' || ''}</td>
-        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.arabic? '✓' : '' || ''}</td>
-        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.art? '✓' : '' || ''}</td>
-        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.english? '✓' : '' || ''}</td>
-        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.geometry? '✓' : '' || ''}</td>
-        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.ict? '✓' : '' || ''}</td>
-        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.religious? '✓' : '' || ''}</td>
-        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.sciense? '✓' : '' || ''}</td>
-        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.social? '✓' : '' || ''}</td>
-        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.subjectnumber || ''}</td>
-        <td className="flex justify-items-center align-items-center" style="border: 1px solid #010101; padding: 6px; text-align: center;font-size: 12px">${item.totalcost || ''}</td>
+        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${idx+1}</td>
+        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.groupnumber || ''}</td>
+        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: right;font-size: 16px">${item.studentname || ''}</td>
+        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.seatnum || ''}</td>
+        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.adminstration || ''}</td>
+        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.arabic? '✓' : '' || ''}</td>
+        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.english? '✓' : '' || ''}</td>
+        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.social? '✓' : '' || ''}</td>
+        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.algebra? '✓' : '' || ''}</td>
+        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.geometry? '✓' : '' || ''}</td>
+        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.sciense? '✓' : '' || ''}</td>
+        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.ict? '✓' : '' || ''}</td>
+        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.art? '✓' : '' || ''}</td>
+        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.religious? '✓' : '' || ''}</td>
+        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.subjectnumber || ''}</td>
+        <td className="flex place-content-center" style="border: 1px solid #010101; padding: 6px;padding-bottom:12px; text-align: center;font-size: 12px">${item.totalcost || ''}</td>
       </tr>
     `).join('');
 
     element.innerHTML = `
       <h2 style="color: #010101; margin-bottom: 5px;">تقرير بيانات الطلاب</h2>
-      <p style="font-size: 12px; color: #000000; margin-bottom: 20px;">Generated: ${new Date().toLocaleString()}</p>
-      <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+      <p style="font-size: 12px; color: #000000; margin-bottom: 20px;">تاريخ الإنشاء: ${new Date().toLocaleString()}</p>
+      <table style="width: 100%; border-collapse: collapse; font-size: 12px;padding: 30px;height: 90vh;">
         <thead>
           <tr style="background-color: #2980b9; color: white;border: 1px solid #010101;">
-            <th style="border: 1px solid #000000; padding: 8px;">#</th>
-            <th style="border: 1px solid #000; padding: 8px;">رقم المجموعة</th>
-            <th style="border: 1px solid #000000; padding: 8px;">الاسم</th>
-            <th style="border: 1px solid #000; padding: 8px;">الرقم</th>
-            <th style="border: 1px solid #000; padding: 8px;">Admin</th>
-            <th style="border: 1px solid #000; padding: 8px;">Algebra</th>
-            <th style="border: 1px solid #000; padding: 8px;">Arabic</th>
-            <th style="border: 1px solid #000; padding: 8px;">Art</th>
-            <th style="border: 1px solid #000; padding: 8px;">English</th>
-            <th style="border: 1px solid #000; padding: 8px;">Geometry</th>
-            <th style="border: 1px solid #000; padding: 8px;">ICT</th>
-            <th style="border: 1px solid #000; padding: 8px;">Religious</th>
-            <th style="border: 1px solid #000; padding: 8px;">Science</th>
-            <th style="border: 1px solid #000; padding: 8px;">Social</th>
-            <th style="border: 1px solid #000; padding: 8px;">Sub No.</th>
-            <th style="border: 1px solid #000; padding: 8px;">Total Cost</th>
+            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">م</th>
+            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">مجموعة</th>
+            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">الاســـــــــــــــم</th>
+            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">جلوس</th>
+            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">الإدارة</th>
+            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px"> العربية</th>
+            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px"> الإنجليزية</th>
+            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">دراسات </th>
+            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">الجبر</th>
+            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">الهندسة</th>
+            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">العلوم</th>
+            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">ICT</th>
+            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">الرسم</th>
+            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px"> الدينية</th>
+            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">عدد المواد</th>
+            <th style="border: 1px solid #000; padding: 8px;padding-bottom:18px;font-size:14px">التكلفة</th>
           </tr>
         </thead>
         <tbody>
@@ -101,7 +101,7 @@ const printGroup = async (students) => {
 
     // 3. Configure and trigger PDF export
     const options = {
-      margin:       20,
+      margin:       5,
       filename:   `${students[0].groupnumber}-تقرير بيانات الطلاب في المجموعة ${new Date().toLocaleString()}.pdf`,
       image:        { type: 'jpeg', quality: 0.98 },
       html2canvas:  { scale: 2, useCORS: true },

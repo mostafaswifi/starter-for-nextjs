@@ -16,6 +16,8 @@ export async function GET(request, { params }) {
   [
     Query.limit(5000) // Fetch up to 5,000 items in a single call
   ] // Replace 'customId' with your field
+  ,
+            86400
         );
         
         if (response.documents.length === 0) {

@@ -7,7 +7,8 @@ export async function GET() {
       COLLECTION_ID,
   [
     Query.limit(100000) // Fetch up to 100,000 items in a single call
-  ]
+  ],
+      86400
     );
 
     return NextResponse.json(

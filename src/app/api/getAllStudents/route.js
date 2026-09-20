@@ -41,7 +41,8 @@ export async function GET() {
         [
           Query.limit(limit),
           Query.offset(offset)
-        ]
+        ],
+        86400
       );
 
       allStudents = [...allStudents, ...response.documents];
