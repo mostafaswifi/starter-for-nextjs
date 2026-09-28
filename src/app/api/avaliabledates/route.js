@@ -1,14 +1,19 @@
 import { NextResponse } from 'next/server';
 import { databases, DATABASE_ID, COLLECTION_ID, ID, Query } from '@/lib/appwriteDates';
 
+// In-memory cache variables for dates
+let cachedData = null;
+let lastFetchTime = 0;
+const CACHE_DURATION = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
+
 // POST - Create a new available date
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { avaliabledates , groupnumber, maxnumforeachdte} = body;
+    const { avaliabledates, groupnumber, maxnumforeachdte } = body;
 
     // Validate required fields
-    if (!avaliabledates ) {
+    if (!avaliabledates) {
       return NextResponse.json(
         { success: false, error: 'Missing required fields' },
         { status: 400 }
@@ -22,11 +27,13 @@ export async function POST(request) {
       {
         avaliabledates,
         groupnumber,
-        $createdAt: new Date().toLocaleString(),
-        $updatedAt: new Date().toLocaleString(),
+        $createdAt: new Date().toLocaleString(),$updatedAt: new Date().toLocaleString(),
         maxnumforeachdte
       }
     );
+
+    // Invalidate cache so fresh data is loaded next time
+    cachedData = null;
 
     return NextResponse.json({
       success: true,
@@ -41,16 +48,28 @@ export async function POST(request) {
   }
 }
 
+// GET - Fetch available dates with 3-hour cache
 export async function GET() {
+  const now = Date.now();
+
+  // Return cached dates instantly (0 Appwrite reads!)
+  if (cachedData && (now - lastFetchTime < CACHE_DURATION)) {
+    console.log("Serving available dates from cache...");
+    return NextResponse.json({ success: true, data: cachedData }, { status: 200 });
+  }
+
   try {
     const response = await databases.listDocuments(
       DATABASE_ID,
       COLLECTION_ID,
       [
-        Query.limit(50) // Fetch up to 5,000 items in a single call
-      ],
-      86400
+        Query.limit(100) // Safe batch limit
+      ]
     );
+
+    // Save to cache
+    cachedData = response.documents;
+    lastFetchTime = now;
 
     return NextResponse.json(
       { success: true, data: response.documents },
@@ -65,29 +84,29 @@ export async function GET() {
   }
 }
 
-
-// Delete All available dates
+// DELETE - Delete all available dates
 export async function DELETE(request) {
   try {
-    // Use the imported constants instead of process.env directly
     const response = await databases.listDocuments(
-      DATABASE_ID,  // Use imported constant
-      COLLECTION_ID, // Use imported constant
+      DATABASE_ID, 
+      COLLECTION_ID, 
       [
         Query.limit(5000)
       ]
     );
     
-    // FIX: Use 'response' instead of 'documents'
     const deletePromises = response.documents.map(doc => 
       databases.deleteDocument(
-        DATABASE_ID,  // Use imported constant
-        COLLECTION_ID, // Use imported constant
+        DATABASE_ID, 
+        COLLECTION_ID, 
         doc.$id
       )
     );
     
     await Promise.all(deletePromises);
+
+    // Invalidate cache
+    cachedData = null;
     
     return NextResponse.json(
       { success: true, message: `Deleted ${response.documents.length} documents` },
@@ -102,39 +121,40 @@ export async function DELETE(request) {
   }
 }
 
+// PUT - Update an existing date
 export async function PUT(request) {
-    try {
-        // Get ID from URL parameters
-        const url = new URL(request.url);
-        const id = url.searchParams.get("id");
-        
-        if (!id) {
-            return NextResponse.json(
-                { success: false, error: "ID parameter is required" },
-                { status: 400 }
-            );
-        }
-
-        // Get the request body
-        const body = await request.json();
-        
-        // Update the document
-        const response = await databases.updateDocument(
-            DATABASE_ID,
-            COLLECTION_ID,
-            id,  // Document ID
-            body // Data to update
-        );
-        
-        return NextResponse.json(
-            { success: true, data: response },
-            { status: 200 }
-        );
-    } catch (error) {
-        console.error('Error updating document:', error);
-        return NextResponse.json(
-            { success: false, error: error.message },
-            { status: 500 }
-        );
+  try {
+    const url = new URL(request.url);
+    const id = url.searchParams.get("id");
+    
+    if (!id) {
+      return NextResponse.json(
+        { success: false, error: "ID parameter is required" },
+        { status: 400 }
+      );
     }
+
+    const body = await request.json();
+    
+    const response = await databases.updateDocument(
+      DATABASE_ID,
+      COLLECTION_ID,
+      id,
+      body
+    );
+
+    // Invalidate cache
+    cachedData = null;
+    
+    return NextResponse.json(
+      { success: true, data: response },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error('Error updating document:', error);
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 500 }
+    );
+  }
 }

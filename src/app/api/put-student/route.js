@@ -50,6 +50,16 @@ export async function PUT(request) {
       items 
     );
 
+    // Optional: If you want to update the studentData cookie with the fresh response
+    cookieStore.set({
+      name: "studentData",
+      value: JSON.stringify(response),
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7 // 1 week
+    });
+
     return NextResponse.json(
       { success: true, data: response },
       { status: 200 }
